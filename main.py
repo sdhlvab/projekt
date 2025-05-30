@@ -1,5 +1,5 @@
 import pygame
-from ui import MainMenu
+from menu import MainMenu
 from game import Game
 
 def main():
