@@ -1,0 +1,16 @@
+# Python cache
+__pycache__/
+*.py[cod]
+*.pyo
+
+# PyCharm / VSCode
+.idea/
+.vscode/
+
+# Systemowe
+.DS_Store
+Thumbs.db
+
+# Logi / pliki tymczasowe
+*.log
+*.tmp
