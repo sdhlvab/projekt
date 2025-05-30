@@ -1,0 +1,20 @@
+$ sudo apt update
+$ sudo apt install python3-pygame
+$ ls -la /home/hackerman
+$ cd /home/hackerman/dev/
+$ git status
+$ git add .
+$ git commit -m "Initial hack"
+$ ping bugzilla.local
+$ traceroute bugzilla.local
+$ ssh root@bugzilla.local
+$ sudo systemctl restart firewall
+$ cat /var/log/auth.log
+$ journalctl -xe
+$ sudo ufw enable
+$ nano exploit.sh
+$ ./exploit.sh
+$ tail -f /var/log/syslog
+$ dmesg | grep bugzilla
+$ ps aux | grep suspicious
+$ top
