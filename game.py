@@ -14,21 +14,21 @@ class Game:
         self.ground_rects = [
             pygame.Rect(0, 550, 800, 50),  # ziemia
         ]
-        ground_top = self.ground_rects[0].top
+        ground_rect = self.ground_rects[0]
         self.player_name = player_name
         self.music_on = music_on
         self.sound_on = sound_on
 
         # TerminalBackground z nickiem!
         self.background = TerminalBackground(
-            800, 600, self.font, "assets/data/commands.txt", ground_top, self.player_name
+            800, 600, self.font, "assets/data/commands.txt", ground_rect.top, self.player_name
         )
 
         self.player = Player((100, 486))
         self.all_sprites = pygame.sprite.Group()
         self.all_sprites.add(self.player)
         self.enemies = pygame.sprite.Group()
-        self.enemies.add(Enemy(300, ground_top))
+        self.enemies.add(Enemy(300, ground_rect))
 
     def handle_events(self):
         for event in pygame.event.get():
