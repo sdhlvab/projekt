@@ -6,6 +6,7 @@ def main():
     pygame.init()
     screen = pygame.display.set_mode((800, 600))
     pygame.display.set_caption("Hackerman vs. Bugzilla")
+    clock = pygame.time.Clock()
     menu = MainMenu(screen)
     menu.run()
 
@@ -20,6 +21,7 @@ def main():
         game.update()
         game.draw()
         pygame.display.flip()
+        clock.tick(60)
     pygame.quit()
 
 if __name__ == "__main__":
