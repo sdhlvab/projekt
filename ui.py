@@ -13,17 +13,33 @@ class MainMenu:
         self.active = False
         self.selected = 0  # 0: Nick, 1: Muzyka, 2: Dźwięki, 3: Start, 4: Wyjdź
         self.running = True
+        self.empty_input = False
+
 
     def draw(self):
+
         self.screen.fill((0, 0, 0))
         title = self.big_font.render("Hackerman vs. Bugzilla", True, (0, 255, 0))
         self.screen.blit(title, (80, 60))
-        label = self.font.render("Nazwa gracza:", True, (0, 255, 0))
+
+        if self.selected == 0:
+            label = self.font.render("Nazwa gracza:", True, (0, 255, 0))
+        else:
+            label = self.font.render("Nazwa gracza:", True, (160, 160, 160))
+
         self.screen.blit(label, (250, 180))
         pygame.draw.rect(self.screen, (30, 30, 30), self.input_box, border_radius=6)
+
         color = (0, 255, 0) if self.active else (100, 100, 100)
         pygame.draw.rect(self.screen, color, self.input_box, 2, border_radius=6)
+
         txt_surface = self.font.render(self.player_name or "Twoja ksywka...", True, color)
+
+        if not self.empty_input:
+            pygame.draw.rect(self.screen, color, self.input_box, 2, border_radius=6)
+        else:
+            pygame.draw.rect(self.screen, (255, 0, 0), self.input_box, 2, border_radius=6)
+
         self.screen.blit(txt_surface, (self.input_box.x + 8, self.input_box.y + 5))
 
         # Opcje menu
@@ -59,11 +75,17 @@ class MainMenu:
                         if event.key == pygame.K_RETURN:
                             if self.selected == 0:
                                 self.active = True
+                                if not self.player_name.strip():
+                                   self.empty_input = True
+                                else:
+                                    self.empty_input = False
                             elif self.selected == 1:
                                 self.music_on = not self.music_on
                             elif self.selected == 2:
                                 self.sound_on = not self.sound_on
                             elif self.selected == 3:
+                                if not self.player_name.strip():
+                                   self.empty_input = True
                                 if self.player_name.strip():
                                     self.running = False
                             elif self.selected == 4:
