@@ -1,7 +1,7 @@
 import pygame
 import random
 
-PROMPT = "hackerman@debian:~$"
+PROMPT_DEFAULT = "hackerman@debian:~$"
 CURSOR_CHARS = ["_", " "]
 
 class TerminalBackground:
@@ -10,7 +10,7 @@ class TerminalBackground:
         self.height = height
         self.font = font
         self.line_height = font.get_linesize()
-        self.terminal_height = ground_top   # <-- Gdzie kończy się terminal!
+        self.terminal_height = ground_top
         self.num_lines = (self.terminal_height - 10) // self.line_height
         self.commands = self.load_commands(command_file)
         self.lines = [self._get_random_line() for _ in range(self.num_lines - 1)]
@@ -33,15 +33,15 @@ class TerminalBackground:
             self.last_cursor_switch = now
 
     def draw(self, surface):
-        PROMPT = f"{self.player_name}@debian:~$"
+        prompt = f"{self.player_name}@debian:~$"
         surface.fill((0, 0, 0))
         for i, line in enumerate(self.lines):
-            text = f"{PROMPT} {line}"
+            text = f"{prompt} {line}"
             txt = self.font.render(text, False, (0, 255, 0))
             surface.blit(txt, (10, i * self.line_height))
         # prompt z kursorem na ostatniej linii
         cursor = CURSOR_CHARS[0] if self.cursor_visible else CURSOR_CHARS[1]
-        prompt_line = f"{PROMPT} {cursor}"
+        prompt_line = f"{prompt} {cursor}"
         prompt_y = (self.num_lines - 1) * self.line_height
         txt = self.font.render(prompt_line, False, (0, 255, 0))
         surface.blit(txt, (10, prompt_y))
