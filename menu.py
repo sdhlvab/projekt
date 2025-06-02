@@ -6,7 +6,7 @@ class MainMenu:
         self.clock = pygame.time.Clock()
         self.font = pygame.font.Font("assets/fonts/UbuntuMono-R.ttf", 28)
         self.big_font = pygame.font.Font("assets/fonts/UbuntuMono-R.ttf", 48)
-        self.input_box = pygame.Rect(150, 220, 300, 40)
+        self.input_box = pygame.Rect(350, 175, 300, 40)
         self.player_name = ""
         self.music_on = True
         self.sound_on = True
@@ -65,7 +65,7 @@ class MainMenu:
         for i, option in enumerate(options):
             color = (0, 255, 0) if self.selected == i + 1 else (160, 160, 160)
             surf = self.font.render(option, True, color)
-            self.screen.blit(surf, (150, 280 + 45 * i))
+            self.screen.blit(surf, (150, 220 + 45 * i))
 
     def run(self):
         while self.running:
