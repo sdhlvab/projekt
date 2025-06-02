@@ -13,6 +13,7 @@ class MainMenu:
         self.active = False
         self.selected = 0  # 0: Nick, 1: Muzyka, 2: Dźwięki, 3: Start, 4: Wyjdź
         self.running = True
+        self.empty_input = False
 
     def draw(self):
 
@@ -41,7 +42,10 @@ class MainMenu:
                 color = (0, 255, 0)
                 # print("PUSTY, AKTYWNY: " + str(color))
             else:
-                color = (255, 0, 0)
+                if self.empty_input:
+                    color = (255, 0, 0)
+                else:
+                    color = (100, 100, 100)
                 # print("PUSTY, NIEAKTYWNY: " + str(color))
 
         pygame.draw.rect(self.screen, color, self.input_box, 2, border_radius=6)
@@ -93,6 +97,8 @@ class MainMenu:
                             elif self.selected == 2:
                                 self.sound_on = not self.sound_on
                             elif self.selected == 3:
+                                if not self.player_name.strip():
+                                    self.empty_input = True
                                 if self.player_name.strip():
                                     self.running = False
                             elif self.selected == 4:
