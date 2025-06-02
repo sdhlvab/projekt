@@ -7,14 +7,17 @@ def main():
     screen = pygame.display.set_mode((800, 600))
     pygame.display.set_caption("Hackerman vs. Bugzilla")
     clock = pygame.time.Clock()
-    menu = MainMenu(screen)
-    menu.run()
+    #menu = MainMenu(screen)
+    #menu.run()
 
     # Odbieramy nicka oraz opcje muzyki/dźwięków
-    player_name = menu.player_name or "hackerman"
-    music_on = menu.music_on
-    sound_on = menu.sound_on
+    #player_name = menu.player_name or "hackerman"
+    #music_on = menu.music_on
+    #sound_on = menu.sound_on
 
+    #game = Game(screen, player_name=player_name, music_on=music_on, sound_on=sound_on)
+    player_name = "test"
+    music_on, sound_on = False, False
     game = Game(screen, player_name=player_name, music_on=music_on, sound_on=sound_on)
     while game.running:
         game.handle_events()

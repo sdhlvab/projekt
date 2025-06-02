@@ -1,4 +1,5 @@
 import pygame
+from projectile import Projectile
 
 WINDOW_WIDTH = 800
 WINDOW_HEIGHT = 600
@@ -102,3 +103,9 @@ class Player(pygame.sprite.Sprite):
                         self.velocity.y = 0
         if direction == 'y' and not any(self.rect.colliderect(tile) for tile in tiles):
             self.on_ground = False
+
+    def shoot(self):
+        center_x = self.rect.centerx
+        center_y = self.rect.centery
+        direction = 1 if self.facing_right else -1
+        return Projectile(center_x, center_y, direction)
