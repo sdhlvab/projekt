@@ -38,10 +38,11 @@ class Game:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 self.running = False
-            elif event.type == pygame.KEYDOWN and self.shoot_cooldown == 0:
-                projectile = self.player.shoot()
-                self.projectiles.add(projectile)
-                self.shoot_cooldown = 15 # cooldown
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_SPACE and self.shoot_cooldown == 0:
+                    projectile = self.player.shoot()
+                    self.projectiles.add(projectile)
+                    self.shoot_cooldown = 15 # cooldown
 
     def update(self):
         self.background.update()
