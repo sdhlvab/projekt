@@ -21,11 +21,16 @@ def scale_to_height(image, target_height):
 class Player(pygame.sprite.Sprite):
     def __init__(self, pos):
         super().__init__()
+        # Wczytaj oryginał i wersję odbitą
         raw = pygame.image.load("assets/img/hackerman_brown.png").convert_alpha()
         cropped = crop_to_visible_area(raw)
-        self.image = scale_to_height(cropped, 64)
+        scaled = scale_to_height(cropped, 64)
+        self.image_right = scaled
+        self.image_left = pygame.transform.flip(self.image_right, True, False)
+        self.image = self.image_right
+        self.facing_right = True
+
         self.rect = self.image.get_rect()
-        # KLUCZOWA ZMIANA: ustawiamy bottomleft = (pos[0], 550) a nie topleft!
         self.rect.bottomleft = (pos[0], 550)
         self.speed = 5
         self.velocity = pygame.math.Vector2(0, 0)
@@ -38,13 +43,16 @@ class Player(pygame.sprite.Sprite):
         self.velocity.x = 0
         if keys[pygame.K_LEFT]:
             self.velocity.x = -self.speed
-        if keys[pygame.K_RIGHT]:
+            self.image = self.image_left
+            self.facing_right = False
+        elif keys[pygame.K_RIGHT]:
             self.velocity.x = self.speed
-        #if keys[pygame.K_UP]:
-        #    print("Góra, on_ground:", self.on_ground)
+            self.image = self.image_right
+            self.facing_right = True
         if keys[pygame.K_UP] and self.on_ground:
-            # print("SKOK!")
             self.velocity.y = self.jump_strength
+        if keys[pygame.K_SPACE] and self.attack_cooldown <= 0:
+            self.attack_cooldown = 20
 
     def apply_gravity(self):
         self.velocity.y += self.gravity
@@ -66,9 +74,7 @@ class Player(pygame.sprite.Sprite):
             self.rect.bottom = WINDOW_HEIGHT
             self.velocity.y = 0
 
-        # NAJWAŻNIEJSZE! Sprawdź, czy pod spodem jest ziemia:
         self.on_ground = False
-        # Przesuwamy prostokąt o 1 w dół (czyli pixel pod stopami)
         rect_below = self.rect.move(0, 1)
         for tile in tiles:
             if rect_below.colliderect(tile):
