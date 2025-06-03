@@ -1,30 +1,32 @@
 import pygame
-from menu import MainMenu
-from game import Game
+from roguelike.map import Map, TILE_SIZE
 
 def main():
     pygame.init()
-    screen = pygame.display.set_mode((800, 600))
-    pygame.display.set_caption("Hackerman vs. Bugzilla")
+    WIDTH, HEIGHT = 25, 18
+    screen = pygame.display.set_mode((TILE_SIZE * WIDTH, TILE_SIZE * HEIGHT))
+    pygame.display.set_caption("Hackerman: Roguelike")
     clock = pygame.time.Clock()
-    #menu = MainMenu(screen)
-    #menu.run()
 
-    # Odbieramy nicka oraz opcje muzyki/dźwięków
-    #player_name = menu.player_name or "hackerman"
-    #music_on = menu.music_on
-    #sound_on = menu.sound_on
+    # Wczytaj grafiki kafelków
+    tile_images = {
+        '#': pygame.image.load("assets/img/tile_wall.png").convert(),
+        '.': pygame.image.load("assets/img/tile_floor.png").convert(),
+    }
 
-    #game = Game(screen, player_name=player_name, music_on=music_on, sound_on=sound_on)
-    player_name = "test"
-    music_on, sound_on = False, False
-    game = Game(screen, player_name=player_name, music_on=music_on, sound_on=sound_on)
-    while game.running:
-        game.handle_events()
-        game.update()
-        game.draw()
+    game_map = Map(WIDTH, HEIGHT)
+
+    running = True
+    while running:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+
+        screen.fill((0, 0, 0))
+        game_map.draw(screen, tile_images)
         pygame.display.flip()
         clock.tick(60)
+
     pygame.quit()
 
 if __name__ == "__main__":
