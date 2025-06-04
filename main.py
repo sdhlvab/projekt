@@ -10,9 +10,21 @@ def main():
     pygame.display.set_caption("Hackerman: Roguelike")
     clock = pygame.time.Clock()
 
-    # Wczytaj kafelki
-    floor_img = pygame.image.load("assets/img/tile_floor.png").convert_alpha()
-    wall_img = pygame.image.load("assets/img/tile_wall.png").convert_alpha()
+    # # Wczytaj kafelki
+    # floor_img = pygame.image.load("assets/img/tile_floor.png").convert_alpha()
+    # wall_img = pygame.image.load("assets/img/tile_wall.png").convert_alpha()
+
+    def get_temp_tile(color):
+        tile = pygame.Surface((TILE_SIZE, TILE_SIZE))
+        tile.fill(color)
+        return tile
+
+    # Zamiast:
+    # floor_img = pygame.image.load("assets/img/floor_tile.png").convert_alpha()
+    # wall_img = pygame.image.load("assets/img/wall_tile.png").convert_alpha()
+
+    floor_img = get_temp_tile((160, 160, 160))  # jasnoszary
+    wall_img = get_temp_tile((80, 80, 80))  # ciemnoszary
 
     # Wczytaj mapę z pliku
     map_data = load_map_from_txt("roguelike/maps/test_map.txt")
