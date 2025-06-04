@@ -1,20 +1,22 @@
 import pygame
-from roguelike.map import Map, TILE_SIZE
+import sys
+from roguelike.map import Map, load_map_from_txt, TILE_SIZE
+
+WIDTH, HEIGHT = 800, 600
 
 def main():
     pygame.init()
-    WIDTH, HEIGHT = 25, 18
-    screen = pygame.display.set_mode((TILE_SIZE * WIDTH, TILE_SIZE * HEIGHT))
+    screen = pygame.display.set_mode((WIDTH, HEIGHT))
     pygame.display.set_caption("Hackerman: Roguelike")
     clock = pygame.time.Clock()
 
-    # Wczytaj grafiki kafelków
-    tile_images = {
-        '#': pygame.image.load("assets/img/tile_wall.png").convert(),
-        '.': pygame.image.load("assets/img/tile_floor.png").convert(),
-    }
+    # Wczytaj kafelki
+    floor_img = pygame.image.load("assets/img/tile_floor.png").convert_alpha()
+    wall_img = pygame.image.load("assets/img/tile_wall.png").convert_alpha()
 
-    game_map = Map(WIDTH, HEIGHT)
+    # Wczytaj mapę z pliku
+    map_data = load_map_from_txt("roguelike/maps/test_map.txt")
+    game_map = Map(map_data)
 
     running = True
     while running:
@@ -23,11 +25,12 @@ def main():
                 running = False
 
         screen.fill((0, 0, 0))
-        game_map.draw(screen, tile_images)
+        game_map.draw(screen, floor_img, wall_img)
         pygame.display.flip()
         clock.tick(60)
 
     pygame.quit()
+    sys.exit()
 
 if __name__ == "__main__":
     main()
