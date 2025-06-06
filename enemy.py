@@ -13,6 +13,6 @@ class Enemy(pygame.sprite.Sprite):
     def update(self, tiles):
         self.rect.x += self.direction * self.speed
         for tile in tiles:
-            if self.rect.colliderect(tile.rect):
+            if self.rect.colliderect(tile):
                 self.direction *= -1
                 break

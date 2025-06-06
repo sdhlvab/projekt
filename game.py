@@ -53,7 +53,7 @@ class Game:
         self.background.draw(self.screen)
         # Rysuj platformy (ściany)
         for rect in self.ground_rects:
-            wall_img = pygame.image.load(f"{IMG_DIR}/wall_tile.png").convert_alpha()
+            wall_img = pygame.image.load(f"{IMG_DIR}/tile_wall.png").convert_alpha()
             self.screen.blit(wall_img, rect)
         # Sprite’y
         self.all_sprites.draw(self.screen)

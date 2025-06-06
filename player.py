@@ -45,19 +45,19 @@ class Player(pygame.sprite.Sprite):
 
     def collide(self, tiles, direction):
         for tile in tiles:
-            if self.rect.colliderect(tile.rect):
+            if self.rect.colliderect(tile):
                 if direction == 'x':
                     if self.velocity.x > 0:
-                        self.rect.right = tile.rect.left
+                        self.rect.right = tile.left
                     elif self.velocity.x < 0:
-                        self.rect.left = tile.rect.right
+                        self.rect.left = tile.right
                 elif direction == 'y':
                     if self.velocity.y > 0:
-                        self.rect.bottom = tile.rect.top
+                        self.rect.bottom = tile.top
                         self.velocity.y = 0
                         self.on_ground = True
                     elif self.velocity.y < 0:
-                        self.rect.top = tile.rect.bottom
+                        self.rect.top = tile.bottom
                         self.velocity.y = 0
-        if direction == 'y' and not any(self.rect.colliderect(tile.rect) for tile in tiles):
+        if direction == 'y' and not any(self.rect.colliderect(tile) for tile in tiles):
             self.on_ground = False
