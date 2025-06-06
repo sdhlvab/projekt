@@ -1,8 +1,8 @@
 import pygame
 import random
-from config import FONT_PATH, COLOR_TERMINAL
 
 PROMPT = "hackerman@debian:~$"
+CURSOR_CHARS = ["_", " "]
 
 class TerminalBackground:
     def __init__(self, width, height, font, command_file, ground_top):
@@ -35,11 +35,11 @@ class TerminalBackground:
         surface.fill((0, 0, 0))
         for i, line in enumerate(self.lines):
             text = f"{PROMPT} {line}"
-            txt = self.font.render(text, False, COLOR_TERMINAL)
+            txt = self.font.render(text, False, (0, 255, 0))
             surface.blit(txt, (10, i * self.line_height))
         # prompt z kursorem na ostatniej linii
-        cursor = "_" if self.cursor_visible else " "
+        cursor = CURSOR_CHARS[0] if self.cursor_visible else CURSOR_CHARS[1]
         prompt_line = f"{PROMPT} {cursor}"
         prompt_y = (self.num_lines - 1) * self.line_height
-        txt = self.font.render(prompt_line, False, COLOR_TERMINAL)
+        txt = self.font.render(prompt_line, False, (0, 255, 0))
         surface.blit(txt, (10, prompt_y))

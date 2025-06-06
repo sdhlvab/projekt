@@ -1,30 +1,39 @@
 import os
-from config import LEVEL_DIR
+import pygame
+from config import TILE_SIZE, LEVEL_DIR
 
 class Level:
     def __init__(self, filename):
         self.tiles = []
-        self.player_start = None
-        self.enemy_starts = []
-        path = os.path.join(LEVEL_DIR, filename)
+        self.ground_rects = []
+        self.enemy_positions = []
+        self._load_map(os.path.join(LEVEL_DIR, filename))
+
+    def _load_map(self, path):
         with open(path) as f:
             for y, line in enumerate(f):
                 row = []
-                for x, ch in enumerate(line.rstrip("\n")):
-                    if ch == "#":
-                        row.append("wall")
-                    else:
-                        row.append(None)
-                    if ch == "P":
-                        self.player_start = (x, y)
-                    if ch == "E":
-                        self.enemy_starts.append((x, y))
+                for x, char in enumerate(line.rstrip('\n')):
+                    row.append(char)
+                    if char == '#':
+                        rect = pygame.Rect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE)
+                        self.ground_rects.append(rect)
+                    elif char == 'E':
+                        self.enemy_positions.append((x * TILE_SIZE, y * TILE_SIZE))
                 self.tiles.append(row)
 
-    def get_ground_rects(self, tile_size):
-        rects = []
+    def get_ground_rects(self):
+        return self.ground_rects
+
+    def get_enemy_positions(self):
+        return self.enemy_positions
+
+    def draw(self, screen, camera_x=0, camera_y=0, tile_images=None):
         for y, row in enumerate(self.tiles):
-            for x, t in enumerate(row):
-                if t == "wall":
-                    rects.append((x * tile_size, y * tile_size, tile_size, tile_size))
-        return rects
+            for x, char in enumerate(row):
+                if char == '#':
+                    if tile_images and 'ground' in tile_images:
+                        screen.blit(tile_images['ground'], (x * TILE_SIZE - camera_x, y * TILE_SIZE - camera_y))
+                elif char == 'E':
+                    # Rysowanie Bugzilli przez Enemy sprite (nie przez level)
+                    pass
