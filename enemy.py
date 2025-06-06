@@ -1,22 +1,18 @@
 import pygame
-from config import ENEMY_IMG, TILE_SIZE
+from config import BUGZILLA_IMG, TILE_SIZE, ENEMY_SPEED
 
 class Enemy(pygame.sprite.Sprite):
-    def __init__(self, pos, ground_rects, speed=2):
+    def __init__(self, x, y):
         super().__init__()
-        img = pygame.image.load(ENEMY_IMG).convert_alpha()
-        self.image = pygame.transform.scale(img, (64, 64))
-        self.rect = self.image.get_rect(topleft=pos)
-        self.ground_rects = ground_rects
-        self.speed = speed
+        self.image = pygame.image.load(BUGZILLA_IMG).convert_alpha()
+        self.image = pygame.transform.scale(self.image, (TILE_SIZE, TILE_SIZE))
+        self.rect = self.image.get_rect(topleft=(x, y))
         self.direction = 1
+        self.speed = ENEMY_SPEED
 
-    def update(self, ground_rects, camera_x):
+    def update(self, tiles):
         self.rect.x += self.direction * self.speed
-        for tile in ground_rects:
-            if self.rect.colliderect(tile):
-                if self.direction == 1:
-                    self.rect.right = tile.left
-                else:
-                    self.rect.left = tile.right
+        for tile in tiles:
+            if self.rect.colliderect(tile.rect):
                 self.direction *= -1
+                break
