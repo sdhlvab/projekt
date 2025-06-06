@@ -1,15 +1,21 @@
-# Game config
-WIDTH = 800
-HEIGHT = 600
+# config.py
+
+# Wymiary okna
+WINDOW_WIDTH = 1024
+WINDOW_HEIGHT = 768
 FPS = 60
-BG_COLOR = (10, 10, 30)
 
-# Player config
-PLAYER_SIZE = 50
-PLAYER_COLOR = (0, 255, 0)
-PLAYER_SPEED = 5
+# Tiles
+TILE_SIZE = 64
 
-# Enemy config
-ENEMY_SIZE = 50
-ENEMY_COLOR = (255, 0, 0)
-ENEMY_SPEED = 2
+# Kolory
+COLOR_BG = (0, 0, 0)
+COLOR_PLATFORM = (50, 50, 50)
+COLOR_TERMINAL = (0, 255, 0)
+
+# Pliki assets
+LEVEL_FILE = "assets/levels/level1.txt"
+FONT_PATH = "assets/fonts/UbuntuMono-R.ttf"
+PLAYER_IMG = "assets/img/hackerman.png"
+ENEMY_IMG = "assets/img/bugzilla.png"
+DISK_IMG = "assets/img/disk.png"

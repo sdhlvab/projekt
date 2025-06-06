@@ -1,45 +1,37 @@
+from config import TILE_SIZE, COLOR_PLATFORM
 import pygame
 
-TILE_SIZE = 48
-
-TILE_TYPES = {
-    "#": "wall",
-    ".": "empty",
-    "H": "player",
-    "B": "enemy"
-}
-
 class Level:
-    def __init__(self, filename):
+    def __init__(self, file_path):
         self.tiles = []
-        self.player_start = None
-        self.enemies = []
-        self.load_from_file(filename)
+        self.ground_rects = []
+        self.player_start = (100, 600)
+        self.enemy_starts = []
+        self.width = 0
+        self.height = 0
+        self._load(file_path)
 
-    def load_from_file(self, filename):
-        with open(filename, encoding='utf-8') as f:
+    def _load(self, file_path):
+        with open(file_path, encoding="utf-8") as f:
             lines = [line.rstrip('\n') for line in f if line.strip()]
-
+        self.height = len(lines)
+        self.width = max(len(line) for line in lines)
         for y, line in enumerate(lines):
-            row = []
             for x, char in enumerate(line):
-                if char == "H":
+                rect = pygame.Rect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE)
+                if char == "#":
+                    self.tiles.append((rect, COLOR_PLATFORM))
+                    self.ground_rects.append(rect)
+                elif char == "P":
                     self.player_start = (x * TILE_SIZE, y * TILE_SIZE)
-                    row.append(".")
-                elif char == "B":
-                    self.enemies.append((x * TILE_SIZE, y * TILE_SIZE))
-                    row.append(".")
-                else:
-                    row.append(char)
-            self.tiles.append(row)
+                elif char == "E":
+                    self.enemy_starts.append((x * TILE_SIZE, y * TILE_SIZE))
 
-    def get_tile(self, x, y):
-        if 0 <= y < len(self.tiles) and 0 <= x < len(self.tiles[0]):
-            return self.tiles[y][x]
-        return None
+    def get_ground_rects(self):
+        return self.ground_rects
 
-    def width(self):
-        return len(self.tiles[0]) * TILE_SIZE
-
-    def height(self):
-        return len(self.tiles) * TILE_SIZE
+    def draw(self, surface, camera_x):
+        for rect, color in self.tiles:
+            r = rect.copy()
+            r.x -= camera_x
+            pygame.draw.rect(surface, color, r)

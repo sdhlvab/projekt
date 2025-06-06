@@ -1,50 +1,22 @@
 import pygame
-import numpy as np
-
-WINDOW_WIDTH = 800
-
-def crop_to_visible_area(image, tolerance=10):
-    arr = pygame.surfarray.array_alpha(image)
-    y_indices, x_indices = np.where(arr > tolerance)
-    if len(x_indices) == 0 or len(y_indices) == 0:
-        return image
-    min_x, max_x = np.min(x_indices), np.max(x_indices)
-    min_y, max_y = np.min(y_indices), np.max(y_indices)
-    rect = pygame.Rect(min_x, min_y, max_x - min_x + 1, max_y - min_y + 1)
-    return image.subsurface(rect).copy()
+from config import ENEMY_IMG, TILE_SIZE
 
 class Enemy(pygame.sprite.Sprite):
-    def __init__(self, x, ground_rect, image_path="assets/img/bugzilla.png", speed=2, target_height=64):
+    def __init__(self, pos, ground_rects, speed=2):
         super().__init__()
-        try:
-            raw = pygame.image.load(image_path).convert_alpha()
-        except Exception as e:
-            print(f"Error loading {image_path}: {e}")
-            raw = pygame.Surface((64, 64), pygame.SRCALPHA)
-            raw.fill((255, 0, 0, 128))
-
-        cropped = crop_to_visible_area(raw)
-        scale = target_height / cropped.get_height()
-        w = int(cropped.get_width() * scale)
-        scaled = pygame.transform.scale(cropped, (w, target_height))
-        self.image = scaled
-        self.rect = self.image.get_rect()
-
-        # KLUCZ: STOPA Bugzilli dokładnie na GÓRZE ziemi!
-        self.rect.midbottom = (x, ground_rect.top)
-
-        self.direction = 1
+        img = pygame.image.load(ENEMY_IMG).convert_alpha()
+        self.image = pygame.transform.scale(img, (64, 64))
+        self.rect = self.image.get_rect(topleft=pos)
+        self.ground_rects = ground_rects
         self.speed = speed
+        self.direction = 1
 
-    def update(self, ground_rects):
+    def update(self, ground_rects, camera_x):
         self.rect.x += self.direction * self.speed
-        if self.rect.left < 0:
-            self.rect.left = 0
-            self.direction = 1
-        if self.rect.right > WINDOW_WIDTH:
-            self.rect.right = WINDOW_WIDTH
-            self.direction = -1
-        # Zawsze trzymaj na górze ziemi!
-        if ground_rects:
-            ground_rect = ground_rects[0]
-            self.rect.bottom = ground_rect.top
+        for tile in ground_rects:
+            if self.rect.colliderect(tile):
+                if self.direction == 1:
+                    self.rect.right = tile.left
+                else:
+                    self.rect.left = tile.right
+                self.direction *= -1

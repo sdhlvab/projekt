@@ -1,20 +1,18 @@
 import pygame
+from config import DISK_IMG
 
-WINDOW_WIDTH = 800
-
-class Projectile(pygame.sprite.Sprite):
-    def __init__(self, x, y, direction, image_path="assets/img/cd.png", speed=10):
+class Disk(pygame.sprite.Sprite):
+    def __init__(self, x, y, direction):
         super().__init__()
-        self.image = pygame.image.load(image_path).convert_alpha()
-        self.image = pygame.transform.scale(self.image, (32, 32))
-        if direction == -1:
-            self.image = pygame.transform.flip(self.image, True, False)
+        img = pygame.image.load(DISK_IMG).convert_alpha()
+        self.image_right = pygame.transform.scale(img, (32, 32))
+        self.image_left = pygame.transform.flip(self.image_right, True, False)
+        self.image = self.image_right if direction == 1 else self.image_left
         self.rect = self.image.get_rect(center=(x, y))
         self.direction = direction
-        self.speed = speed
+        self.speed = 12
 
-    def update(self):
+    def update(self, camera_x):
         self.rect.x += self.speed * self.direction
-        # Usuwanie, jeśli wyjdzie poza ekran
-        if self.rect.right < 0 or self.rect.left > WINDOW_WIDTH:
+        if self.rect.right < 0 or self.rect.left > 2000:
             self.kill()
