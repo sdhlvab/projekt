@@ -8,8 +8,8 @@ FONT_DIR = os.path.join(ASSETS_DIR, "fonts")
 LEVEL_DIR = os.path.join("levels")
 DATA_DIR = os.path.join(ASSETS_DIR, "data")
 
-FLOOR_IMG = os.path.join(IMG_DIR, "floor_tile.png")
-WALL_IMG = os.path.join(IMG_DIR, "wall_tile.png")
+FLOOR_IMG = os.path.join(IMG_DIR, "tile_floor.png")
+WALL_IMG = os.path.join(IMG_DIR, "tile_wall.png")
 PLAYER_IMG = os.path.join(IMG_DIR, "hackerman_brown.png")
 BUGZILLA_IMG = os.path.join(IMG_DIR, "bugzilla.png")
 
