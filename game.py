@@ -10,11 +10,11 @@ class Game:
         self.screen = screen
         self.running = True
 
-        # Wczytaj level
+        # Wczytaj level – wpisz tutaj nazwę pliku poziomu
         self.level = Level("level1.txt")
         self.tile_size = TILE_SIZE
 
-        # Tło terminalowe
+        # Terminal w tle
         self.font = pygame.font.Font("assets/fonts/UbuntuMono-R.ttf", 18)
         self.background = TerminalBackground(
             self.screen.get_width(),
@@ -37,7 +37,7 @@ class Game:
         # Przeciwnicy
         self.enemies = pygame.sprite.Group()
         for (ex, ey) in self.level.enemy_starts:
-            self.enemies.add(Enemy((ex * self.tile_size, ey * self.tile_size)))
+            self.enemies.add(Enemy(ex * self.tile_size, ey * self.tile_size))  # <- poprawione przekazanie x, y
 
     def handle_events(self):
         for event in pygame.event.get():
