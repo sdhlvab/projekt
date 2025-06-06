@@ -13,8 +13,10 @@ class Game:
         self.level = Level("level1.txt")
         self.tile_size = TILE_SIZE
         self.tile_images = {
-            'ground': pygame.image.load(os.path.join("assets", "img", "tile_floor.png")).convert_alpha(),
+            'floor': pygame.image.load(os.path.join("assets", "img", "floor_tile.png")).convert_alpha(),
+            'wall': pygame.image.load(os.path.join("assets", "img", "wall_tile.png")).convert_alpha(),
         }
+
         # Czcionka terminala
         font_path = os.path.join("assets", "fonts", "UbuntuMono-R.ttf")
         self.font = pygame.font.Font(font_path, 18)
@@ -40,9 +42,13 @@ class Game:
         self.camera_y = 0  # Brak pionowego scrolla
 
     def draw(self):
+        # 1. Terminal na CAŁE OKNO
         self.background.draw(self.screen)
+        # 2. Mapa (przezroczyste tiles)
         self.level.draw(self.screen, camera_x=self.camera_x, camera_y=self.camera_y, tile_images=self.tile_images)
+        # 3. Postacie
         for sprite in self.all_sprites:
             self.screen.blit(sprite.image, (sprite.rect.x - self.camera_x, sprite.rect.y - self.camera_y))
         for enemy in self.enemies:
             self.screen.blit(enemy.image, (enemy.rect.x - self.camera_x, enemy.rect.y - self.camera_y))
+

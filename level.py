@@ -31,9 +31,9 @@ class Level:
     def draw(self, screen, camera_x=0, camera_y=0, tile_images=None):
         for y, row in enumerate(self.tiles):
             for x, char in enumerate(row):
+                pos = (x * TILE_SIZE - camera_x, y * TILE_SIZE - camera_y)
                 if char == '#':
-                    if tile_images and 'ground' in tile_images:
-                        screen.blit(tile_images['ground'], (x * TILE_SIZE - camera_x, y * TILE_SIZE - camera_y))
-                elif char == 'E':
-                    # Rysowanie Bugzilli przez Enemy sprite (nie przez level)
-                    pass
+                    screen.blit(tile_images['wall'], pos)
+                elif char == '.':
+                    screen.blit(tile_images['floor'], pos)
+
