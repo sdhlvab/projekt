@@ -1,34 +1,43 @@
 import pygame
-from config import *
+from config import TILE_SIZE, IMG_DIR
 from level import Level
-from camera import Camera
+from background import TerminalBackground
 from player import Player
 from enemy import Enemy
-from background import TerminalBackground
 
 class Game:
-    def __init__(self, screen, player_name="hackerman", music_on=True, sound_on=True):
+    def __init__(self, screen, player_name, music_on=True, sound_on=True):
         self.screen = screen
-        self.player_name = player_name
-        self.music_on = music_on
-        self.sound_on = sound_on
+        self.running = True
 
+        # Wczytaj level
         self.level = Level("level1.txt")
-        self.tiles = self.level.get_tiles()
-        self.enemies = pygame.sprite.Group()
-        for ex, ey in self.level.get_enemies():
-            self.enemies.add(Enemy(ex, ey))
-        self.player = Player(self.level.get_player_start())
+        self.tile_size = TILE_SIZE
 
         # Tło terminalowe
-        self.font = pygame.font.Font(FONT_PATH, 18)
-        self.background = TerminalBackground(WINDOW_WIDTH, WINDOW_HEIGHT, self.font, TERMINAL_COMMANDS, ground_top=WINDOW_HEIGHT)
+        self.font = pygame.font.Font("assets/fonts/UbuntuMono-R.ttf", 18)
+        self.background = TerminalBackground(
+            self.screen.get_width(),
+            self.screen.get_height(),
+            self.font,
+            "assets/data/commands.txt",
+            self.screen.get_height()
+        )
 
-        self.all_sprites = pygame.sprite.Group()
-        self.all_sprites.add(self.player)
-        self.all_sprites.add(self.enemies)
-        self.camera = Camera(self.level.map_width * TILE_SIZE, self.level.map_height * TILE_SIZE)
-        self.running = True
+        # Platformy
+        self.ground_rects = [
+            pygame.Rect(x, y, w, h) for (x, y, w, h) in self.level.get_ground_rects(self.tile_size)
+        ]
+
+        # Gracz
+        px, py = self.level.player_start if self.level.player_start else (1, 1)
+        self.player = Player((px * self.tile_size, py * self.tile_size))
+        self.all_sprites = pygame.sprite.Group(self.player)
+
+        # Przeciwnicy
+        self.enemies = pygame.sprite.Group()
+        for (ex, ey) in self.level.enemy_starts:
+            self.enemies.add(Enemy((ex * self.tile_size, ey * self.tile_size)))
 
     def handle_events(self):
         for event in pygame.event.get():
@@ -37,14 +46,15 @@ class Game:
 
     def update(self):
         self.background.update()
-        self.all_sprites.update(self.tiles)
-        self.enemies.update(self.tiles)
-        self.camera.update(self.player)
+        self.all_sprites.update(self.ground_rects)
+        self.enemies.update(self.ground_rects)
 
     def draw(self):
         self.background.draw(self.screen)
-        for tile in self.tiles:
-            self.screen.blit(tile.image, self.camera.apply(tile))
-        for enemy in self.enemies:
-            self.screen.blit(enemy.image, self.camera.apply(enemy))
-        self.screen.blit(self.player.image, self.camera.apply(self.player))
+        # Rysuj platformy (ściany)
+        for rect in self.ground_rects:
+            wall_img = pygame.image.load(f"{IMG_DIR}/wall_tile.png").convert_alpha()
+            self.screen.blit(wall_img, rect)
+        # Sprite’y
+        self.all_sprites.draw(self.screen)
+        self.enemies.draw(self.screen)
