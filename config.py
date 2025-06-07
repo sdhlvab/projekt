@@ -3,7 +3,7 @@ ASSETS_DIR = "assets/"
 IMG_DIR = ASSETS_DIR + "img/"
 FLOOR_TILE = IMG_DIR + "floor_tile.png"
 WALL_TILE = IMG_DIR + "wall_tile.png"
-PLAYER_IMAGE = IMG_DIR + "hackerman_brown_small.png"
+PLAYER_IMAGE = IMG_DIR + "hackerman_brown.png"
 ENEMY_IMAGE = IMG_DIR + "bugzilla.png"
 # ... tu inne grafiki, jeśli będą
 

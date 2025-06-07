@@ -21,7 +21,7 @@ class Projectile(pygame.sprite.Sprite):
             self.kill()
         # Kolizja z przeciwnikami
         for enemy in enemies:
-            if self.rect.colliderect(enemy.rect):
+            if hasattr(enemy, "rect") and self.rect.colliderect(enemy.rect):
                 enemy.kill()
                 self.kill()
         # Kolizja ze ścianą

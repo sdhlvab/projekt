@@ -5,7 +5,9 @@ class Player(pygame.sprite.Sprite):
     def __init__(self, pos):
         super().__init__()
         self.base_image = pygame.image.load(PLAYER_IMAGE).convert_alpha()
-        self.image = self.base_image
+        #self.image = self.base_image
+        self.image = pygame.transform.scale(self.base_image, (TILE_SIZE, TILE_SIZE))  # <-- KLUCZ!
+
         self.rect = self.image.get_rect()
         self.rect.topleft = pos
         self.speed = 4
