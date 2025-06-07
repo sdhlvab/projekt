@@ -5,12 +5,13 @@ PROMPT = "hackerman@debian:~$"
 CURSOR_CHARS = ["_", " "]
 
 class TerminalBackground:
-    def __init__(self, width, height, font, command_file, terminal_height):
+    def __init__(self, width, height, font, command_file, terminal_height, player_name="aaa"):
         self.width = width
         self.height = height
         self.font = font
         self.line_height = font.get_linesize()
         self.terminal_height = terminal_height
+        self.player_name = player_name
         self.num_lines = (self.terminal_height - 10) // self.line_height
         self.commands = self.load_commands(command_file)
         self.lines = [self._get_random_line() for _ in range(self.num_lines - 1)]

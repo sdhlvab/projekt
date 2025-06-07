@@ -6,6 +6,7 @@ from projectile import Projectile
 from level import Level
 from camera import Camera
 from background import TerminalBackground
+import os
 
 class Game:
     def __init__(self, screen, player_name="hackerman", music_on=True, sound_on=True):
@@ -13,6 +14,10 @@ class Game:
         self.clock = pygame.time.Clock()
         self.running = True
         self.player_name = player_name
+
+        font_path = os.path.join("assets", "fonts", "UbuntuMono-R.ttf")
+        font = pygame.font.Font(font_path, 18)
+        command_file = "assets/data/commands.txt"
 
         # Level i kafelki
         self.level = Level(LEVEL_FILE)
@@ -33,7 +38,7 @@ class Game:
         self.camera = Camera(self.level.pixel_width, self.level.pixel_height, SCREEN_WIDTH, SCREEN_HEIGHT)
 
         # Terminal w tle (wywołanie bez przesunięcia)
-        self.terminal_bg = TerminalBackground(SCREEN_WIDTH, SCREEN_HEIGHT, player_name=player_name)
+        self.terminal_bg = TerminalBackground(SCREEN_WIDTH, SCREEN_HEIGHT, font, command_file, SCREEN_HEIGHT , player_name)
 
     def run(self):
         while self.running:
