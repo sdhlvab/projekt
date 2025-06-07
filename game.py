@@ -36,9 +36,6 @@ class Game:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 exit()
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_SPACE:
-                    self.player.attack()
 
     def update(self):
         self.all_sprites.update(self.ground_rects)
@@ -48,6 +45,7 @@ class Game:
 
     def _update_camera(self):
         px, py = self.player.rect.center
+        # Zawsze w środku ekranu, chyba że na końcach mapy
         self.camera_x = max(0, min(px - SCREEN_WIDTH // 2, self.level.pixel_width - SCREEN_WIDTH))
         self.camera_y = max(0, min(py - SCREEN_HEIGHT // 2, self.level.pixel_height - SCREEN_HEIGHT))
 
