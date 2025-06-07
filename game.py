@@ -1,54 +1,56 @@
 import pygame
-from config import TILE_SIZE, WINDOW_WIDTH, WINDOW_HEIGHT
-from level import Level
+from config import *
 from player import Player
 from enemy import Enemy
+from level import Level
 from background import TerminalBackground
 
 class Game:
     def __init__(self, screen, player_name="hackerman", music_on=True, sound_on=True):
         self.screen = screen
-        self.player_name = player_name
-        self.music_on = music_on
-        self.sound_on = sound_on
 
-        self.level = Level("level1.txt")
+        self.terminal_font = pygame.font.Font(FONT_PATH, TERMINAL_FONT_SIZE)
+        self.terminal_background = TerminalBackground(
+            SCREEN_WIDTH, SCREEN_HEIGHT, self.terminal_font, DATA_COMMANDS_PATH, TERMINAL_HEIGHT
+        )
+
+        self.level = Level(LEVEL_PATH)
         self.ground_rects = self.level.get_ground_rects()
-        self.terminal_bg = TerminalBackground(WINDOW_WIDTH, WINDOW_HEIGHT // 3)  # górna część terminala
-        self.camera_offset = 0
-
-        # Start Hackermana na najniższej podłodze przy lewej ścianie!
-        spawn_x, spawn_y = self.level.get_player_spawn()
-        self.player = Player((spawn_x, spawn_y))
 
         self.all_sprites = pygame.sprite.Group()
+        self.enemies = pygame.sprite.Group()
+
+        spawn_x, spawn_y = self.level.player_spawn
+        self.player = Player((spawn_x, spawn_y))
         self.all_sprites.add(self.player)
 
-        self.enemies = pygame.sprite.Group()
-        for ex, ey in self.level.get_enemy_spawns():
-            self.enemies.add(Enemy(ex * TILE_SIZE, ey * TILE_SIZE + TILE_SIZE - 64))  # Dodajemy żeby stała na podłodze
+        for ex, ey in self.level.enemy_spawns:
+            enemy = Enemy(ex, ey)
+            self.enemies.add(enemy)
+
+        self.camera_x = 0
+        self.camera_y = 0
 
     def handle_events(self):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                return False
-        return True
+                exit()
 
     def update(self):
         self.all_sprites.update(self.ground_rects)
         self.enemies.update(self.ground_rects)
-        # Kamera podąża za graczem
-        self.camera_offset = max(0, self.player.rect.centerx - WINDOW_WIDTH // 2)
+        self._update_camera()
+
+    def _update_camera(self):
+        px, py = self.player.rect.center
+        self.camera_x = max(0, min(px - SCREEN_WIDTH // 2, self.level.pixel_width - SCREEN_WIDTH))
+        self.camera_y = max(0, min(py - SCREEN_HEIGHT // 2, self.level.pixel_height - SCREEN_HEIGHT))
 
     def draw(self):
-        # 1. Terminal w tle
-        self.terminal_bg.draw(self.screen, offset_x=self.camera_offset)
-
-        # 2. Rysuj mapę z przesunięciem kamery
-        self.level.draw(self.screen, offset_x=self.camera_offset)
-
-        # 3. Sprity
+        self.screen.fill((0, 0, 0))
+        self.terminal_background.draw(self.screen, self.camera_x, self.camera_y)
+        self.level.draw(self.screen, self.camera_x, self.camera_y)
         for sprite in self.all_sprites:
-            self.screen.blit(sprite.image, (sprite.rect.x - self.camera_offset, sprite.rect.y))
+            self.screen.blit(sprite.image, (sprite.rect.x - self.camera_x, sprite.rect.y - self.camera_y))
         for enemy in self.enemies:
-            self.screen.blit(enemy.image, (enemy.rect.x - self.camera_offset, enemy.rect.y))
+            self.screen.blit(enemy.image, (enemy.rect.x - self.camera_x, enemy.rect.y - self.camera_y))

@@ -1,52 +1,57 @@
-import os
-from config import TILE_SIZE, LEVEL_DIR, FLOOR_IMG, WALL_IMG
 import pygame
+from config import *
+import os
 
 class Level:
-    def __init__(self, filename):
+    def __init__(self, path):
         self.tiles = []
-        self.player_spawn = None
+        self.ground_rects = []
         self.enemy_spawns = []
-        with open(os.path.join(LEVEL_DIR, filename)) as f:
-            for y, line in enumerate(f):
-                row = []
-                for x, char in enumerate(line.strip()):
-                    if char == "#":
-                        row.append("wall")
-                    elif char == ".":
-                        row.append("floor")
-                    elif char == "P":
-                        row.append("floor")
-                        self.player_spawn = (x * TILE_SIZE, y * TILE_SIZE)
-                    elif char == "E":
-                        row.append("floor")
-                        self.enemy_spawns.append((x, y))
-                    else:
-                        row.append("empty")
-                self.tiles.append(row)
+        self.player_spawn = (TILE_SIZE, TILE_SIZE * 4)  # domyślnie lewy dolny róg
+        self.pixel_width = 0
+        self.pixel_height = 0
+        self._load_map(path)
+
+    def _load_map(self, path):
+        with open(path, "r", encoding="utf-8") as f:
+            lines = [line.rstrip("\n") for line in f.readlines()]
+        self.tiles = []
+        self.enemy_spawns = []
+        for y, line in enumerate(lines):
+            row = []
+            for x, char in enumerate(line):
+                if char == "#":
+                    row.append("wall")
+                elif char == ".":
+                    row.append("floor")
+                elif char == "P":
+                    self.player_spawn = (x * TILE_SIZE, y * TILE_SIZE)
+                    row.append("floor")
+                elif char == "E":
+                    self.enemy_spawns.append((x * TILE_SIZE, y * TILE_SIZE))
+                    row.append("floor")
+                else:
+                    row.append(None)
+            self.tiles.append(row)
+        self.pixel_width = len(self.tiles[0]) * TILE_SIZE
+        self.pixel_height = len(self.tiles) * TILE_SIZE
+
+    def draw(self, surface, camera_x, camera_y):
+        wall_img = pygame.image.load(os.path.join(IMG_DIR, "wall_tile.png")).convert_alpha()
+        floor_img = pygame.image.load(os.path.join(IMG_DIR, "floor_tile.png")).convert_alpha()
+        for y, row in enumerate(self.tiles):
+            for x, tile in enumerate(row):
+                px = x * TILE_SIZE - camera_x
+                py = y * TILE_SIZE - camera_y
+                if tile == "wall":
+                    surface.blit(wall_img, (px, py))
+                elif tile == "floor":
+                    surface.blit(floor_img, (px, py))
 
     def get_ground_rects(self):
-        rects = []
+        ground = []
         for y, row in enumerate(self.tiles):
             for x, tile in enumerate(row):
-                if tile == "floor" or tile == "wall":
-                    rects.append(pygame.Rect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE))
-        return rects
-
-    def get_player_spawn(self):
-        return self.player_spawn if self.player_spawn else (TILE_SIZE, TILE_SIZE)
-
-    def get_enemy_spawns(self):
-        return self.enemy_spawns
-
-    def draw(self, surface, offset_x=0):
-        for y, row in enumerate(self.tiles):
-            for x, tile in enumerate(row):
-                draw_x = x * TILE_SIZE - offset_x
-                draw_y = y * TILE_SIZE
-                if tile == "wall":
-                    img = pygame.image.load(WALL_IMG).convert_alpha()
-                    surface.blit(img, (draw_x, draw_y))
-                elif tile == "floor":
-                    img = pygame.image.load(FLOOR_IMG).convert_alpha()
-                    surface.blit(img, (draw_x, draw_y))
+                if tile == "wall" or tile == "floor":
+                    ground.append(pygame.Rect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE))
+        return ground
