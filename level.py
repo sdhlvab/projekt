@@ -1,52 +1,52 @@
-# level.py
-
 import os
-from config import LEVEL_DIR, TILE_SIZE
+from config import TILE_SIZE, LEVEL_DIR, FLOOR_IMG, WALL_IMG
+import pygame
 
 class Level:
     def __init__(self, filename):
         self.tiles = []
-        self.width = 0
-        self.height = 0
-        self._load_map(os.path.join(LEVEL_DIR, filename))
-
-    def _load_map(self, path):
-        with open(path, "r", encoding="utf-8") as f:
-            for line in f:
-                row = list(line.rstrip('\n'))
-                if len(row) > self.width:
-                    self.width = len(row)
+        self.player_spawn = None
+        self.enemy_spawns = []
+        with open(os.path.join(LEVEL_DIR, filename)) as f:
+            for y, line in enumerate(f):
+                row = []
+                for x, char in enumerate(line.strip()):
+                    if char == "#":
+                        row.append("wall")
+                    elif char == ".":
+                        row.append("floor")
+                    elif char == "P":
+                        row.append("floor")
+                        self.player_spawn = (x * TILE_SIZE, y * TILE_SIZE)
+                    elif char == "E":
+                        row.append("floor")
+                        self.enemy_spawns.append((x, y))
+                    else:
+                        row.append("empty")
                 self.tiles.append(row)
-        self.height = len(self.tiles)
-        # Uzupełnij do równej szerokości (przezroczyste "powietrze")
-        for row in self.tiles:
-            while len(row) < self.width:
-                row.append(' ')
 
     def get_ground_rects(self):
-        """Zwraca listę pygame.Rect dla każdego kafla ziemi (floor lub wall)."""
-        import pygame
         rects = []
         for y, row in enumerate(self.tiles):
-            for x, char in enumerate(row):
-                if char in "#.":  # Wall lub Floor
+            for x, tile in enumerate(row):
+                if tile == "floor" or tile == "wall":
                     rects.append(pygame.Rect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE))
         return rects
 
-    def find_floor_y(self, x, y_start):
-        """Zwraca y, na którym znajduje się najniższy kafel podanego x (dla spawnu przeciwnika)."""
-        for y in range(y_start, self.height):
-            if self.tiles[y][x] in "#.":
-                return y
-        return self.height - 1
+    def get_player_spawn(self):
+        return self.player_spawn if self.player_spawn else (TILE_SIZE, TILE_SIZE)
 
-    def draw(self, screen, camera_x=0, camera_y=0, tile_images=None):
-        # Rysuj tylko kafelki, nie tło!
+    def get_enemy_spawns(self):
+        return self.enemy_spawns
+
+    def draw(self, surface, offset_x=0):
         for y, row in enumerate(self.tiles):
-            for x, char in enumerate(row):
-                pos = (x * TILE_SIZE - camera_x, y * TILE_SIZE - camera_y)
-                if char == '#':
-                    screen.blit(tile_images['wall'], pos)
-                elif char == '.':
-                    screen.blit(tile_images['floor'], pos)
-        # UWAGA: brak rysowania tła! (terminal pod spodem)
+            for x, tile in enumerate(row):
+                draw_x = x * TILE_SIZE - offset_x
+                draw_y = y * TILE_SIZE
+                if tile == "wall":
+                    img = pygame.image.load(WALL_IMG).convert_alpha()
+                    surface.blit(img, (draw_x, draw_y))
+                elif tile == "floor":
+                    img = pygame.image.load(FLOOR_IMG).convert_alpha()
+                    surface.blit(img, (draw_x, draw_y))
