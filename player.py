@@ -1,29 +1,31 @@
+# player.py
+
 import pygame
-from config import PLAYER_IMG, PLAYER_SPEED, PLAYER_JUMP, GRAVITY, TILE_SIZE, WINDOW_WIDTH, WINDOW_HEIGHT
+from config import TILE_SIZE, PLAYER_IMG, WINDOW_WIDTH, WINDOW_HEIGHT
 
 class Player(pygame.sprite.Sprite):
     def __init__(self, pos):
         super().__init__()
-        self.image = pygame.image.load(PLAYER_IMG).convert_alpha()
-        self.image = pygame.transform.scale(self.image, (TILE_SIZE, TILE_SIZE))
+        raw = pygame.image.load(PLAYER_IMG).convert_alpha()
+        self.image = pygame.transform.scale(raw, (TILE_SIZE, TILE_SIZE))
         self.rect = self.image.get_rect(topleft=pos)
+        self.speed = 5
         self.velocity = pygame.math.Vector2(0, 0)
-        self.speed = PLAYER_SPEED
-        self.jump_strength = PLAYER_JUMP
-        self.gravity = GRAVITY
+        self.jump_strength = -12
+        self.gravity = 0.5
         self.on_ground = False
-        self.facing_right = True
+        self.attack_cooldown = 0
 
     def handle_input(self, keys):
         self.velocity.x = 0
         if keys[pygame.K_LEFT]:
             self.velocity.x = -self.speed
-            self.facing_right = False
         if keys[pygame.K_RIGHT]:
             self.velocity.x = self.speed
-            self.facing_right = True
         if keys[pygame.K_UP] and self.on_ground:
             self.velocity.y = self.jump_strength
+        if keys[pygame.K_SPACE] and self.attack_cooldown <= 0:
+            self.attack_cooldown = 20
 
     def apply_gravity(self):
         self.velocity.y += self.gravity
@@ -35,17 +37,18 @@ class Player(pygame.sprite.Sprite):
         self.apply_gravity()
         self.rect.x += self.velocity.x
         self.collide(tiles, 'x')
+        if self.rect.left < 0:
+            self.rect.left = 0
+        if self.rect.right > WINDOW_WIDTH:
+            self.rect.right = WINDOW_WIDTH
         self.rect.y += self.velocity.y
         self.collide(tiles, 'y')
-        if not self.facing_right:
-            self.image = pygame.transform.flip(pygame.image.load(PLAYER_IMG).convert_alpha(), True, False)
-            self.image = pygame.transform.scale(self.image, (TILE_SIZE, TILE_SIZE))
-        else:
-            self.image = pygame.transform.scale(pygame.image.load(PLAYER_IMG).convert_alpha(), (TILE_SIZE, TILE_SIZE))
+        if self.attack_cooldown > 0:
+            self.attack_cooldown -= 1
 
     def collide(self, tiles, direction):
         for tile in tiles:
-            if self.rect.colliderect(tile):
+            if self.rect.colliderect(tile):  # UWAGA: tile to pygame.Rect!
                 if direction == 'x':
                     if self.velocity.x > 0:
                         self.rect.right = tile.left

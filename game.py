@@ -1,54 +1,66 @@
+# game.py
+
 import pygame
-import os
-from config import WINDOW_WIDTH, WINDOW_HEIGHT, TILE_SIZE, LEVEL_DIR, FPS
+from config import (TILE_SIZE, WINDOW_WIDTH, WINDOW_HEIGHT, FLOOR_IMG, WALL_IMG)
 from level import Level
 from player import Player
 from enemy import Enemy
-from background import TerminalBackground
+from background import TerminalBackground  # Zakładam, że masz taki moduł!
 
 class Game:
-    def __init__(self, screen, player_name="hackerman", music_on=True, sound_on=True):
+    def __init__(self, screen, player_name="", music_on=True, sound_on=True):
         self.screen = screen
-        self.clock = pygame.time.Clock()
+        self.player_name = player_name
+        self.music_on = music_on
+        self.sound_on = sound_on
+
+        # Tło terminala
+        font_path = "assets/fonts/UbuntuMono-R.ttf"
+        font = pygame.font.Font(font_path, 18)
+        self.background = TerminalBackground(WINDOW_WIDTH, WINDOW_HEIGHT, font, "assets/data/commands.txt", ground_top=WINDOW_HEIGHT)
+
+        # Poziom
         self.level = Level("level1.txt")
-        self.tile_size = TILE_SIZE
+        self.ground_rects = self.level.get_ground_rects()
+
+        # Kafelki do podania do draw
         self.tile_images = {
-            'floor': pygame.image.load(os.path.join("assets", "img", "floor_tile.png")).convert_alpha(),
-            'wall': pygame.image.load(os.path.join("assets", "img", "wall_tile.png")).convert_alpha(),
+            'floor': pygame.image.load(FLOOR_IMG).convert_alpha(),
+            'wall': pygame.image.load(WALL_IMG).convert_alpha(),
         }
 
-        # Czcionka terminala
-        font_path = os.path.join("assets", "fonts", "UbuntuMono-R.ttf")
-        self.font = pygame.font.Font(font_path, 18)
-        self.background = TerminalBackground(WINDOW_WIDTH, WINDOW_HEIGHT, self.font, "assets/data/commands.txt", ground_top=WINDOW_HEIGHT - TILE_SIZE*1)
+        # Gracz
+        self.player = Player((TILE_SIZE, TILE_SIZE * (self.level.height - 2)))
+        self.all_sprites = pygame.sprite.Group()
+        self.all_sprites.add(self.player)
 
+        # Przeciwnicy (ustaw na podłodze w levelu)
+        self.enemies = pygame.sprite.Group()
+        for y, row in enumerate(self.level.tiles):
+            for x, char in enumerate(row):
+                if char == 'B':  # 'B' to Bugzilla w pliku txt
+                    world_x, world_y = x * TILE_SIZE, y * TILE_SIZE
+                    self.enemies.add(Enemy(world_x, world_y))
+
+        # Kamera
         self.camera_x = 0
         self.camera_y = 0
 
-        self.ground_rects = self.level.get_ground_rects()
-        self.player = Player((100, 400))
-        self.all_sprites = pygame.sprite.Group(self.player)
-
-        self.enemies = pygame.sprite.Group()
-        for (ex, ey) in self.level.get_enemy_positions():
-            self.enemies.add(Enemy(ex, ey))
+    def handle_events(self):
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                self.running = False
 
     def update(self):
-        self.background.update()
         self.all_sprites.update(self.ground_rects)
         self.enemies.update(self.ground_rects)
-        # Kamera podąża za graczem (X)
-        self.camera_x = max(0, self.player.rect.centerx - WINDOW_WIDTH // 2)
-        self.camera_y = 0  # Brak pionowego scrolla
+        # Kamera śledzi gracza
+        player_center_x = self.player.rect.centerx
+        self.camera_x = max(0, player_center_x - WINDOW_WIDTH // 2)
+        self.camera_y = 0  # Jeśli chcesz, dodaj pionową kamerę
 
     def draw(self):
-        # 1. Terminal na CAŁE OKNO
         self.background.draw(self.screen)
-        # 2. Mapa (przezroczyste tiles)
         self.level.draw(self.screen, camera_x=self.camera_x, camera_y=self.camera_y, tile_images=self.tile_images)
-        # 3. Postacie
-        for sprite in self.all_sprites:
-            self.screen.blit(sprite.image, (sprite.rect.x - self.camera_x, sprite.rect.y - self.camera_y))
-        for enemy in self.enemies:
-            self.screen.blit(enemy.image, (enemy.rect.x - self.camera_x, enemy.rect.y - self.camera_y))
-
+        self.enemies.draw(self.screen)
+        self.all_sprites.draw(self.screen)
