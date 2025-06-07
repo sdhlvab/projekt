@@ -64,5 +64,7 @@ class Player(pygame.sprite.Sprite):
 
     def shoot(self, group):
         from projectile import Projectile
-        proj = Projectile(self.rect.center, right=self.facing_right)
+        x, y = self.rect.center
+        direction = 1 if self.facing_right else -1
+        proj = Projectile(x, y, direction=direction)
         group.add(proj)
