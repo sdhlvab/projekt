@@ -1,21 +1,20 @@
-# camera.py
-from config import WINDOW_WIDTH, WINDOW_HEIGHT
-import pygame
-
 class Camera:
-    def __init__(self, width, height):
-        self.camera = pygame.Rect(0, 0, width, height)
-        self.width = width
-        self.height = height
+    def __init__(self, level_width, level_height, screen_width, screen_height):
+        self.level_width = level_width
+        self.level_height = level_height
+        self.screen_width = screen_width
+        self.screen_height = screen_height
+        self.x = 0
+        self.y = 0
 
-    def apply(self, target):
-        return target.rect.move(-self.camera.x, -self.camera.y)
+    def apply(self, rect):
+        """Przekształca rect z przestrzeni świata do przestrzeni ekranu"""
+        return rect.move(-self.x, -self.y)
 
-    def update(self, target):
-        x = target.rect.centerx - WINDOW_WIDTH // 2
-        y = target.rect.centery - WINDOW_HEIGHT // 2
-
-        x = max(0, min(x, self.width - WINDOW_WIDTH))
-        y = max(0, min(y, self.height - WINDOW_HEIGHT))
-
-        self.camera = pygame.Rect(x, y, self.width, self.height)
+    def update(self, target_rect):
+        # Środek ekranu na graczu
+        self.x = target_rect.centerx - self.screen_width // 2
+        self.y = target_rect.centery - self.screen_height // 2
+        # Ograniczenia, by kamera nie wychodziła poza level
+        self.x = max(0, min(self.x, self.level_width - self.screen_width))
+        self.y = max(0, min(self.y, self.level_height - self.screen_height))

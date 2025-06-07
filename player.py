@@ -1,56 +1,43 @@
 import pygame
-from config import *
-import os
+from config import TILE_SIZE, PLAYER_IMAGE
 
 class Player(pygame.sprite.Sprite):
-    def __init__(self, pos, projectile_group):
+    def __init__(self, pos):
         super().__init__()
-        self.raw_image = pygame.image.load(os.path.join(IMG_DIR, "hackerman_brown.png")).convert_alpha()
-        self.image = pygame.transform.scale(self.raw_image, (TILE_SIZE, TILE_SIZE))
+        self.base_image = pygame.image.load(PLAYER_IMAGE).convert_alpha()
+        self.image = self.base_image
         self.rect = self.image.get_rect()
         self.rect.topleft = pos
-        self.speed = 5
+        self.speed = 4
+        self.jump_strength = -12
         self.velocity = pygame.math.Vector2(0, 0)
-        self.jump_strength = -13
-        self.gravity = 0.6
+        self.gravity = 0.7
         self.on_ground = False
-        self.projectile_group = projectile_group
-        self.last_direction = 1  # 1: prawo, -1: lewo
-        self.attacking = False
+        self.facing_right = True
 
-    def handle_input(self, keys):
+    def handle_input(self):
+        keys = pygame.key.get_pressed()
         self.velocity.x = 0
         if keys[pygame.K_LEFT]:
             self.velocity.x = -self.speed
-            self.last_direction = -1
-            self.image = pygame.transform.flip(
-                pygame.transform.scale(self.raw_image, (TILE_SIZE, TILE_SIZE)), True, False
-            )
+            if self.facing_right:
+                self.facing_right = False
+                self.image = pygame.transform.flip(self.base_image, True, False)
         if keys[pygame.K_RIGHT]:
             self.velocity.x = self.speed
-            self.last_direction = 1
-            self.image = pygame.transform.scale(self.raw_image, (TILE_SIZE, TILE_SIZE))
+            if not self.facing_right:
+                self.facing_right = True
+                self.image = self.base_image
         if keys[pygame.K_UP] and self.on_ground:
             self.velocity.y = self.jump_strength
-        if keys[pygame.K_SPACE] and not self.attacking:
-            self.attack()
-            self.attacking = True
-        if not keys[pygame.K_SPACE]:
-            self.attacking = False
-
-    def attack(self):
-        from projectile import Projectile
-        proj = Projectile(self.rect.centerx, self.rect.centery, self.last_direction)
-        self.projectile_group.add(proj)
 
     def apply_gravity(self):
         self.velocity.y += self.gravity
-        if self.velocity.y > 15:
-            self.velocity.y = 15
+        if self.velocity.y > 12:
+            self.velocity.y = 12
 
     def update(self, tiles):
-        keys = pygame.key.get_pressed()
-        self.handle_input(keys)
+        self.handle_input()
         self.apply_gravity()
         self.rect.x += self.velocity.x
         self.collide(tiles, 'x')
@@ -58,10 +45,9 @@ class Player(pygame.sprite.Sprite):
         self.collide(tiles, 'y')
 
     def collide(self, tiles, direction):
-        collided = False
+        self.on_ground = False
         for tile in tiles:
             if self.rect.colliderect(tile):
-                collided = True
                 if direction == 'x':
                     if self.velocity.x > 0:
                         self.rect.right = tile.left
@@ -75,5 +61,8 @@ class Player(pygame.sprite.Sprite):
                     elif self.velocity.y < 0:
                         self.rect.top = tile.bottom
                         self.velocity.y = 0
-        if direction == 'y' and not collided:
-            self.on_ground = False
+
+    def shoot(self, group):
+        from projectile import Projectile
+        proj = Projectile(self.rect.center, right=self.facing_right)
+        group.add(proj)

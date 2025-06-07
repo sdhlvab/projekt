@@ -1,18 +1,21 @@
-import os
+# Ścieżki do assetów (dostosuj jeśli masz inny układ katalogów)
+ASSETS_DIR = "assets/"
+IMG_DIR = ASSETS_DIR + "img/"
+FLOOR_TILE = IMG_DIR + "floor_tile.png"
+WALL_TILE = IMG_DIR + "wall_tile.png"
+PLAYER_IMAGE = IMG_DIR + "hackerman_brown_small.png"
+ENEMY_IMAGE = IMG_DIR + "bugzilla.png"
+# ... tu inne grafiki, jeśli będą
 
-# Ścieżki
-ASSETS_DIR = "assets"
-IMG_DIR = os.path.join(ASSETS_DIR, "img")
-FONT_PATH = os.path.join(ASSETS_DIR, "fonts", "UbuntuMono-R.ttf")
-DATA_COMMANDS_PATH = os.path.join(ASSETS_DIR, "data", "commands.txt")
-LEVEL_PATH = os.path.join("levels", "level1.txt")
+# Plik levela
+LEVEL_FILE = "levels/level1.txt"
 
-# Rozmiary i kolory
-SCREEN_WIDTH = 1024
-SCREEN_HEIGHT = 768
-FPS = 60
+# Podstawowe ustawienia
 TILE_SIZE = 64
+SCREEN_WIDTH = 1280
+SCREEN_HEIGHT = 800
+FPS = 60
 
-# Terminal
-TERMINAL_FONT_SIZE = 20
-TERMINAL_HEIGHT = 192  # ile px wysokości na terminal (3 rzędy kafelków)
+# Opcjonalnie: inne configi, np. czcionka
+FONT_PATH = ASSETS_DIR + "fonts/UbuntuMono-R.ttf"
+FONT_SIZE = 20
