@@ -7,7 +7,7 @@ class Level:
         self.tiles = []
         self.ground_rects = []
         self.enemy_spawns = []
-        self.player_spawn = (TILE_SIZE, TILE_SIZE * 4)  # domyślnie lewy dolny róg
+        self.player_spawn = (TILE_SIZE, TILE_SIZE * 4)
         self.pixel_width = 0
         self.pixel_height = 0
         self._load_map(path)
@@ -26,10 +26,10 @@ class Level:
                     row.append("floor")
                 elif char == "P":
                     self.player_spawn = (x * TILE_SIZE, y * TILE_SIZE)
-                    row.append("floor")
+                    row.append(None)  # brak kafla pod graczem!
                 elif char == "E":
                     self.enemy_spawns.append((x * TILE_SIZE, y * TILE_SIZE))
-                    row.append("floor")
+                    row.append(None)  # brak kafla pod przeciwnikiem!
                 else:
                     row.append(None)
             self.tiles.append(row)

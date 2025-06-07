@@ -1,18 +1,30 @@
 import pygame
-from config import DISK_IMG
+from config import *
+import os
 
-class Disk(pygame.sprite.Sprite):
+class Projectile(pygame.sprite.Sprite):
     def __init__(self, x, y, direction):
         super().__init__()
-        img = pygame.image.load(DISK_IMG).convert_alpha()
-        self.image_right = pygame.transform.scale(img, (32, 32))
-        self.image_left = pygame.transform.flip(self.image_right, True, False)
-        self.image = self.image_right if direction == 1 else self.image_left
+        img_path = os.path.join(IMG_DIR, "cd.png")
+        raw = pygame.image.load(img_path).convert_alpha()
+        self.image = pygame.transform.scale(raw, (32, 32))
+        if direction == -1:
+            self.image = pygame.transform.flip(self.image, True, False)
         self.rect = self.image.get_rect(center=(x, y))
         self.direction = direction
         self.speed = 12
 
-    def update(self, camera_x):
-        self.rect.x += self.speed * self.direction
-        if self.rect.right < 0 or self.rect.left > 2000:
+    def update(self, enemies, tiles):
+        self.rect.x += self.direction * self.speed
+        # Zniszcz pocisk jeśli poza ekranem/mapą
+        if self.rect.right < 0 or self.rect.left > SCREEN_WIDTH * 2:
             self.kill()
+        # Kolizja z przeciwnikami
+        for enemy in enemies:
+            if self.rect.colliderect(enemy.rect):
+                enemy.kill()
+                self.kill()
+        # Kolizja ze ścianą
+        for tile in tiles:
+            if self.rect.colliderect(tile):
+                self.kill()

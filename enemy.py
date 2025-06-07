@@ -14,16 +14,19 @@ class Enemy(pygame.sprite.Sprite):
         self.speed = 2
 
     def update(self, tiles):
+        # Proste poruszanie się po platformie w poziomie
         self.rect.x += self.direction * self.speed
+        collided = False
         for tile in tiles:
             if self.rect.colliderect(tile):
+                collided = True
                 if self.direction > 0:
                     self.rect.right = tile.left
                 else:
                     self.rect.left = tile.right
                 self.direction *= -1
         # Grawitacja
-        self.rect.y += 4
+        self.rect.y += 8
         for tile in tiles:
             if self.rect.colliderect(tile):
                 self.rect.bottom = tile.top

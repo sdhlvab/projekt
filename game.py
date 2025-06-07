@@ -18,10 +18,11 @@ class Game:
         self.ground_rects = self.level.get_ground_rects()
 
         self.all_sprites = pygame.sprite.Group()
+        self.projectiles = pygame.sprite.Group()
         self.enemies = pygame.sprite.Group()
 
         spawn_x, spawn_y = self.level.player_spawn
-        self.player = Player((spawn_x, spawn_y))
+        self.player = Player((spawn_x, spawn_y), self.projectiles)
         self.all_sprites.add(self.player)
 
         for ex, ey in self.level.enemy_spawns:
@@ -35,9 +36,13 @@ class Game:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 exit()
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_SPACE:
+                    self.player.attack()
 
     def update(self):
         self.all_sprites.update(self.ground_rects)
+        self.projectiles.update(self.enemies, self.ground_rects)
         self.enemies.update(self.ground_rects)
         self._update_camera()
 
@@ -52,5 +57,7 @@ class Game:
         self.level.draw(self.screen, self.camera_x, self.camera_y)
         for sprite in self.all_sprites:
             self.screen.blit(sprite.image, (sprite.rect.x - self.camera_x, sprite.rect.y - self.camera_y))
+        for proj in self.projectiles:
+            self.screen.blit(proj.image, (proj.rect.x - self.camera_x, proj.rect.y - self.camera_y))
         for enemy in self.enemies:
             self.screen.blit(enemy.image, (enemy.rect.x - self.camera_x, enemy.rect.y - self.camera_y))

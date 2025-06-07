@@ -3,7 +3,7 @@ from config import *
 import os
 
 class Player(pygame.sprite.Sprite):
-    def __init__(self, pos):
+    def __init__(self, pos, projectile_group):
         super().__init__()
         img_path = os.path.join(IMG_DIR, "hackerman_brown_small.png")
         raw = pygame.image.load(img_path).convert_alpha()
@@ -15,15 +15,24 @@ class Player(pygame.sprite.Sprite):
         self.jump_strength = -12
         self.gravity = 0.5
         self.on_ground = False
+        self.projectile_group = projectile_group
+        self.last_direction = 1  # 1: prawo, -1: lewo
 
     def handle_input(self, keys):
         self.velocity.x = 0
         if keys[pygame.K_LEFT]:
             self.velocity.x = -self.speed
+            self.last_direction = -1
         if keys[pygame.K_RIGHT]:
             self.velocity.x = self.speed
+            self.last_direction = 1
         if keys[pygame.K_UP] and self.on_ground:
             self.velocity.y = self.jump_strength
+
+    def attack(self):
+        from projectile import Projectile
+        proj = Projectile(self.rect.centerx, self.rect.centery, self.last_direction)
+        self.projectile_group.add(proj)
 
     def apply_gravity(self):
         self.velocity.y += self.gravity
