@@ -65,3 +65,9 @@ class Level:
                     surface.blit(floor_img, (px, py))
                 elif tile == "wall":
                     surface.blit(wall_img, (px, py))
+
+    def get_player_spawn(self):
+        return self.player_pos
+
+    def get_enemy_spawns(self):
+        return self.enemies_pos
