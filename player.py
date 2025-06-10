@@ -1,12 +1,31 @@
 import pygame
 from config import TILE_SIZE, PLAYER_IMAGE
 
+def crop_to_visible_area(image, tolerance=10):
+    mask = pygame.mask.from_surface(image, tolerance)
+    rects = mask.get_bounding_rects()
+    if rects:
+        crop_rect = rects[0]
+        cropped = image.subsurface(crop_rect).copy()
+        return cropped
+    return image
+
+def scale_to_height(image, target_height):
+    w, h = image.get_size()
+    scale = target_height / h
+    new_w = int(w * scale)
+    return pygame.transform.scale(image, (new_w, target_height))
+
 class Player(pygame.sprite.Sprite):
     def __init__(self, pos):
         super().__init__()
-        self.base_image = pygame.image.load(PLAYER_IMAGE).convert_alpha()
-        #self.image = self.base_image
-        self.image_right = pygame.transform.scale(self.base_image, (TILE_SIZE, TILE_SIZE))  # <-- KLUCZ!
+        raw = pygame.image.load(PLAYER_IMAGE).convert_alpha()
+        cropped = crop_to_visible_area(raw)
+        scaled = scale_to_height(cropped, TILE_SIZE)
+        self.base_image = crop_to_visible_area(pygame.image.load(PLAYER_IMAGE).convert_alpha())
+        #self.base_image = scale_to_height(self.base_image, TILE_SIZE)
+        #self.image_right = pygame.transform.scale(self.base_image, (TILE_SIZE, TILE_SIZE))  # <-- KLUCZ!
+        self.image_right = scaled
         self.image_left = pygame.transform.flip(self.image_right, True, False)
         self.image = self.image_right
         
