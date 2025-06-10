@@ -22,7 +22,7 @@ class Player(pygame.sprite.Sprite):
         raw = pygame.image.load(PLAYER_IMAGE).convert_alpha()
         cropped = crop_to_visible_area(raw)
         scaled = scale_to_height(cropped, TILE_SIZE)
-        self.base_image = crop_to_visible_area(pygame.image.load(PLAYER_IMAGE).convert_alpha())
+        #self.base_image = crop_to_visible_area(pygame.image.load(PLAYER_IMAGE).convert_alpha())
         #self.base_image = scale_to_height(self.base_image, TILE_SIZE)
         #self.image_right = pygame.transform.scale(self.base_image, (TILE_SIZE, TILE_SIZE))  # <-- KLUCZ!
         self.image_right = scaled

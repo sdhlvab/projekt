@@ -1,11 +1,12 @@
 import pygame
-from config import SCREEN_WIDTH, SCREEN_HEIGHT, TILE_SIZE, LEVEL_FILE
+from config import SCREEN_WIDTH, SCREEN_HEIGHT, TILE_SIZE, LEVEL_FILE, PLAYER_IMAGE, ENEMY_IMAGE
 from player import Player
 from enemy import Enemy
 from projectile import Projectile
 from level import Level
 from camera import Camera
 from background import TerminalBackground
+from character import Character
 import os
 
 class Game:
@@ -27,12 +28,14 @@ class Game:
 
         # Pozycja startowa gracza z pliku levela
         px, py = self.level.get_player_spawn()
-        self.player = Player((px, py))
+        #self.player = Player((px, py))
+        self.player = Character(PLAYER_IMAGE, self.level.get_player_spawn(), speed = 7, controllable=True)
         self.all_sprites = pygame.sprite.Group(self.player)
 
         # Dodaj przeciwników z levela (np. 'E' w pliku)
         for ex, ey in self.level.get_enemy_spawns():
-            self.enemies.add(Enemy(ex, ey))
+            #self.enemies.add(Enemy(ex, ey))
+            self.enemies.add(Character(ENEMY_IMAGE, ((ex, ey))))
 
         # Kamera
         self.camera = Camera(self.level.pixel_width, self.level.pixel_height, SCREEN_WIDTH, SCREEN_HEIGHT)
@@ -52,8 +55,10 @@ class Game:
             if event.type == pygame.QUIT:
                 self.running = False
             elif event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_SPACE:
-                    self.player.shoot(self.projectiles)
+                if event.key == pygame.K_SPACE and self.player.attack_cooldown == 0:
+                    projectile = self.player.shoot()
+                    self.projectiles.add(projectile)
+                    self.player.attack_cooldown = 40
 
     def update(self):
         self.player.update(self.ground_rects)
