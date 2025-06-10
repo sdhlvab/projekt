@@ -9,6 +9,7 @@ ENEMY_IMAGE = IMG_DIR + "bugzilla.png"
 
 # Plik levela
 LEVEL_FILE = "levels/level1.txt"
+LEVEL_DIR = "levels"
 
 # Podstawowe ustawienia
 TILE_SIZE = 64
