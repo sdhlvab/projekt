@@ -25,15 +25,15 @@ class Level:
         for y, line in enumerate(lines):
             row = []
             for x, char in enumerate(line):
-                if char == "1":
+                if char == "#":
                     row.append("wall")
-                elif char == "0":
+                elif char == ".":
                     row.append("floor")
                 elif char == "P":
-                    row.append("floor")
+                    row.append(None)
                     self.player_pos = (x * TILE_SIZE, y * TILE_SIZE)
                 elif char == "E":
-                    row.append("floor")
+                    row.append(None)
                     self.enemies_pos.append((x * TILE_SIZE, y * TILE_SIZE))
                 else:
                     row.append(None)

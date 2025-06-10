@@ -18,3 +18,7 @@ class Camera:
         # Ograniczenia, by kamera nie wychodziła poza level
         self.x = max(0, min(self.x, self.level_width - self.screen_width))
         self.y = max(0, min(self.y, self.level_height - self.screen_height))
+
+    def apply_point(self, point):
+        px, py = point
+        return px - self.x, py - self.y
