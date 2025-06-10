@@ -1,6 +1,6 @@
 import os
 import pygame
-from config import TILE_SIZE, LEVEL_DIR, FLOOR_TILE, WALL_TILE
+from config import TILE_SIZE, LEVEL_DIR, FLOOR_TILE, WALL_TILE, SCREEN_HEIGHT
 
 class Level:
     def __init__(self, filename):
@@ -31,10 +31,10 @@ class Level:
                     row.append("floor")
                 elif char == "P":
                     row.append(None)
-                    self.player_pos = (x * TILE_SIZE, y * TILE_SIZE)
+                    self.player_pos = (x * TILE_SIZE, self._offset_y() + y * TILE_SIZE)
                 elif char == "E":
                     row.append(None)
-                    self.enemies_pos.append((x * TILE_SIZE, y * TILE_SIZE))
+                    self.enemies_pos.append((x * TILE_SIZE, self._offset_y() + y * TILE_SIZE))
                 else:
                     row.append(None)
             self.tiles.append(row)
@@ -49,9 +49,8 @@ class Level:
 
     def _offset_y(self):
         # Pozycja startowa Y mapy (od dołu okna)
-        import config
         map_height_px = self.height * TILE_SIZE
-        return config.SCREEN_HEIGHT - map_height_px
+        return SCREEN_HEIGHT - map_height_px
 
     def draw(self, surface, camera=None):
         floor_img = pygame.image.load(FLOOR_TILE).convert_alpha()
