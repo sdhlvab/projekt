@@ -10,6 +10,8 @@ class Level:
         self.width = 0
         self.height = 0
         self._load_map(os.path.join(LEVEL_DIR, filename))
+        self.pixel_width = self.width * TILE_SIZE
+        self.pixel_height = self.height * TILE_SIZE
 
     def _load_map(self, path):
         with open(path) as f:
