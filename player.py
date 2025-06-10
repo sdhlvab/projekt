@@ -24,12 +24,12 @@ class Player(pygame.sprite.Sprite):
             self.velocity.x = -self.speed
             if self.facing_right:
                 self.facing_right = False
-                self.image = pygame.transform.flip(self.base_image, True, False)
+                self.image = pygame.transform.flip(self.image, True, False)
         if keys[pygame.K_RIGHT]:
             self.velocity.x = self.speed
             if not self.facing_right:
                 self.facing_right = True
-                self.image = self.base_image
+                self.image = pygame.transform.flip(self.image, True, False)
         if keys[pygame.K_UP] and self.on_ground:
             self.velocity.y = self.jump_strength
 
