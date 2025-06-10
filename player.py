@@ -6,8 +6,10 @@ class Player(pygame.sprite.Sprite):
         super().__init__()
         self.base_image = pygame.image.load(PLAYER_IMAGE).convert_alpha()
         #self.image = self.base_image
-        self.image = pygame.transform.scale(self.base_image, (TILE_SIZE, TILE_SIZE))  # <-- KLUCZ!
-
+        self.image_right = pygame.transform.scale(self.base_image, (TILE_SIZE, TILE_SIZE))  # <-- KLUCZ!
+        self.image_left = pygame.transform.flip(self.image_right, True, False)
+        self.image = self.image_right
+        
         self.rect = self.image.get_rect()
         self.rect.topleft = pos
         self.speed = 4
@@ -24,12 +26,12 @@ class Player(pygame.sprite.Sprite):
             self.velocity.x = -self.speed
             if self.facing_right:
                 self.facing_right = False
-                self.image = pygame.transform.flip(self.image, True, False)
+                self.image = self.image_left
         if keys[pygame.K_RIGHT]:
             self.velocity.x = self.speed
             if not self.facing_right:
                 self.facing_right = True
-                self.image = pygame.transform.flip(self.image, True, False)
+                self.image = self.image_right
         if keys[pygame.K_UP] and self.on_ground:
             self.velocity.y = self.jump_strength
 
