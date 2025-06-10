@@ -8,7 +8,7 @@ ENEMY_IMAGE = IMG_DIR + "bugzilla.png"
 # ... tu inne grafiki, jeśli będą
 
 # Plik levela
-LEVEL_FILE = "levels/level1.txt"
+LEVEL_FILE = "level1.txt"
 LEVEL_DIR = "levels"
 
 # Podstawowe ustawienia
