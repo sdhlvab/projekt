@@ -1,5 +1,4 @@
 import pygame
-from pygame.examples.sprite_texture import event
 
 from config import SCREEN_WIDTH, SCREEN_HEIGHT, TILE_SIZE, LEVEL_FILE, PLAYER_IMAGE, ENEMY_IMAGE
 from player import Player
@@ -55,13 +54,12 @@ class Game:
             self.draw()
 
     def handle_events(self):
-        for event in pygame.event.get():
-            print('EVENT.TYPE:  ', event.type)
-            if event.type == pygame.QUIT:
+        for eventG in pygame.event.get():
+            if eventG.type == pygame.QUIT:
                 self.running = False
-            elif event.type == pygame.KEYDOWN:
+            elif eventG.type == pygame.KEYDOWN:
                 print("KEYDOWN")
-                if event.key == pygame.K_SPACE: # and self.shoot_cooldown == 0:
+                if eventG.key == pygame.K_SPACE: # and self.shoot_cooldown == 0:
                     projectile = self.player.shoot()
                     self.projectiles.add(projectile)
                     self.shoot_cooldown = 15
