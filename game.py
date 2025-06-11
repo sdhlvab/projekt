@@ -66,12 +66,11 @@ class Game:
                     #print("SPACE GAME LOOP")
 
     def update(self):
-        #print(self.player.attack_cooldown ,'              ',self.shoot_cooldown)
-        #print('EVENT.TYPE:  ', event.type)
         self.player.update(self.ground_rects)
         self.enemies.update(self.ground_rects)
+
         self.projectiles.update(self.level.get_ground_rects(), self.enemies)
-        # self.projectiles.update()
+
         self.camera.update(self.player.rect)
         self.terminal_bg.update()
 
