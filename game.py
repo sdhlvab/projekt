@@ -58,12 +58,12 @@ class Game:
             if eventG.type == pygame.QUIT:
                 self.running = False
             elif eventG.type == pygame.KEYDOWN:
-                print("KEYDOWN")
+                #print("KEYDOWN")
                 if eventG.key == pygame.K_SPACE: # and self.shoot_cooldown == 0:
                     projectile = self.player.shoot()
                     self.projectiles.add(projectile)
                     self.shoot_cooldown = 15
-                    print("SPACE GAME LOOP")
+                    #print("SPACE GAME LOOP")
 
     def update(self):
         #print(self.player.attack_cooldown ,'              ',self.shoot_cooldown)
