@@ -1,4 +1,6 @@
 import pygame
+from pygame.examples.sprite_texture import event
+
 from config import SCREEN_WIDTH, SCREEN_HEIGHT, TILE_SIZE, LEVEL_FILE, PLAYER_IMAGE, ENEMY_IMAGE
 from player import Player
 from enemy import Enemy
@@ -54,20 +56,37 @@ class Game:
 
     def handle_events(self):
         for event in pygame.event.get():
+            print('EVENT.TYPE:  ', event.type)
             if event.type == pygame.QUIT:
                 self.running = False
             elif event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_SPACE and self.player.attack_cooldown == 0:
+                print("KEYDOWN")
+                if event.key == pygame.K_SPACE: # and self.shoot_cooldown == 0:
                     projectile = self.player.shoot()
                     self.projectiles.add(projectile)
                     self.shoot_cooldown = 15
+                    print("SPACE GAME LOOP")
 
     def update(self):
+        #print(self.player.attack_cooldown ,'              ',self.shoot_cooldown)
+        #print('EVENT.TYPE:  ', event.type)
         self.player.update(self.ground_rects)
         self.enemies.update(self.ground_rects)
-        self.projectiles.update(self.level.get_ground_rects(), self.enemies)
+        #self.projectiles.update(self.level.get_ground_rects(), self.enemies)
+        self.projectiles.update()
         self.camera.update(self.player.rect)
         self.terminal_bg.update()
+
+        #cooldown
+        if self.shoot_cooldown > 0:
+            self.shoot_cooldown -= 1
+
+        #kolizje pocisków
+
+        for projectile in self.projectiles:
+            hits = pygame.sprite.spritecollide(projectile, self.enemies, True)
+            if hits:
+                projectile.kill()
 
     def draw(self):
         # Tło terminala (nie podlega kamerze)
@@ -80,6 +99,7 @@ class Game:
         for enemy in self.enemies:
             self.screen.blit(enemy.image, self.camera.apply(enemy.rect))
         # Rysuj pociski
-        for proj in self.projectiles:
-            self.screen.blit(proj.image, self.camera.apply(proj.rect))
+        # for proj in self.projectiles:
+        #     self.screen.blit(proj.image, self.camera.apply(proj.rect))
+        self.projectiles.draw(self.screen)
         pygame.display.flip()

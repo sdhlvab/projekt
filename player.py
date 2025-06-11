@@ -59,6 +59,7 @@ class Player(pygame.sprite.Sprite):
         if keys[pygame.K_UP] and self.on_ground:
             self.velocity.y = self.jump_strength
         if keys[pygame.K_SPACE] and self.attack_cooldown <= 0:
+            #print("PLAYER SPACE")
             self.attack_cooldown = 20
 
     def apply_gravity(self):
