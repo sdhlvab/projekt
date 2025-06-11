@@ -19,7 +19,7 @@ class Character(pygame.sprite.Sprite):
         self.speed = speed
         self.velocity = pygame.math.Vector2(0, 0)
         self.gravity = 0.7
-        self.jump_strength = -12
+        self.jump_strength = -16
         self.facing_right = True
         self.on_ground = False
         self.direction = 1 if self.facing_right else -1
