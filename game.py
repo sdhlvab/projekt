@@ -54,16 +54,14 @@ class Game:
             self.draw()
 
     def handle_events(self):
-        for eventG in pygame.event.get():
-            if eventG.type == pygame.QUIT:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
                 self.running = False
-            elif eventG.type == pygame.KEYDOWN:
-                #print("KEYDOWN")
-                if eventG.key == pygame.K_SPACE: # and self.shoot_cooldown == 0:
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_SPACE and self.shoot_cooldown == 0:
                     projectile = self.player.shoot()
                     self.projectiles.add(projectile)
                     self.shoot_cooldown = 15
-                    #print("SPACE GAME LOOP")
 
     def update(self):
         self.player.update(self.ground_rects)
