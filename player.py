@@ -40,6 +40,7 @@ class Player(pygame.sprite.Sprite):
         self.on_ground = False
         self.facing_right = True
         self.attack_cooldown = 0
+        self.def_att_cd = 30
 
         self.projectiles = pygame.sprite.Group()
 
@@ -58,9 +59,9 @@ class Player(pygame.sprite.Sprite):
                 self.image = self.image_right
         if keys[pygame.K_UP] and self.on_ground:
             self.velocity.y = self.jump_strength
-        if keys[pygame.K_SPACE] and self.attack_cooldown <= 0:
+        #if keys[pygame.K_SPACE] and self.attack_cooldown <= 0:
             #print("PLAYER SPACE")
-            self.attack_cooldown = 20
+            #self.attack_cooldown = 20
 
     def apply_gravity(self):
         self.velocity.y += self.gravity
@@ -96,6 +97,9 @@ class Player(pygame.sprite.Sprite):
                         self.velocity.y = 0
 
     def shoot(self):
-        x, y = self.rect.center
-        direction = 1 if self.facing_right else -1
-        return Projectile(x, y, direction)
+        if self.attack_cooldown == 0:
+            self.attack_cooldown = self.def_att_cd
+            x, y = self.rect.center
+            direction = 1 if self.facing_right else -1
+            return Projectile(x, y, direction)
+        else: return None

@@ -44,8 +44,6 @@ class Game:
         # Terminal w tle (wywołanie bez przesunięcia)
         self.terminal_bg = TerminalBackground(SCREEN_WIDTH, SCREEN_HEIGHT, font, command_file, SCREEN_HEIGHT , player_name)
 
-        self.shoot_cooldown = 0
-
     def run(self):
         while self.running:
             self.clock.tick(60)
@@ -58,10 +56,12 @@ class Game:
             if event.type == pygame.QUIT:
                 self.running = False
             elif event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_SPACE and self.shoot_cooldown == 0:
+                if event.key == pygame.K_SPACE:
                     projectile = self.player.shoot()
-                    self.projectiles.add(projectile)
-                    self.shoot_cooldown = 15
+                    if projectile:
+                        self.projectiles.add(projectile)
+                    #self.projectiles.add(projectile)
+                    #self.shoot_cooldown = 15
 
     def update(self):
         self.player.update(self.ground_rects)
@@ -71,10 +71,6 @@ class Game:
 
         self.camera.update(self.player.rect)
         self.terminal_bg.update()
-
-        #cooldown
-        if self.shoot_cooldown > 0:
-            self.shoot_cooldown -= 1
 
     def draw(self):
         # Tło terminala (nie podlega kamerze)
