@@ -86,7 +86,6 @@ class Character(pygame.sprite.Sprite):
             ratio = self.hp / self.max_hp
             inner = pygame.Rect(x, y, w * ratio, h)
             outer = pygame.Rect(x, y, w, h)
-            surface.blit = None  # tu tylko placeholder
             inner = camera.apply(inner)
             outer = camera.apply(outer)
             pygame.draw.rect(surface, (255, 0, 0), inner)
