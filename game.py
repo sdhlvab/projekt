@@ -64,7 +64,7 @@ class Game:
                     #self.shoot_cooldown = 15
 
     def update(self):
-        self.player.update(self.ground_rects)
+        self.player.update(pygame.key.get_pressed(), self.ground_rects)
         self.enemies.update(self.ground_rects)
 
         self.projectiles.update(self.enemies, self.level.get_ground_rects())
