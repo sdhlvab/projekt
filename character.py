@@ -20,9 +20,8 @@ class Character(pygame.sprite.Sprite):
         self.velocity = pygame.math.Vector2(0, 0)
         self.gravity = 0.7
         self.jump_strength = -16
-        self.facing_right = True
         self.on_ground = False
-        self.direction = 1 if self.facing_right else -1
+        self.facing = 1
 
         self.max_hp = max_hp
         self.hp = self.max_hp
@@ -44,8 +43,15 @@ class Character(pygame.sprite.Sprite):
         self.rect.x += self.velocity.x
         for tile in tiles:
             if self.rect.colliderect(tile):
-                if self.velocity.x > 0: self.rect.right = tile.left
-                if self.velocity.x < 0: self.rect.left = tile.right
+                if self.velocity.x > 0:
+                    self.rect.right = tile.left
+                    self.facing = 1
+                if self.velocity.x < 0:
+                    self.rect.left = tile.right
+                    self.facing = -1
+
+        # odwracanie grafiki w zależności od kierunku ruchu
+        self.image = self.image_left if self.facing == -1 else self.image_right
 
         #pion
         self.rect.y += self.velocity.y

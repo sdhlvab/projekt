@@ -28,7 +28,7 @@ class Player(Character):
         self.image_left = pygame.transform.flip(self.image_right, True, False)
         super().__init__(self.image_right, pos, speed=7, max_hp=100)
 
-        self.facing = 1 # 1 prawo, -1 lewo
+        self.direction = 1 # 1 prawo, -1 lewo
         self.shoot_cooldown = 0
         self.def_shoot_cooldown = 5
         self.shoot_speed = 12
@@ -37,8 +37,6 @@ class Player(Character):
     def update(self, keys, tiles):
         #obsługa klawiszy
         self.handle_input()
-
-
 
         #cooldown ataku
         if self.shoot_cooldown > 0: self.shoot_cooldown -= 1
@@ -51,7 +49,7 @@ class Player(Character):
         if self.shoot_cooldown == 0:
             self.shoot_cooldown = self.def_shoot_cooldown
             x, y = self.rect.center
-            return Projectile(x, y, direction=self.facing, speed=self.shoot_speed, damage=self.shoot_damage)
+            return Projectile(x, y, direction=self.direction, speed=self.shoot_speed, damage=self.shoot_damage)
         else: return None
 
     def handle_input(self):
@@ -59,13 +57,13 @@ class Player(Character):
         self.velocity.x = 0
         if keys[pygame.K_LEFT]:
             self.velocity.x = -self.speed
-            self.facing = -1
+            self.direction = -1
         if keys[pygame.K_RIGHT]:
             self.velocity.x = self.speed
-            self.facing = 1
+            self.direction = 1
 
         # odwracanie grafiki w zależności od kierunku ruchu
-        self.image = self.image_left if self.facing == -1 else self.image_right
+        self.image = self.image_left if self.direction == -1 else self.image_right
 
         if keys[pygame.K_UP] and self.on_ground:
             self.velocity.y = self.jump_strength
