@@ -69,7 +69,7 @@ class Game:
         self.player.update(self.ground_rects)
         self.enemies.update(self.ground_rects)
 
-        self.projectiles.update(self.level.get_ground_rects(), self.enemies)
+        self.projectiles.update(self.enemies, self.level.get_ground_rects())
 
         self.camera.update(self.player.rect)
         self.terminal_bg.update()
@@ -77,13 +77,6 @@ class Game:
         #cooldown
         if self.shoot_cooldown > 0:
             self.shoot_cooldown -= 1
-
-        #kolizje pocisków
-
-        for projectile in self.projectiles:
-            hits = pygame.sprite.spritecollide(projectile, self.enemies, True)
-            if hits:
-                projectile.kill()
 
     def draw(self):
         # Tło terminala (nie podlega kamerze)
