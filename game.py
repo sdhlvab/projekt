@@ -55,13 +55,10 @@ class Game:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 self.running = False
-            elif event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_SPACE:
-                    projectile = self.player.shoot()
-                    if projectile:
-                        self.projectiles.add(projectile)
-                    #self.projectiles.add(projectile)
-                    #self.shoot_cooldown = 15
+            else:
+                new_proj = self.player.handle_event(event)
+                if new_proj:
+                    self.projectiles.add(new_proj)
 
     def update(self):
         self.player.update(pygame.key.get_pressed(), self.ground_rects)

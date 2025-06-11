@@ -69,3 +69,9 @@ class Player(Character):
 
         if keys[pygame.K_UP] and self.on_ground:
             self.velocity.y = self.jump_strength
+
+    def handle_event(self, event):
+        if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
+            proj = self.shoot()
+            return proj
+        return None
