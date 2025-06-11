@@ -1,5 +1,7 @@
 import pygame
+
 from config import TILE_SIZE, PLAYER_IMAGE
+from projectile import Projectile
 
 def crop_to_visible_area(image, tolerance=10):
     mask = pygame.mask.from_surface(image, tolerance)
@@ -37,6 +39,9 @@ class Player(pygame.sprite.Sprite):
         self.gravity = 0.7
         self.on_ground = False
         self.facing_right = True
+        self.attack_cooldown = 0
+
+        self.projectiles = pygame.sprite.Group()
 
     def handle_input(self):
         keys = pygame.key.get_pressed()
@@ -53,6 +58,10 @@ class Player(pygame.sprite.Sprite):
                 self.image = self.image_right
         if keys[pygame.K_UP] and self.on_ground:
             self.velocity.y = self.jump_strength
+        if keys[pygame.K_SPACE] and self.attack_cooldown <= 0:
+            projectile = self.shoot()
+            self.projectiles.add(projectile)
+            self.attack_cooldown = 20
 
     def apply_gravity(self):
         self.velocity.y += self.gravity
@@ -66,6 +75,8 @@ class Player(pygame.sprite.Sprite):
         self.collide(tiles, 'x')
         self.rect.y += self.velocity.y
         self.collide(tiles, 'y')
+        if self.attack_cooldown > 0:
+            self.attack_cooldown -= 1
 
     def collide(self, tiles, direction):
         self.on_ground = False
@@ -85,9 +96,8 @@ class Player(pygame.sprite.Sprite):
                         self.rect.top = tile.bottom
                         self.velocity.y = 0
 
-    def shoot(self, group):
-        from projectile import Projectile
+    def shoot(self):
         x, y = self.rect.center
         direction = 1 if self.facing_right else -1
         proj = Projectile(x, y, direction=direction)
-        group.add(proj)
+        return Projectile(x, y, direction)
