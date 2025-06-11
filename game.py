@@ -97,7 +97,6 @@ class Game:
         for enemy in self.enemies:
             self.screen.blit(enemy.image, self.camera.apply(enemy.rect))
         # Rysuj pociski
-        # for proj in self.projectiles:
-        #     self.screen.blit(proj.image, self.camera.apply(proj.rect))
-        self.projectiles.draw(self.screen)
+        for proj in self.projectiles:
+            self.screen.blit(proj.image, self.camera.apply(proj.rect))
         pygame.display.flip()
