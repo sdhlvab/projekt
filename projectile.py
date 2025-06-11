@@ -3,7 +3,7 @@ from config import *
 import os
 
 class Projectile(pygame.sprite.Sprite):
-    def __init__(self, x, y, direction):
+    def __init__(self, x, y, direction, speed=12, damage=10):
         super().__init__()
         img_path = os.path.join(IMG_DIR, "cd.png")
         raw = pygame.image.load(img_path).convert_alpha()
@@ -12,7 +12,8 @@ class Projectile(pygame.sprite.Sprite):
             self.image = pygame.transform.flip(self.image, True, False)
         self.rect = self.image.get_rect(center=(x, y))
         self.direction = direction
-        self.speed = 12
+        self.speed = speed
+        self.damage = damage
 
     def update(self, enemies, tiles):
         self.rect.x += self.direction * self.speed
@@ -22,7 +23,7 @@ class Projectile(pygame.sprite.Sprite):
         # Kolizja z przeciwnikami
         for enemy in enemies:
             if hasattr(enemy, "rect") and self.rect.colliderect(enemy.rect):
-                enemy.kill()
+                enemy.take_damage(self.damage)
                 self.kill()
         # Kolizja ze ścianą
         for tile in tiles:

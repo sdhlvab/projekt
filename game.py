@@ -79,9 +79,31 @@ class Game:
         self.level.draw(self.screen, self.camera)
         # Rysuj gracza
         self.screen.blit(self.player.image, self.camera.apply(self.player.rect))
+
+        now = pygame.time.get_ticks()
         # Rysuj przeciwników
         for enemy in self.enemies:
+            # rysowanie sprite'a
             self.screen.blit(enemy.image, self.camera.apply(enemy.rect))
+            if now < enemy.show_hp_time:
+                #pasek życia nad przeciwnikami
+                bar_w = enemy.rect.width
+                bar_h = 6
+                #współrzędne globalne paska
+                bar_x = enemy.rect.x
+                bar_y = enemy.rect.y - bar_h - 2
+                #proporcje życia
+                ratio = enemy.hp / enemy.max_hp
+                #health bar (czerwony)
+                inner = pygame.Rect(bar_x, bar_y, bar_w * ratio, bar_h)
+                #obramowanie (biały)
+                outer = pygame.Rect(bar_x, bar_y, bar_w, bar_h)
+                #przesunięcie obu prostokatów do ekranu
+                inner = self.camera.apply(inner)
+                outer = self.camera.apply(outer)
+                pygame.draw.rect(self.screen, (255, 0, 0), inner)
+                pygame.draw.rect(self.screen, (255, 255, 255), outer, 1)
+
         # Rysuj pociski
         for proj in self.projectiles:
             self.screen.blit(proj.image, self.camera.apply(proj.rect))
