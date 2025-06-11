@@ -43,6 +43,8 @@ class Game:
         # Terminal w tle (wywołanie bez przesunięcia)
         self.terminal_bg = TerminalBackground(SCREEN_WIDTH, SCREEN_HEIGHT, font, command_file, SCREEN_HEIGHT , player_name)
 
+        self.shoot_cooldown = 0
+
     def run(self):
         while self.running:
             self.clock.tick(60)
@@ -54,11 +56,11 @@ class Game:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 self.running = False
-            #elif event.type == pygame.KEYDOWN:
-                #if event.key == pygame.K_SPACE and self.player.attack_cooldown == 0:
-                    #projectile = self.player.shoot()
-                    #self.projectiles.add(projectile)
-                    #self.player.attack_cooldown = 40
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_SPACE and self.player.attack_cooldown == 0:
+                    projectile = self.player.shoot()
+                    self.projectiles.add(projectile)
+                    self.shoot_cooldown = 15
 
     def update(self):
         self.player.update(self.ground_rects)

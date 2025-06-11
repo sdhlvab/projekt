@@ -12,10 +12,15 @@ class Enemy(pygame.sprite.Sprite):
         self.gravity = 0.7
         self.direction = 1
         self.speed = 2
+        self.on_ground = True
 
     def update(self, ground_rects):
         self.rect.x += self.direction * self.speed
         self.apply_gravity()
+        if self.on_ground:
+            self.velocity.x = self.direction * self.speed
+        else:
+            self.velocity.x = 0
         # Odbijaj się od krawędzi/ścian
         for tile in ground_rects:
             if self.rect.colliderect(tile):

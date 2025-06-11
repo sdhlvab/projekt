@@ -59,8 +59,6 @@ class Player(pygame.sprite.Sprite):
         if keys[pygame.K_UP] and self.on_ground:
             self.velocity.y = self.jump_strength
         if keys[pygame.K_SPACE] and self.attack_cooldown <= 0:
-            projectile = self.shoot()
-            self.projectiles.add(projectile)
             self.attack_cooldown = 20
 
     def apply_gravity(self):
@@ -99,5 +97,4 @@ class Player(pygame.sprite.Sprite):
     def shoot(self):
         x, y = self.rect.center
         direction = 1 if self.facing_right else -1
-        proj = Projectile(x, y, direction=direction)
         return Projectile(x, y, direction)
