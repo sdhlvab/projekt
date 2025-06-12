@@ -1,16 +1,12 @@
 import pygame
 import os
 
-from pygame.examples.aliens import Score
-
 from config import SCREEN_WIDTH, SCREEN_HEIGHT, TILE_SIZE, LEVEL_FILE, PLAYER_IMAGE, ENEMY_IMAGE
 from player import Player
 from enemy import Enemy
-from projectile import Projectile
 from level import Level
 from camera import Camera
 from background import TerminalBackground
-from character import Character
 from engine import ScoreManager
 from ui import Scoreboard
 
@@ -88,7 +84,8 @@ class Game:
 
         # Rysowanie przeciwników
         for e in self.enemies: e.draw(self.screen, self.camera)
-
         for p in self.projectiles: self.screen.blit(p.image, self.camera.apply(p.rect))
 
+        # Rysowanie HUD'a
+        self.hud.draw(self.screen)
         pygame.display.flip()

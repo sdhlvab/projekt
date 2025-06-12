@@ -6,18 +6,16 @@ class ScoreManager:
         self.points_per_kill = points_per_kill
 
     def handle_hits(self, projectiles: pygame.sprite.Group, enemies: pygame.sprite.Group):
-        """
-        Sprawdza kolizje pocisków z wrogami,
-        usuwa trafione obiekty i przekazuje liczbę punktów HUD-owi.
-        """
+        # wykryj trafienia pocisk→wróg i usuń obie grupy
         hits = pygame.sprite.groupcollide(
             projectiles, enemies,
-            True,   # usuwaj pocisk
-            True    # usuwaj wroga
+            True,  # usuń pocisk
+            False  # nie usuwaj wroga od razu – pozwól take_damage(…) zadziałać
         )
-        if not hits:
-            return
-        # policz ile wrogów zginęło
-        killed = sum(len(v) for v in hits.values())
-        # nalicz punkty
-        self.hud.add_points(self.points_per_kill * killed)
+        for proj, hit_list in hits.items():
+            for enemy in hit_list:
+                # dajemy trochę damage
+                enemy.take_damage(proj.damage)
+                # jeśli wróg faktycznie umarł, nalicz punkty
+                if not enemy.alive():
+                    self.hud.add_points(self.points_per_kill)
