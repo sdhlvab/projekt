@@ -130,10 +130,40 @@ class Scoreboard:
     def draw(self, surface):
         text = f"Score: {self.score}"
         surf = self.font.render(text, True, self.TEXT_COLOR)
-        bg_rect = surf.get_rect(topright=(SCREEN_WIDTH - self.PADDING, self.PADDING)).inflate(8, 4)
+        bg_rect = surf.get_rect(topright=(SCREEN_WIDTH - self.PADDING, self.PADDING + 30)).inflate(8, 4)
         # półprzezroczyste tło (jeśli masz display z ALPHA)
         bg = pygame.Surface(bg_rect.size, pygame.SRCALPHA)
         bg.fill(self.BG_COLOR)
         surface.blit(bg, bg_rect.topright)
         txt_pos = (bg_rect.right - surf.get_width() - 4, bg_rect.y + 2)
         surface.blit(surf, txt_pos)
+
+
+class HealthBar:
+    PADDING = 16
+    BAR_W = 200
+    BAR_H = 20
+    BORDER_COL = (255, 255, 255)
+    FILL_COL   = (200,   0,   0)
+    BG_COL     = (0,     0,   0,  180)
+
+    def __init__(self, player):
+        self.player = player
+        # pozycja prawego górnego rogu
+        self.pos = (SCREEN_WIDTH - self.PADDING - self.BAR_W, self.PADDING)
+
+    def draw(self, surface):
+        # wypełnienie tłem
+        bg_surf = pygame.Surface((self.BAR_W, self.BAR_H), pygame.SRCALPHA)
+        bg_surf.fill(self.BG_COL)
+        surface.blit(bg_surf, self.pos)
+
+        # oblicz % życia
+        ratio = self.player.hp / self.player.max_hp
+        fill_w = int(self.BAR_W * ratio)
+        fill_rect = pygame.Rect(self.pos[0], self.pos[1], fill_w, self.BAR_H)
+        pygame.draw.rect(surface, self.FILL_COL, fill_rect)
+
+        # obrys
+        border_rect = pygame.Rect(self.pos[0], self.pos[1], self.BAR_W, self.BAR_H)
+        pygame.draw.rect(surface, self.BORDER_COL, border_rect, 2)

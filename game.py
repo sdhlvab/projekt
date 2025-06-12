@@ -7,8 +7,8 @@ from enemy import Enemy
 from level import Level
 from camera import Camera
 from background import TerminalBackground
-from engine import ScoreManager
-from ui import Scoreboard
+from engine import Engine
+from ui import Scoreboard, HealthBar
 
 class Game:
     def __init__(self, screen, player_name="hackerman", music_on=True, sound_on=True):
@@ -44,7 +44,8 @@ class Game:
 
         # UI
         self.hud = Scoreboard()
-        self.score_manager = ScoreManager(self.hud, points_per_kill=100)
+        self.engine = Engine(self.hud, points_per_kill=100)
+        self.health_bar = HealthBar(self.player)
 
     def run(self):
         while self.running:
@@ -71,7 +72,8 @@ class Game:
         self.camera.update(self.player.rect)
         self.terminal_bg.update()
 
-        self.score_manager.handle_hits(self.projectiles, self.enemies)
+        self.engine.handle_hits(self.projectiles, self.enemies)
+        self.engine.handle_player_collisions(self.player, self.enemies)
 
     def draw(self):
         # Tło terminala (nie podlega kamerze)
@@ -88,4 +90,5 @@ class Game:
 
         # Rysowanie HUD'a
         self.hud.draw(self.screen)
+        self.health_bar.draw(self.screen)
         pygame.display.flip()

@@ -32,6 +32,9 @@ class Player(Character):
         self.shoot_speed = 12
         self.shoot_damage = 10
 
+        self.invincible_time = 0
+        self.def_invincible_time = 1000
+
     def update(self, keys, tiles):
         #obsługa klawiszy
         self.handle_input()
@@ -69,3 +72,7 @@ class Player(Character):
             proj = self.shoot()
             return proj
         return None
+
+    def take_damage(self, damage):
+        # wywołuje się tylko jeśli nie ma protekcji
+        super().take_damage(damage)
