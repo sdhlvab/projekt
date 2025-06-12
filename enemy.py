@@ -15,6 +15,7 @@ class Enemy(Character):
 
         def bounce():
             self.direction *= -1
+            self.set_facing(self.direction)
 
         self.apply_gravity()
         self.move_collide(tiles, on_horizontal_collision=bounce)
