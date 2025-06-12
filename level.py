@@ -45,6 +45,15 @@ class Level:
             for x, tile in enumerate(row):
                 if tile in ("floor", "wall"):
                     rects.append(pygame.Rect(x * TILE_SIZE, self._offset_y() + y * TILE_SIZE, TILE_SIZE, TILE_SIZE))
+        # dodanie pionowych, niewidzialnych ścian przy pionowych krawędziach poziomu
+        height = len(self.tiles) * TILE_SIZE
+        top = self._offset_y()
+        #lewa krawędź
+        rects.append(pygame.Rect(0, top, 1, height))
+        #prawa krawędź
+        width = len(self.tiles[0] * TILE_SIZE)
+        rects.append(pygame.Rect(width - 1, top, 1, height))
+
         return rects
 
     def _offset_y(self):
