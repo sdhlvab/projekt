@@ -24,7 +24,7 @@ class Player(Character):
         raw = pygame.image.load(PLAYER_IMAGE).convert_alpha()
         cropped = crop_to_visible_area(raw)
         self.image = scale_to_height(cropped, TILE_SIZE)
-        super().__init__(self.image, pos, speed=7, max_hp=100)
+        super().__init__(self.image, pos, speed=5, max_hp=100)
 
         self.direction = 1 # 1 prawo, -1 lewo
         self.shoot_cooldown = 0

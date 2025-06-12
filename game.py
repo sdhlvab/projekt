@@ -1,4 +1,7 @@
 import pygame
+import os
+
+from pygame.examples.aliens import Score
 
 from config import SCREEN_WIDTH, SCREEN_HEIGHT, TILE_SIZE, LEVEL_FILE, PLAYER_IMAGE, ENEMY_IMAGE
 from player import Player
@@ -8,7 +11,8 @@ from level import Level
 from camera import Camera
 from background import TerminalBackground
 from character import Character
-import os
+from engine import ScoreManager
+from ui import Scoreboard
 
 class Game:
     def __init__(self, screen, player_name="hackerman", music_on=True, sound_on=True):
@@ -30,19 +34,21 @@ class Game:
         # Pozycja startowa gracza z pliku levela
         px, py = self.level.get_player_spawn()
         self.player = Player((px, py))
-        #self.player = Character(PLAYER_IMAGE, self.level.get_player_spawn(), speed = 7, controllable=True)
         self.all_sprites = pygame.sprite.Group(self.player)
 
         # Dodaj przeciwników z levela (np. 'E' w pliku)
         for ex, ey in self.level.get_enemy_spawns():
             self.enemies.add(Enemy((ex, ey)))
-            #self.enemies.add(Character(ENEMY_IMAGE, ((ex, ey))))
 
         # Kamera
         self.camera = Camera(self.level.pixel_width, self.level.pixel_height, SCREEN_WIDTH, SCREEN_HEIGHT)
 
         # Terminal w tle (wywołanie bez przesunięcia)
         self.terminal_bg = TerminalBackground(SCREEN_WIDTH, SCREEN_HEIGHT, font, command_file, SCREEN_HEIGHT , player_name)
+
+        # UI
+        self.hud = Scoreboard()
+        self.score_manager = ScoreManager(self.hud, points_per_kill=100)
 
     def run(self):
         while self.running:
@@ -69,9 +75,12 @@ class Game:
         self.camera.update(self.player.rect)
         self.terminal_bg.update()
 
+        self.score_manager.handle_hits(self.projectiles, self.enemies)
+
     def draw(self):
         # Tło terminala (nie podlega kamerze)
         self.terminal_bg.draw(self.screen, self.camera.x, self.camera.y)
+
         # Rysuj level (kafelki)
         self.level.draw(self.screen, self.camera)
         # Rysuj gracza
@@ -83,31 +92,3 @@ class Game:
         for p in self.projectiles: self.screen.blit(p.image, self.camera.apply(p.rect))
 
         pygame.display.flip()
-        # now = pygame.time.get_ticks()
-        # # Rysuj przeciwników
-        # for enemy in self.enemies:
-        #     # rysowanie sprite'a
-        #     self.screen.blit(enemy.image, self.camera.apply(enemy.rect))
-        #     if now < enemy.show_hp_time:
-        #         #pasek życia nad przeciwnikami
-        #         bar_w = enemy.rect.width
-        #         bar_h = 6
-        #         #współrzędne globalne paska
-        #         bar_x = enemy.rect.x
-        #         bar_y = enemy.rect.y - bar_h - 2
-        #         #proporcje życia
-        #         ratio = enemy.hp / enemy.max_hp
-        #         #health bar (czerwony)
-        #         inner = pygame.Rect(bar_x, bar_y, bar_w * ratio, bar_h)
-        #         #obramowanie (biały)
-        #         outer = pygame.Rect(bar_x, bar_y, bar_w, bar_h)
-        #         #przesunięcie obu prostokatów do ekranu
-        #         inner = self.camera.apply(inner)
-        #         outer = self.camera.apply(outer)
-        #         pygame.draw.rect(self.screen, (255, 0, 0), inner)
-        #         pygame.draw.rect(self.screen, (255, 255, 255), outer, 1)
-        #
-        # # Rysuj pociski
-        # for proj in self.projectiles:
-        #     self.screen.blit(proj.image, self.camera.apply(proj.rect))
-        # pygame.display.flip()

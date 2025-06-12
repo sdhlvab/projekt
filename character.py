@@ -1,10 +1,7 @@
 import pygame
 
-from config import TILE_SIZE
-from projectile import Projectile
-
 class Character(pygame.sprite.Sprite):
-    def __init__(self, image, pos, speed=4, max_hp=50):
+    def __init__(self, image, pos, speed=3, max_hp=50):
         super().__init__()
         # Odbicie grafiki
         self.image_right = image

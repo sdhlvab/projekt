@@ -1,44 +1,23 @@
 import pygame
-from config import *
-from player import Player
-from enemy import Enemy
-from ui import draw_ui
 
-class Game:
-    def __init__(self):
-        self.screen = pygame.display.set_mode((WIDTH, HEIGHT))
-        pygame.display.set_caption("Hackerman vs. Bugzilla")
-        self.clock = pygame.time.Clock()
-        self.running = True
-        self.player = Player(100, HEIGHT // 2)
-        self.enemies = [Enemy(WIDTH - 150, HEIGHT // 2)]
-        self.font = pygame.font.SysFont(None, 30)
+class ScoreManager:
+    def __init__(self, hud, points_per_kill=100):
+        self.hud = hud
+        self.points_per_kill = points_per_kill
 
-    def run(self):
-        while self.running:
-            self.clock.tick(FPS)
-            self.handle_events()
-            self.update()
-            self.draw()
-        pygame.quit()
-
-    def handle_events(self):
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                self.running = False
-
-        keys = pygame.key.get_pressed()
-        self.player.handle_input(keys)
-
-    def update(self):
-        self.player.update()
-        for enemy in self.enemies:
-            enemy.update(self.player.rect)
-
-    def draw(self):
-        self.screen.fill(BG_COLOR)
-        self.player.draw(self.screen)
-        for enemy in self.enemies:
-            enemy.draw(self.screen)
-        draw_ui(self.screen, self.player, self.font)
-        pygame.display.flip()
+    def handle_hits(self, projectiles: pygame.sprite.Group, enemies: pygame.sprite.Group):
+        """
+        Sprawdza kolizje pocisków z wrogami,
+        usuwa trafione obiekty i przekazuje liczbę punktów HUD-owi.
+        """
+        hits = pygame.sprite.groupcollide(
+            projectiles, enemies,
+            True,   # usuwaj pocisk
+            True    # usuwaj wroga
+        )
+        if not hits:
+            return
+        # policz ile wrogów zginęło
+        killed = sum(len(v) for v in hits.values())
+        # nalicz punkty
+        self.hud.add_points(self.points_per_kill * killed)

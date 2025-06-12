@@ -1,6 +1,8 @@
 import pygame
 import random
 
+from config import TILE_SIZE
+
 PROMPT = "hackerman@debian:~$"
 CURSOR_CHARS = ["_", " "]
 
@@ -10,7 +12,7 @@ class TerminalBackground:
         self.height = height
         self.font = font
         self.line_height = font.get_linesize()
-        self.terminal_height = terminal_height
+        self.terminal_height = terminal_height - TILE_SIZE
         self.player_name = player_name
         self.num_lines = (self.terminal_height - 10) // self.line_height
         self.commands = self.load_commands(command_file)
