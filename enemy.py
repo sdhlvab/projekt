@@ -11,15 +11,11 @@ class Enemy(Character):
         self.direction = 1
 
     def update(self, tiles):
-        if self.on_ground:
-            self.velocity.x = self.direction * self.speed
-        else:
-            self.velocity.x = 0
+        self.velocity.x = self.direction * self.speed if self.on_ground else 0
+
+        def bounce():
+            self.direction *= -1
 
         self.apply_gravity()
-        self.move_collide(tiles)
+        self.move_collide(tiles, on_horizontal_collision=bounce)
 
-        for tile in tiles:
-            if self.rect.colliderect(tile):
-                self.direction *= -1
-                self.set_facing(self.direction)

@@ -10,12 +10,9 @@ class Character(pygame.sprite.Sprite):
         self.image_right = image
         self.image_left = pygame.transform.flip(image, True, False)
         self.image = self.image_right
-        self.facing = 1 # 1 prawo, -1 lewo
-
 
         # Pozycja
         self.rect = self.image.get_rect(topleft=pos)
-        #self.rect.topleft = pos
 
         # Atrybuty
         self.speed = speed
@@ -35,20 +32,17 @@ class Character(pygame.sprite.Sprite):
         self.velocity.y = min(self.velocity.y + self.gravity, 12)
 
     # Wykrywanie kolizji
-    def move_collide(self, tiles):
+    def move_collide(self, tiles, on_horizontal_collision=None):
         #poziom
         self.rect.x += self.velocity.x
         for tile in tiles:
             if self.rect.colliderect(tile):
                 if self.velocity.x > 0:
                     self.rect.right = tile.left
-                    self.facing = 1
                 if self.velocity.x < 0:
                     self.rect.left = tile.right
-                    self.facing = -1
-
-        # odwracanie grafiki w zależności od kierunku ruchu
-        self.image = self.image_left if self.facing == -1 else self.image_right
+                if on_horizontal_collision:
+                    on_horizontal_collision()
 
         #pion
         self.rect.y += self.velocity.y
@@ -93,6 +87,5 @@ class Character(pygame.sprite.Sprite):
         #direction: 1 = prawo, -1 = lewo
         if direction not in (-1, 1):
             return
-        self.facing = direction
         self.image = self.image_left if direction < 0 else self.image_right
 
