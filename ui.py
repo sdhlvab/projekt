@@ -1,7 +1,7 @@
 import pygame
 import os
 
-from config import SCREEN_WIDTH
+from config import SCREEN_WIDTH, SCREEN_HEIGHT
 
 class MainMenu:
     def __init__(self, screen):
@@ -167,3 +167,26 @@ class HealthBar:
         # obrys
         border_rect = pygame.Rect(self.pos[0], self.pos[1], self.BAR_W, self.BAR_H)
         pygame.draw.rect(surface, self.BORDER_COL, border_rect, 2)
+
+class GameOverScreen:
+    FONT_SIZE = 72
+    OVERLAY_ALPHA = 180
+
+    def __init__(self, screen):
+        self.screen = screen
+        self.font = pygame.font.Font(None, self.FONT_SIZE)
+
+    def show(self):
+        # półprzezroczyste tło
+        overlay = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT))
+        overlay.set_alpha(self.OVERLAY_ALPHA)
+        overlay.fill((0, 0, 0))
+        self.screen.blit(overlay, (0, 0))
+
+        # napis "Game Over"
+        text = self.font.render("GAME OVER", True, (255, 0, 0))
+        x = (SCREEN_WIDTH - text.get_width()) // 2
+        y = (SCREEN_HEIGHT - text.get_height()) // 2
+        self.screen.blit(text, (x, y))
+        pygame.display.flip()
+        pygame.time.wait(2000)
