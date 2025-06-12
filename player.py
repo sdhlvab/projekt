@@ -33,7 +33,7 @@ class Player(Character):
         self.shoot_damage = 10
 
         self.invincible_time = 0
-        self.def_invincible_time = 1000
+        self.def_invincible_time = 100
 
     def update(self, keys, tiles):
         #obsługa klawiszy
@@ -74,5 +74,11 @@ class Player(Character):
         return None
 
     def take_damage(self, damage):
-        # wywołuje się tylko jeśli nie ma protekcji
+        now = pygame.time.get_ticks()
+        # jeśli nadal w czasie nietykalności, nic nie rób
+        if now < self.invincible_time:
+            return
+        # ustaw nowe okno nietykalności
+        self.invincible_time = now + self.def_invincible_time
+        # wywołaj bazową logikę (hp-=, show_hp, kill() jeśli hp≤0)
         super().take_damage(damage)

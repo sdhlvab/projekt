@@ -5,8 +5,6 @@ class Engine:
         self.hud = hud
         self.points_per_kill = points_per_kill
 
-        self.invincibility_ms = 1000
-
     def handle_hits(self, projectiles: pygame.sprite.Group, enemies: pygame.sprite.Group):
         # wykryj trafienia pocisk→wróg i usuń obie grupy
         hits = pygame.sprite.groupcollide(
@@ -23,18 +21,5 @@ class Engine:
                     self.hud.add_points(self.points_per_kill)
 
     def handle_player_collisions(self, player, enemies: pygame.sprite.Group):
-        """
-         Jeśli gracz dotknie wroga i nie jest w stanie nietykalności,
-         odejmij mu zdrowie i rozpocznij timer invincibility.
-        """
-        
-        now = pygame.time.get_ticks()
-        # jeśli nadal w oknie nietykalności, nic nie rób
-
-        if now < getattr(player, "invincible_until", 0):
-            return
-        # jeśli kolizja – zadaj dmg i ustaw invincibility
-
         if pygame.sprite.spritecollideany(player, enemies):
-            player.invincible_until = now + self.invincibility_ms
             player.take_damage(1)
