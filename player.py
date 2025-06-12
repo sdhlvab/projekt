@@ -24,9 +24,7 @@ class Player(Character):
         raw = pygame.image.load(PLAYER_IMAGE).convert_alpha()
         cropped = crop_to_visible_area(raw)
         self.image = scale_to_height(cropped, TILE_SIZE)
-        self.image_right = self.image
-        self.image_left = pygame.transform.flip(self.image_right, True, False)
-        super().__init__(self.image_right, pos, speed=7, max_hp=100)
+        super().__init__(self.image, pos, speed=7, max_hp=100)
 
         self.direction = 1 # 1 prawo, -1 lewo
         self.shoot_cooldown = 0
@@ -58,13 +56,11 @@ class Player(Character):
         if keys[pygame.K_LEFT]:
             self.velocity.x = -self.speed
             self.direction = -1
+            self.set_facing(-1)
         if keys[pygame.K_RIGHT]:
             self.velocity.x = self.speed
             self.direction = 1
-
-        # odwracanie grafiki w zależności od kierunku ruchu
-        self.image = self.image_left if self.direction == -1 else self.image_right
-
+            self.set_facing(1)
         if keys[pygame.K_UP] and self.on_ground:
             self.velocity.y = self.jump_strength
 

@@ -8,8 +8,10 @@ class Character(pygame.sprite.Sprite):
         super().__init__()
         # Odbicie grafiki
         self.image_right = image
-        self.image_left = pygame.transform.flip(self.image_right, True, False)
+        self.image_left = pygame.transform.flip(image, True, False)
         self.image = self.image_right
+        self.facing = 1 # 1 prawo, -1 lewo
+
 
         # Pozycja
         self.rect = self.image.get_rect(topleft=pos)
@@ -21,7 +23,6 @@ class Character(pygame.sprite.Sprite):
         self.gravity = 0.7
         self.jump_strength = -16
         self.on_ground = False
-        self.facing = 1
 
         self.max_hp = max_hp
         self.hp = self.max_hp
@@ -30,10 +31,6 @@ class Character(pygame.sprite.Sprite):
 
 
     # Ograniczenie prędkości spadania
-    # def apply_gravity(self):
-    #     self.velocity.y += self.gravity
-    #     if self.velocity.y > 10:
-    #         self.velocity.y = 10
     def apply_gravity(self):
         self.velocity.y = min(self.velocity.y + self.gravity, 12)
 
@@ -90,4 +87,12 @@ class Character(pygame.sprite.Sprite):
             outer = camera.apply(outer)
             pygame.draw.rect(surface, (255, 0, 0), inner)
             pygame.draw.rect(surface, (255, 255, 255), outer, 1)
+
+    #obracanie grafiki w zależności od kierunku
+    def set_facing(self, direction:int):
+        #direction: 1 = prawo, -1 = lewo
+        if direction not in (-1, 1):
+            return
+        self.facing = direction
+        self.image = self.image_left if direction < 0 else self.image_right
 
