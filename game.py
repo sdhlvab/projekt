@@ -66,7 +66,7 @@ class Game:
         self.player.update(pygame.key.get_pressed(), self.ground_rects)
         self.enemies.update(self.ground_rects)
 
-        self.projectiles.update(self.enemies, self.level.get_ground_rects())
+        self.projectiles.update(self.level.get_ground_rects())
 
         self.camera.update(self.player.rect)
         self.terminal_bg.update()

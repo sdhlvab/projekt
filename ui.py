@@ -130,8 +130,7 @@ class Scoreboard:
     def draw(self, surface):
         text = f"Score: {self.score}"
         surf = self.font.render(text, True, self.TEXT_COLOR)
-        screen_w = surface.get_width()
-        bg_rect = surf.get_rect(topright=(screen_w - self.PADDING, self.PADDING)).inflate(8, 4)
+        bg_rect = surf.get_rect(topright=(SCREEN_WIDTH - self.PADDING, self.PADDING)).inflate(8, 4)
         # półprzezroczyste tło (jeśli masz display z ALPHA)
         bg = pygame.Surface(bg_rect.size, pygame.SRCALPHA)
         bg.fill(self.BG_COLOR)
