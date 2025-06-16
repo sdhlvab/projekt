@@ -92,7 +92,7 @@ class Game:
                 self._draw_pause()
                 continue
 
-            if self.state == "GAME OVER":
+            if self.state == "GAME_OVER":
                 self._draw_game_over()
                 # pętla kończu się przez stan "EXIT"
                 continue
