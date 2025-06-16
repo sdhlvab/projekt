@@ -4,8 +4,6 @@ from time import sleep
 import pygame
 import os
 
-from pygame.examples.midi import key_images
-
 from config import SCREEN_WIDTH, SCREEN_HEIGHT, TILE_SIZE, LEVEL_FILE, PLAYER_IMAGE, ENEMY_IMAGE
 from player import Player
 from enemy import Enemy
@@ -59,8 +57,9 @@ class Game:
     def run(self):
         while self.running and self.state != "EXIT":
             self.clock.tick(60)
+            events = pygame.event.get()
 
-            for e in pygame.event.get():
+            for e in events:
                 if e.type == pygame.QUIT:
                     self.running = False
                     self.state = "EXIT"
@@ -78,7 +77,7 @@ class Game:
 
             if self.state == "PLAY":
                 # normalna pętla gry
-                self.handle_events()
+                self.handle_events(events)
                 self.update()
                 self.draw()
                 # wykrycie przegranej
@@ -94,15 +93,16 @@ class Game:
 
             if self.state == "GAME_OVER":
                 self._draw_game_over()
-                # pętla kończu się przez stan "EXIT"
+                # powrót do menu
+                self.state = "MENU"
                 continue
 
             # self.handle_events()
             # self.update()
             # self.draw()
 
-    def handle_events(self):
-        for event in pygame.event.get():
+    def handle_events(self, events):
+        for event in events:
             if event.type == pygame.QUIT:
                 self.running = False
             else:
@@ -176,4 +176,5 @@ class Game:
         self.screen.blit(go, ((SCREEN_WIDTH - go.get_width()) // 2, (SCREEN_HEIGHT - go.get_height()) // 2))
         pygame.display.flip()
         pygame.time.wait(2000)
-        self.state = "EXIT"
+        self.__init__(self.screen, self.player_name)
+        self.state = "MENU"
