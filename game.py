@@ -1,10 +1,7 @@
 import sys
-from time import sleep
-
-import pygame
+import re
 import os
-
-from select import select
+import pygame
 
 from config import SCREEN_WIDTH, SCREEN_HEIGHT, TILE_SIZE, LEVEL_FILE, PLAYER_IMAGE, ENEMY_IMAGE
 from player import Player
@@ -22,6 +19,7 @@ class Game:
         self.clock = pygame.time.Clock()
         self.running = True
         self.player_name = player_name
+        self.level_file = LEVEL_FILE
 
         # początkowy stan gry
         self.state = "PLAY"
@@ -32,7 +30,7 @@ class Game:
         self.command_file = "assets/data/commands.txt"
 
         # Level i kafelki
-        self.level = Level(LEVEL_FILE)
+        self.level = Level(self.level_file)
         self.ground_rects = self.level.get_ground_rects()
         self.enemies = pygame.sprite.Group()
         self.projectiles = pygame.sprite.Group()
@@ -60,7 +58,7 @@ class Game:
     def reset(self):
         # przywrócenie stanu początkowego gry
         # odtworzenie poziomu i kafli
-        self.level = Level(LEVEL_FILE)
+        self.level = Level(self.level_file)
         self.ground_rects = self.level.get_ground_rects()
         # gracz
         px, py = self.level.get_player_spawn()
@@ -144,8 +142,19 @@ class Game:
                     self.projectiles.add(new_proj)
 
     def update(self):
+        # wykrycie dotknięcia L (exit_tile)
         self.player.update(pygame.key.get_pressed(), self.ground_rects)
-        self.enemies.update(self.ground_rects)
+        for rect in self.level.get_exit_rects():
+            if self.player.rect.colliderect(rect):
+                if self.next_level():
+                    return
+                self.state = "GAME_OVER"
+                return
+
+        #self.enemies.update(self.ground_rects)
+        # wrogowie odbijają się od wszystkich kfelków
+        all_solid = self.ground_rects + self.level.get_exit_rects()
+        self.enemies.update(all_solid)
 
         self.projectiles.update(self.level.get_ground_rects())
 
@@ -239,6 +248,26 @@ class Game:
                         waiting = False
             self.clock.tick(10)
 
-        # pygame.time.wait(2000)
-        # self.__init__(self.screen, self.player_name)
-        # self.state = "MENU"
+    def next_level(self):
+        """Przechodzi do kolejnego pliku levelX.txt, jeśli istnieje."""
+        base = os.path.basename(self.level_file)
+        name, ext = os.path.splitext(base)
+        m = re.match(r"(.*?)(\d+)$", name)
+        print("BASE ", base)
+        print("M ", m)
+        if not m:
+            return False
+        prefix, num = m.groups()
+        next_num = int(num) + 1
+        next_file = os.path.join(
+            os.path.dirname(self.level_file),
+            f"{prefix}{next_num}{ext}"
+        )
+        print("NEXT FILE ", next_file)
+        print(os.path.exists(next_file))
+        print(next_file)
+        if not os.path.exists(next_file):
+            return False
+        self.level_file = next_file
+        self.reset()
+        return True

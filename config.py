@@ -5,6 +5,7 @@ FLOOR_TILE = IMG_DIR + "floor2_tile.png"
 WALL_TILE = IMG_DIR + "wall3_tile.png"
 PLAYER_IMAGE = IMG_DIR + "hackerman_brown.png"
 ENEMY_IMAGE = IMG_DIR + "bugzilla.png"
+EXIT_TILE = IMG_DIR + "wall_tile.png"
 # ... tu inne grafiki, jeśli będą
 
 # Plik levela

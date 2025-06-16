@@ -1,6 +1,6 @@
 import os
 import pygame
-from config import TILE_SIZE, LEVEL_DIR, FLOOR_TILE, WALL_TILE, SCREEN_HEIGHT
+from config import TILE_SIZE, LEVEL_DIR, FLOOR_TILE, WALL_TILE, EXIT_TILE, SCREEN_HEIGHT
 
 class Level:
     def __init__(self, filename):
@@ -21,6 +21,7 @@ class Level:
         self.tiles = []
         self.enemies_pos = []
         self.player_pos = None
+        self.exit_tiles = []
 
         for y, line in enumerate(lines):
             row = []
@@ -35,6 +36,9 @@ class Level:
                 elif char == "E":
                     row.append(None)
                     self.enemies_pos.append((x * TILE_SIZE, self._offset_y() + y * TILE_SIZE))
+                elif char == "L":
+                    row.append("exit")
+                    self.exit_tiles.append((x, y))
                 else:
                     row.append(None)
             self.tiles.append(row)
@@ -63,6 +67,7 @@ class Level:
     def draw(self, surface, camera=None):
         floor_img = pygame.image.load(FLOOR_TILE).convert_alpha()
         wall_img = pygame.image.load(WALL_TILE).convert_alpha()
+        exit_img = pygame.image.load(EXIT_TILE).convert_alpha()
 
         for y, row in enumerate(self.tiles):
             for x, tile in enumerate(row):
@@ -74,9 +79,19 @@ class Level:
                     surface.blit(floor_img, (px, py))
                 elif tile == "wall":
                     surface.blit(wall_img, (px, py))
+                elif tile == "exit":
+                    surface.blit(exit_img, (px, py))
 
     def get_player_spawn(self):
         return self.player_pos
 
     def get_enemy_spawns(self):
         return self.enemies_pos
+
+    def get_exit_rects(self):
+        rects = []
+        for x, y in self.exit_tiles:
+            px = x * TILE_SIZE
+            py = self._offset_y() + y * TILE_SIZE
+            rects.append(pygame.Rect(px, py, TILE_SIZE, TILE_SIZE))
+        return rects
