@@ -65,7 +65,7 @@ class Game:
         px, py = self.level.get_player_spawn()
         self.player = Player((px, py))
         # wrogowie
-        self.enemies = pygame.sprite.Group
+        self.enemies = pygame.sprite.Group()
         for ex, ey in self.level.get_enemy_spawns():
             self.enemies.add(Enemy((ex, ey)))
         # pociski
@@ -97,6 +97,7 @@ class Game:
 
             if self.state =="MENU":
                 self.menu.run()
+                self.reset()
                 self.state = "PLAY"
                 continue
 
@@ -118,8 +119,8 @@ class Game:
 
             if self.state == "GAME_OVER":
                 self._draw_game_over()
-                # powrót do menu
-                self.state = "MENU"
+                # # powrót do menu
+                # self.state = "MENU"
                 continue
 
             # self.handle_events()
@@ -224,6 +225,7 @@ class Game:
                 elif e.type == pygame.KEYDOWN:
                     if e.key == pygame.K_t: # tak = restart
                         self.reset()
+                        self.state = "PLAY"
                         waiting = False
                     elif e.key == pygame.K_n: # nie = menu
                         self.reset()
