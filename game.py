@@ -10,7 +10,7 @@ from level import Level
 from camera import Camera
 from background import TerminalBackground
 from engine import Engine
-from ui import Scoreboard, HealthBar, MainMenu
+from ui import Scoreboard, HealthBar, MainMenu, CurrentLevel
 
 
 class Game:
@@ -24,6 +24,7 @@ class Game:
         # początkowy stan gry
         self.state = "PLAY"
         self.menu = MainMenu(self.screen)
+        self.current_level = 1
 
         font_path = os.path.join("assets", "fonts", "UbuntuMono-R.ttf")
         self.font = pygame.font.Font(font_path, 18)
@@ -54,6 +55,7 @@ class Game:
         self.hud = Scoreboard()
         self.engine = Engine(self.hud, points_per_kill=100)
         self.health_bar = HealthBar(self.player)
+        self.clvl = CurrentLevel(self.screen, self.current_level)
 
     def reset(self):
         # przywrócenie stanu początkowego gry
@@ -164,6 +166,9 @@ class Game:
         self.engine.handle_hits(self.projectiles, self.enemies)
         self.engine.handle_player_collisions(self.player, self.enemies)
 
+        self.clvl.draw()
+
+
     def draw(self):
         # Tło terminala (nie podlega kamerze)
         self.terminal_bg.draw(self.screen, self.camera.x, self.camera.y)
@@ -180,6 +185,8 @@ class Game:
         # Rysowanie HUD'a
         self.hud.draw(self.screen)
         self.health_bar.draw(self.screen)
+        self.clvl.draw()
+
         pygame.display.flip()
 
     # Prosste menu
@@ -253,8 +260,6 @@ class Game:
         base = os.path.basename(self.level_file)
         name, ext = os.path.splitext(base)
         m = re.match(r"(.*?)(\d+)$", name)
-        print("BASE ", base)
-        print("M ", m)
         if not m:
             return False
         prefix, num = m.groups()
@@ -263,11 +268,9 @@ class Game:
             os.path.dirname(self.level_file),
             f"{prefix}{next_num}{ext}"
         )
-        print("NEXT FILE ", next_file)
-        print(os.path.exists(next_file))
-        print(next_file)
         if not os.path.exists(next_file):
             return False
         self.level_file = next_file
+        self.current_level += 1
         self.reset()
         return True

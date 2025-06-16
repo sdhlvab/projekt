@@ -190,3 +190,20 @@ class GameOverScreen:
         self.screen.blit(text, (x, y))
         pygame.display.flip()
         pygame.time.wait(2000)
+
+class CurrentLevel:
+    FONT_SIZE = 40
+
+    def __init__(self, screen, level):
+        self.screen = screen
+        self.level = level
+        self.font = pygame.font.Font(None, self.FONT_SIZE)
+
+    def draw(self):
+        # obecny poziom
+        font = pygame.font.Font(None, 48)
+        txt = font.render(f"Poziom: {self.level}", True, (255, 255, 255))
+        self.screen.blit(txt, ((SCREEN_WIDTH - txt.get_width()) // 2, 10))
+        #pygame.display.flip()
+
+
