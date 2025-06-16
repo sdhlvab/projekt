@@ -17,18 +17,19 @@ from ui import Scoreboard, HealthBar, MainMenu
 
 
 class Game:
-    def __init__(self, screen, player_name="hackerman", music_on=True, sound_on=True):
+    def __init__(self, screen, player_name="", music_on=True, sound_on=True):
         self.screen = screen
         self.clock = pygame.time.Clock()
         self.running = True
         self.player_name = player_name
 
+        # początkowy stan gry
         self.state = "PLAY"
         self.menu = MainMenu(self.screen)
 
         font_path = os.path.join("assets", "fonts", "UbuntuMono-R.ttf")
-        font = pygame.font.Font(font_path, 18)
-        command_file = "assets/data/commands.txt"
+        self.font = pygame.font.Font(font_path, 18)
+        self.command_file = "assets/data/commands.txt"
 
         # Level i kafelki
         self.level = Level(LEVEL_FILE)
@@ -49,7 +50,7 @@ class Game:
         self.camera = Camera(self.level.pixel_width, self.level.pixel_height, SCREEN_WIDTH, SCREEN_HEIGHT)
 
         # Terminal w tle (wywołanie bez przesunięcia)
-        self.terminal_bg = TerminalBackground(SCREEN_WIDTH, SCREEN_HEIGHT, font, command_file, SCREEN_HEIGHT , player_name)
+        self.terminal_bg = TerminalBackground(SCREEN_WIDTH, SCREEN_HEIGHT, self.font, self.command_file, SCREEN_HEIGHT , self.player_name)
 
         # UI
         self.hud = Scoreboard()
@@ -78,6 +79,8 @@ class Game:
         # reset stanu i zegara
         self.clock.tick()
         self.state = "PLAY"
+        # reset tła (linii komend)
+        self.terminal_bg = TerminalBackground(SCREEN_WIDTH, SCREEN_HEIGHT, self.font, self.command_file, SCREEN_HEIGHT , self.player_name)
 
     def run(self):
         while self.running and self.state != "EXIT":
@@ -96,7 +99,10 @@ class Game:
 
 
             if self.state =="MENU":
+                self.menu.player_name = self.player_name
+                self.menu.active = False
                 self.menu.run()
+                self.player_name = self.menu.player_name
                 self.reset()
                 self.state = "PLAY"
                 continue

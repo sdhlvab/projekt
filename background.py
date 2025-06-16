@@ -3,11 +3,11 @@ import random
 
 from config import TILE_SIZE
 
-PROMPT = "hackerman@debian:~$"
+PROMPT = "@debian:~$"
 CURSOR_CHARS = ["_", " "]
 
 class TerminalBackground:
-    def __init__(self, width, height, font, command_file, terminal_height, player_name="aaa"):
+    def __init__(self, width, height, font, command_file, terminal_height, player_name="hackerman"):
         self.width = width
         self.height = height
         self.font = font
@@ -35,15 +35,16 @@ class TerminalBackground:
             self.last_cursor_switch = now
 
     def draw(self, surface, camera_x, camera_y):
+        prompt = self.player_name + PROMPT
         # Terminal zawsze na górze, bez przesuwania
         surface.fill((0, 0, 0), (0, 0, self.width, self.terminal_height))
         for i, line in enumerate(self.lines):
-            text = f"{PROMPT} {line}"
+            text = f"{prompt} {line}"
             txt = self.font.render(text, False, (0, 255, 0))
             surface.blit(txt, (10, i * self.line_height))
         # prompt z kursorem na ostatniej linii
         cursor = CURSOR_CHARS[0] if self.cursor_visible else CURSOR_CHARS[1]
-        prompt_line = f"{PROMPT} {cursor}"
+        prompt_line = f"{prompt} {cursor}"
         prompt_y = (self.num_lines - 1) * self.line_height
         txt = self.font.render(prompt_line, False, (0, 255, 0))
         surface.blit(txt, (10, prompt_y))
