@@ -4,6 +4,8 @@ from time import sleep
 import pygame
 import os
 
+from select import select
+
 from config import SCREEN_WIDTH, SCREEN_HEIGHT, TILE_SIZE, LEVEL_FILE, PLAYER_IMAGE, ENEMY_IMAGE
 from player import Player
 from enemy import Enemy
@@ -21,7 +23,7 @@ class Game:
         self.running = True
         self.player_name = player_name
 
-        self.state = "MENU"
+        self.state = "PLAY"
         self.menu = MainMenu(self.screen)
 
         font_path = os.path.join("assets", "fonts", "UbuntuMono-R.ttf")
@@ -53,6 +55,29 @@ class Game:
         self.hud = Scoreboard()
         self.engine = Engine(self.hud, points_per_kill=100)
         self.health_bar = HealthBar(self.player)
+
+    def reset(self):
+        # przywrócenie stanu początkowego gry
+        # odtworzenie poziomu i kafli
+        self.level = Level(LEVEL_FILE)
+        self.ground_rects = self.level.get_ground_rects()
+        # gracz
+        px, py = self.level.get_player_spawn()
+        self.player = Player((px, py))
+        # wrogowie
+        self.enemies = pygame.sprite.Group
+        for ex, ey in self.level.get_enemy_spawns():
+            self.enemies.add(Enemy((ex, ey)))
+        # pociski
+        self.projectiles = pygame.sprite.Group()
+        # kamera
+        self.camera = Camera(self.level.pixel_width, self.level.pixel_height, SCREEN_WIDTH, SCREEN_HEIGHT)
+        # reset ui
+        self.hud.reset()
+        self.health_bar = HealthBar(self.player)
+        # reset stanu i zegara
+        self.clock.tick()
+        self.state = "PLAY"
 
     def run(self):
         while self.running and self.state != "EXIT":
@@ -168,13 +193,44 @@ class Game:
             self.clock.tick(10)
 
     def _draw_game_over(self):
+        # ciemne tło
         overlay = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT))
         overlay.set_alpha(180);
         overlay.fill((0, 0, 0))
         self.screen.blit(overlay, (0, 0))
+        # napis game over
         go = pygame.font.Font(None, 72).render("GAME OVER", True, (255, 0, 0))
-        self.screen.blit(go, ((SCREEN_WIDTH - go.get_width()) // 2, (SCREEN_HEIGHT - go.get_height()) // 2))
+        self.screen.blit(go, ((SCREEN_WIDTH - go.get_width()) // 2, (SCREEN_HEIGHT - go.get_height()) // 2 - 60))
+        # wynik
+        font_med = pygame.font.Font(None, 48)
+        score_txt = font_med.render(f"Twój wynik: {self.hud.score}", True, (255, 255, 255))
+        self.screen.blit(score_txt, ((SCREEN_WIDTH - score_txt.get_width()) // 2,
+                                     (SCREEN_HEIGHT - score_txt.get_height()) // 2 + 20))
+        # pytanie o restart
+        font_sm = pygame.font.Font(None, 36)
+        txt = font_sm.render("Czy chcesz zrestartować? (T)ak/(N)ie", True, (200, 200, 200))
+        self.screen.blit(txt, ((SCREEN_WIDTH - txt.get_width()) // 2,
+                               (SCREEN_HEIGHT - txt.get_height()) // 2 + 80))
+
         pygame.display.flip()
-        pygame.time.wait(2000)
-        self.__init__(self.screen, self.player_name)
-        self.state = "MENU"
+
+        #czekamy na decyzje
+        waiting = True
+        while waiting:
+            for e in pygame.event.get():
+                if e.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+                elif e.type == pygame.KEYDOWN:
+                    if e.key == pygame.K_t: # tak = restart
+                        self.reset()
+                        waiting = False
+                    elif e.key == pygame.K_n: # nie = menu
+                        self.reset()
+                        self.state = "MENU"
+                        waiting = False
+            self.clock.tick(10)
+
+        # pygame.time.wait(2000)
+        # self.__init__(self.screen, self.player_name)
+        # self.state = "MENU"
