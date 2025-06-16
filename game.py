@@ -1,3 +1,4 @@
+import sys
 from time import sleep
 
 import pygame
@@ -12,7 +13,8 @@ from level import Level
 from camera import Camera
 from background import TerminalBackground
 from engine import Engine
-from ui import Scoreboard, HealthBar
+from ui import Scoreboard, HealthBar, MainMenu
+
 
 class Game:
     def __init__(self, screen, player_name="hackerman", music_on=True, sound_on=True):
@@ -21,7 +23,8 @@ class Game:
         self.running = True
         self.player_name = player_name
 
-        self.state = "PLAY"
+        self.state = "MENU"
+        self.menu = MainMenu(self.screen)
 
         font_path = os.path.join("assets", "fonts", "UbuntuMono-R.ttf")
         font = pygame.font.Font(font_path, 18)
@@ -67,12 +70,10 @@ class Game:
                     elif self.state == "PAUSE":
                         self.state = "PLAY"
 
+
             if self.state =="MENU":
-                keys = pygame.key.get_pressed()
-                # ENTER przechodzi do gry
-                if keys[pygame.K_RETURN]:
-                    self.state = "PLAY"
-                self._draw_menu()
+                self.menu.run()
+                self.state = "PLAY"
                 continue
 
             if self.state == "PLAY":
@@ -95,7 +96,7 @@ class Game:
                 self._draw_game_over()
                 # pętla kończu się przez stan "EXIT"
                 continue
-            
+
             # self.handle_events()
             # self.update()
             # self.draw()
@@ -155,6 +156,16 @@ class Game:
         pause = pygame.font.Font(None, 72).render("PAUSE", True, (255, 255, 0))
         self.screen.blit(pause, ((SCREEN_WIDTH - pause.get_width()) // 2, 20))
         pygame.display.flip()
+        paused = True
+        while paused:
+            for e in pygame.event.get():
+                if e.type == pygame.KEYDOWN and e.key == pygame.K_ESCAPE:
+                    paused = False
+                    self.state = "PLAY"
+                elif e.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+            self.clock.tick(10)
 
     def _draw_game_over(self):
         overlay = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT))
