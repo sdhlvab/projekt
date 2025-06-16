@@ -1,3 +1,5 @@
+from time import sleep
+
 import pygame
 import os
 
@@ -65,47 +67,38 @@ class Game:
                     elif self.state == "PAUSE":
                         self.state = "PLAY"
 
-            if self.state == "MENU":
+            if self.state =="MENU":
                 keys = pygame.key.get_pressed()
-                #enter ptrzechfi do gry
                 # ENTER przechodzi do gry
-                +
                 if keys[pygame.K_RETURN]:
-                    +                    self.state = "PLAY"
-                +                self._draw_menu()
-                +
+                    self.state = "PLAY"
+                self._draw_menu()
                 continue
-                +
-                +
-                if self.state == "PLAY":
-                    +  # normalna pętla gry
-                +                self.handle_events()
-                +                self.update()
-                +                self.draw()
-                +  # wykrycie przegranej
-                +
+
+            if self.state == "PLAY":
+                # normalna pętla gry
+                self.handle_events()
+                self.update()
+                self.draw()
+                # wykrycie przegranej
                 if self.player.hp <= 0:
-                    +                    self.state = "GAME_OVER"
-                +
+                    self.state = "GAME_OVER"
                 continue
-                +
-                +
-                if self.state == "PAUSE":
-                    +  # rysujemy pauzę, ale nie update’ujemy świata
-                +                self.draw()  # rysujemy świat, żeby mieć tło
-                +                self._draw_pause()
-                +
+
+            if self.state == "PAUSE":
+                # pauza - rysowanie wszystkiego, ale bez update'u
+                self.draw()
+                self._draw_pause()
                 continue
-                +
-                +
-                if self.state == "GAME_OVER":
-                    +                self._draw_game_over()
-                +  # petla się zakończy przez state=="EXIT"
-                +
+
+            if self.state == "GAME OVER":
+                self._draw_game_over()
+                # pętla kończu się przez stan "EXIT"
                 continue
-            self.handle_events()
-            self.update()
-            self.draw()
+            
+            # self.handle_events()
+            # self.update()
+            # self.draw()
 
     def handle_events(self):
         for event in pygame.event.get():
