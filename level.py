@@ -9,7 +9,8 @@ class Level:
         self.player_pos = None
         self.width = 0
         self.height = 0
-        self._load_map(os.path.join(LEVEL_DIR, filename))
+        #self._load_map(os.path.join(LEVEL_DIR, filename))
+        self._load_map(filename)
         self.pixel_width = self.width * TILE_SIZE
         self.pixel_height = self.height * TILE_SIZE
 

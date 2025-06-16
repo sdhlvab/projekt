@@ -3,7 +3,7 @@ import re
 import os
 import pygame
 
-from config import SCREEN_WIDTH, SCREEN_HEIGHT, TILE_SIZE, LEVEL_FILE, PLAYER_IMAGE, ENEMY_IMAGE
+from config import SCREEN_WIDTH, SCREEN_HEIGHT, TILE_SIZE, LEVEL_FILE, PLAYER_IMAGE, ENEMY_IMAGE, LEVEL_DIR
 from player import Player
 from enemy import Enemy
 from level import Level
@@ -19,7 +19,7 @@ class Game:
         self.clock = pygame.time.Clock()
         self.running = True
         self.player_name = player_name
-        self.level_file = LEVEL_FILE
+        self.level_file = os.path.join(LEVEL_DIR, LEVEL_FILE)
 
         # początkowy stan gry
         self.state = "PLAY"
