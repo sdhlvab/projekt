@@ -1,8 +1,8 @@
 # Ścieżki do assetów (dostosuj jeśli masz inny układ katalogów)
 ASSETS_DIR = "assets/"
 IMG_DIR = ASSETS_DIR + "img/"
-FLOOR_TILE = IMG_DIR + "floor_tile.png"
-WALL_TILE = IMG_DIR + "wall_tile.png"
+FLOOR_TILE = IMG_DIR + "floor2_tile.png"
+WALL_TILE = IMG_DIR + "wall3_tile.png"
 PLAYER_IMAGE = IMG_DIR + "hackerman_brown.png"
 ENEMY_IMAGE = IMG_DIR + "bugzilla.png"
 # ... tu inne grafiki, jeśli będą

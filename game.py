@@ -101,6 +101,7 @@ class Game:
             if self.state =="MENU":
                 self.menu.player_name = self.player_name
                 self.menu.active = False
+                self.menu.running = True
                 self.menu.run()
                 self.player_name = self.menu.player_name
                 self.reset()
