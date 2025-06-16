@@ -234,7 +234,6 @@ class Game:
                         self.state = "PLAY"
                         waiting = False
                     elif e.key == pygame.K_n: # nie = menu
-                        self.reset()
                         self.state = "MENU"
                         waiting = False
             self.clock.tick(10)
