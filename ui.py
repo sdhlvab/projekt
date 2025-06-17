@@ -1,14 +1,14 @@
 import pygame
 import os
 
-from config import SCREEN_WIDTH, SCREEN_HEIGHT
+from config import SCREEN_WIDTH, SCREEN_HEIGHT, FONT_PATH
 
 class MainMenu:
     def __init__(self, screen):
         self.screen = screen
         self.clock = pygame.time.Clock()
-        self.font = pygame.font.Font("assets/fonts/UbuntuMono-R.ttf", 28)
-        self.big_font = pygame.font.Font("assets/fonts/UbuntuMono-R.ttf", 48)
+        self.font = pygame.font.Font(FONT_PATH, 28)
+        self.big_font = pygame.font.Font(FONT_PATH, 48)
         self.input_box = pygame.Rect(250, 220, 300, 40)
         self.player_name = ""
         self.music_on = True
@@ -115,10 +115,9 @@ class Scoreboard:
     BG_COLOR = (0, 0, 0, 180)
     TEXT_COLOR = (255, 255, 255)
 
-    def __init__(self, initial_score=0, font_size=24, font_name="UbuntuMono-R.ttf"):
+    def __init__(self, initial_score=0, font_size=24):
         # ładowanie fontu
-        font_path = os.path.join("assets", "fonts", font_name)
-        self.font = pygame.font.Font(font_path, font_size)
+        self.font = pygame.font.Font(FONT_PATH, font_size)
         self.score = initial_score
 
     def add_points(self, pts):
@@ -128,7 +127,7 @@ class Scoreboard:
         self.score = 0
 
     def draw(self, surface):
-        text = f"Score: {self.score}"
+        text = f"Punkty: {self.score}"
         surf = self.font.render(text, True, self.TEXT_COLOR)
         bg_rect = surf.get_rect(topright=(SCREEN_WIDTH - self.PADDING, self.PADDING + 30)).inflate(8, 4)
         # półprzezroczyste tło (jeśli masz display z ALPHA)

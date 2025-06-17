@@ -20,11 +20,6 @@ class Projectile(pygame.sprite.Sprite):
         # Zniszcz pocisk jeśli poza ekranem/mapą
         if self.rect.right < 0 or self.rect.left > SCREEN_WIDTH * 2:
             self.kill()
-        # # Kolizja z przeciwnikami
-        # for enemy in enemies:
-        #     if hasattr(enemy, "rect") and self.rect.colliderect(enemy.rect):
-        #         enemy.take_damage(self.damage)
-        #         self.kill()
         # Kolizja ze ścianą
         for tile in tiles:
             if self.rect.colliderect(tile):

@@ -57,7 +57,7 @@ class Game:
         self.health_bar = HealthBar(self.player)
         self.clvl = CurrentLevel(self.screen, self.current_level)
 
-    def reset(self):
+    def reset(self, full_reset=True):
         # przywrócenie stanu początkowego gry
         # odtworzenie poziomu i kafli
         self.level = Level(self.level_file)
@@ -73,9 +73,10 @@ class Game:
         self.projectiles = pygame.sprite.Group()
         # kamera
         self.camera = Camera(self.level.pixel_width, self.level.pixel_height, SCREEN_WIDTH, SCREEN_HEIGHT)
-        # reset ui
-        self.hud.reset()
-        self.health_bar = HealthBar(self.player)
+        # reset ui (nie resetuje przy przejściu do kolejnego poziomu)
+        if full_reset:
+            self.hud.reset()
+            self.health_bar = HealthBar(self.player)
         # reset stanu i zegara
         self.clock.tick()
         self.state = "PLAY"
@@ -189,20 +190,14 @@ class Game:
 
         pygame.display.flip()
 
-    # Prosste menu
-    def _draw_menu(self):
-        # tu np. prosty napis „PRESS ENTER TO START”
-        font = pygame.font.Font(None, 48)
-        txt = font.render("Press ENTER to Start", True, (0, 255, 0))
-        x = (SCREEN_WIDTH - txt.get_width()) // 2
-        y = (SCREEN_HEIGHT - txt.get_height()) // 2
-        self.screen.fill((0, 0, 0))
-        self.screen.blit(txt, (x, y))
-        pygame.display.flip()
-
         # prosta pauza
     def _draw_pause(self):
-        pause = pygame.font.Font(None, 72).render("PAUSE", True, (255, 255, 0))
+        # ciemne tło
+        overlay = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT))
+        overlay.set_alpha(180);
+        overlay.fill((0, 0, 0))
+        self.screen.blit(overlay, (0, 0))
+        pause = pygame.font.Font(None, 72).render("PAUZA", True, (255, 255, 0))
         self.screen.blit(pause, ((SCREEN_WIDTH - pause.get_width()) // 2, 20))
         pygame.display.flip()
         paused = True
@@ -271,7 +266,7 @@ class Game:
         if not os.path.exists(next_file):
             return False
         self.level_file = next_file
-        self.reset()
+        self.reset(False)
         self.current_level += 1
         self.clvl = CurrentLevel(self.screen, self.current_level)
         return True
