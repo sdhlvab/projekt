@@ -80,6 +80,7 @@ class Game:
         else:
             px, py = self.level.get_player_spawn()
             self.player = Player((px, py), hp=self.player.hp)
+            self.health_bar = HealthBar(self.player)
         # reset stanu i zegara
         self.clock.tick()
         self.state = "PLAY"
@@ -171,9 +172,6 @@ class Game:
         self.engine.handle_player_collisions(self.player, self.enemies)
 
         self.clvl.draw()
-
-        print(self.player.hp)
-
 
     def draw(self):
         # Tło terminala (nie podlega kamerze)
