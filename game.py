@@ -3,7 +3,7 @@ import re
 import os
 import pygame
 
-from config import SCREEN_WIDTH, SCREEN_HEIGHT, TILE_SIZE, LEVEL_FILE, PLAYER_IMAGE, ENEMY_IMAGE, LEVEL_DIR
+from config import SCREEN_WIDTH, SCREEN_HEIGHT, TILE_SIZE, LEVEL_FILE, LEVEL_DIR #PLAYER_IMAGE, ENEMY_IMAGE,
 from player import Player
 from enemy import Enemy
 from level import Level
