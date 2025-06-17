@@ -1,7 +1,9 @@
 import pygame
+from select import select
+
 
 class Character(pygame.sprite.Sprite):
-    def __init__(self, image, pos, speed=3, max_hp=50):
+    def __init__(self, image, pos, speed=3, max_hp=50, hp=50):
         super().__init__()
         # Odbicie grafiki
         self.image_right = image
@@ -19,7 +21,7 @@ class Character(pygame.sprite.Sprite):
         self.on_ground = False
 
         self.max_hp = max_hp
-        self.hp = self.max_hp
+        self.hp = hp if hp is not None else self.max_hp
         self.show_hp_time = 0
         self.def_show_hp_time = 1000
 

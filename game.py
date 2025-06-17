@@ -62,9 +62,6 @@ class Game:
         # odtworzenie poziomu i kafli
         self.level = Level(self.level_file)
         self.ground_rects = self.level.get_ground_rects()
-        # gracz
-        px, py = self.level.get_player_spawn()
-        self.player = Player((px, py))
         # wrogowie
         self.enemies = pygame.sprite.Group()
         for ex, ey in self.level.get_enemy_spawns():
@@ -75,8 +72,14 @@ class Game:
         self.camera = Camera(self.level.pixel_width, self.level.pixel_height, SCREEN_WIDTH, SCREEN_HEIGHT)
         # reset ui (nie resetuje przy przejściu do kolejnego poziomu)
         if full_reset:
+            # gracz
+            px, py = self.level.get_player_spawn()
+            self.player = Player((px, py))
             self.hud.reset()
             self.health_bar = HealthBar(self.player)
+        else:
+            px, py = self.level.get_player_spawn()
+            self.player = Player((px, py), hp=self.player.hp)
         # reset stanu i zegara
         self.clock.tick()
         self.state = "PLAY"
@@ -169,6 +172,8 @@ class Game:
 
         self.clvl.draw()
 
+        print(self.player.hp)
+
 
     def draw(self):
         # Tło terminala (nie podlega kamerze)
@@ -194,11 +199,11 @@ class Game:
     def _draw_pause(self):
         # ciemne tło
         overlay = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT))
-        overlay.set_alpha(180);
+        overlay.set_alpha(200)
         overlay.fill((0, 0, 0))
         self.screen.blit(overlay, (0, 0))
         pause = pygame.font.Font(None, 72).render("PAUZA", True, (255, 255, 0))
-        self.screen.blit(pause, ((SCREEN_WIDTH - pause.get_width()) // 2, 20))
+        self.screen.blit(pause, ((SCREEN_WIDTH - pause.get_width()) // 2, 200))
         pygame.display.flip()
         paused = True
         while paused:

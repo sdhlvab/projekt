@@ -20,11 +20,11 @@ def scale_to_height(image, target_height):
     return pygame.transform.scale(image, (new_w, target_height))
 
 class Player(Character):
-    def __init__(self, pos):
+    def __init__(self, pos, hp=None):
         raw = pygame.image.load(PLAYER_IMAGE).convert_alpha()
         cropped = crop_to_visible_area(raw)
         self.image = scale_to_height(cropped, TILE_SIZE)
-        super().__init__(self.image, pos, speed=5, max_hp=100)
+        super().__init__(self.image, pos, speed=5, max_hp=100, hp=hp)
 
         self.direction = 1 # 1 prawo, -1 lewo
         self.shoot_cooldown = 0
