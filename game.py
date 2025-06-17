@@ -271,6 +271,6 @@ class Game:
         if not os.path.exists(next_file):
             return False
         self.level_file = next_file
-        self.current_level += 1
         self.reset()
+        self.current_level += 1
         return True
