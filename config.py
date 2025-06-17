@@ -4,13 +4,16 @@ IMG_DIR = ASSETS_DIR + "img/"
 FLOOR_TILE = IMG_DIR + "floor2_tile.png"
 WALL_TILE = IMG_DIR + "wall3_tile.png"
 PLAYER_IMAGE = IMG_DIR + "hackerman_brown.png"
+EXIT_TILE = IMG_DIR + "level_tile.png"
+
+#przeciwnicy
 ENEMY_IMAGE = IMG_DIR + "bugzilla.png"
-EXIT_TILE = IMG_DIR + "wall_tile.png"
-# ... tu inne grafiki, jeśli będą
+
+
 
 # Plik levela
 LEVEL_FILE = "level1.txt"
-LEVEL_DIR = "levels"
+LEVEL_DIR = "assets/levels"
 
 # Podstawowe ustawienia
 TILE_SIZE = 64
