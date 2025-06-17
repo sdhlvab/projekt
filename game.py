@@ -273,4 +273,5 @@ class Game:
         self.level_file = next_file
         self.reset()
         self.current_level += 1
+        self.clvl = CurrentLevel(self.screen, self.current_level)
         return True
