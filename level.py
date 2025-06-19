@@ -96,3 +96,11 @@ class Level:
             py = self._offset_y() + y * TILE_SIZE
             rects.append(pygame.Rect(px, py, TILE_SIZE, TILE_SIZE))
         return rects
+
+    def get_coin_spawns(self):
+        spawns =[]
+        for y, row in enumerate(self.tiles):
+            for x, tile in enumerate(row):
+                if tile == "C":
+                    spawns.append((x * TILE_SIZE, self._offset_y() + y * TILE_SIZE))
+        return spawns

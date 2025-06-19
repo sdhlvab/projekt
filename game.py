@@ -11,6 +11,7 @@ from camera import Camera
 from background import TerminalBackground
 from engine import Engine
 from ui import Scoreboard, HealthBar, MainMenu, CurrentLevel
+from coin import Coin
 
 
 class Game:
@@ -44,6 +45,11 @@ class Game:
         # Dodaj przeciwników z levela (np. 'E' w pliku)
         for ex, ey in self.level.get_enemy_spawns():
             self.enemies.add(Enemy((ex, ey)))
+
+        # "monety"
+        self.coins = pygame.sprite.Group()
+        for cx, cy in self.level.get_coin_spawns():
+            self.coins.add(Coin(cx, cy))
 
         # Kamera
         self.camera = Camera(self.level.pixel_width, self.level.pixel_height, SCREEN_WIDTH, SCREEN_HEIGHT)
@@ -158,6 +164,11 @@ class Game:
                 self.state = "GAME_OVER"
                 return
 
+        # wykrycie zderzenia z monetami
+        hits = pygame.sprite.spritecollide(self.player, self.coins, True)
+        if hits:
+            self.hud.add_points(10 * len(hits))
+
         #self.enemies.update(self.ground_rects)
         # wrogowie odbijają się od wszystkich kfelków
         all_solid = self.ground_rects + self.level.get_exit_rects()
@@ -190,6 +201,10 @@ class Game:
         self.hud.draw(self.screen)
         self.health_bar.draw(self.screen)
         self.clvl.draw()
+
+        # Rysowanie "monet"
+        for coin in self.coins:
+            self.screen.blit(coin.image, self.camera.apply(coin.rect))
 
         pygame.display.flip()
 

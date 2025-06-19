@@ -7,6 +7,8 @@ WALL_TILE = IMG_DIR + "wall3_tile.png"
 PLAYER_IMAGE = IMG_DIR + "hackerman_brown.png"
 EXIT_TILE = IMG_DIR + "level_tile.png"
 
+COIN_IMAGE = IMG_DIR + "boost2.png"
+
 #przeciwnicy
 ENEMY_TYPES = {
     "bugzilla": {
@@ -46,12 +48,12 @@ ENEMY_TYPES = {
     },
     "syntaxterror": {
         "image": ENEMIES_DIR + "syntaxterror.png",
-        "speed": 9,
+        "speed": 7,
         "hp": 25,
     },
     "trojanhorse": {
         "image": ENEMIES_DIR + "trojanhorse.png",
-        "speed": 8,
+        "speed": 6,
         "hp": 125,
     },
     "virusworm": {
