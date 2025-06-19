@@ -7,7 +7,7 @@ WALL_TILE = IMG_DIR + "wall3_tile.png"
 PLAYER_IMAGE = IMG_DIR + "hackerman_brown.png"
 EXIT_TILE = IMG_DIR + "level_tile.png"
 
-COIN_IMAGE = IMG_DIR + "boost2.png"
+COIN_IMAGE = IMG_DIR + "boost1.png"
 
 #przeciwnicy
 ENEMY_TYPES = {

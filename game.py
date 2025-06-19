@@ -50,6 +50,7 @@ class Game:
         self.coins = pygame.sprite.Group()
         for cx, cy in self.level.get_coin_spawns():
             self.coins.add(Coin(cx, cy))
+        print(self.level.get_coin_spawns())
 
         # Kamera
         self.camera = Camera(self.level.pixel_width, self.level.pixel_height, SCREEN_WIDTH, SCREEN_HEIGHT)
