@@ -12,6 +12,7 @@ from background import TerminalBackground
 from engine import Engine
 from ui import Scoreboard, HealthBar, MainMenu, CurrentLevel
 from coin import Coin
+from audio import Music, Sound
 
 
 class Game:
@@ -21,6 +22,13 @@ class Game:
         self.running = True
         self.player_name = player_name
         self.level_file = os.path.join(LEVEL_DIR, LEVEL_FILE)
+
+        # audio
+        self.music_on = music_on
+        self.sound_on = sound_on
+        self.music = Music(self.music_on)
+        self.music.play()
+        self.sfx = Sound(self.sound_on)
 
         # początkowy stan gry
         self.state = "PLAY"
@@ -50,7 +58,6 @@ class Game:
         self.coins = pygame.sprite.Group()
         for cx, cy in self.level.get_coin_spawns():
             self.coins.add(Coin(cx, cy))
-        print(self.level.get_coin_spawns())
 
         # Kamera
         self.camera = Camera(self.level.pixel_width, self.level.pixel_height, SCREEN_WIDTH, SCREEN_HEIGHT)
@@ -154,6 +161,7 @@ class Game:
                 new_proj = self.player.handle_event(event)
                 if new_proj:
                     self.projectiles.add(new_proj)
+            self.music.handle_event(event)
 
     def update(self):
         # wykrycie dotknięcia L (exit_tile)
@@ -168,7 +176,8 @@ class Game:
         # wykrycie zderzenia z monetami
         hits = pygame.sprite.spritecollide(self.player, self.coins, True)
         if hits:
-            self.hud.add_points(10 * len(hits))
+            self.sfx.play("coin")
+            self.hud.add_points(10)
 
         #self.enemies.update(self.ground_rects)
         # wrogowie odbijają się od wszystkich kfelków

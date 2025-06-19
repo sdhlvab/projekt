@@ -2,12 +2,33 @@
 ASSETS_DIR = "assets/"
 IMG_DIR = ASSETS_DIR + "img/"
 ENEMIES_DIR = IMG_DIR + "enemies/"
+MUSIC_DIR = ASSETS_DIR + "music/"
+SFX_DIR = ASSETS_DIR + "sfx/"
+
 FLOOR_TILE = IMG_DIR + "floor2_tile.png"
 WALL_TILE = IMG_DIR + "wall3_tile.png"
 PLAYER_IMAGE = IMG_DIR + "hackerman_brown.png"
 EXIT_TILE = IMG_DIR + "level_tile.png"
 
 COIN_IMAGE = IMG_DIR + "boost1.png"
+
+#muzyka
+MUSIC = [MUSIC_DIR + "theme1.mp3",
+         MUSIC_DIR + "theme2.mp3",
+         MUSIC_DIR + "theme3.mp3",
+         MUSIC_DIR + "theme4.mp3",
+         MUSIC_DIR + "theme5.mp3"]
+
+#sfx
+SFX = {
+    "coin": SFX_DIR + "coin.mp3",
+    "dead": SFX_DIR + "dead.mp3",
+    "jump": SFX_DIR + "jump.mp3",
+    "kill": SFX_DIR + "kill.mp3",
+    "levelup": SFX_DIR + "levelup.mp3",
+    "powerup": SFX_DIR + "powerup.mp3",
+    "shoot": SFX_DIR + "shoot.mp3",
+}
 
 #przeciwnicy
 ENEMY_TYPES = {

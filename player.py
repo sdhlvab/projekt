@@ -3,6 +3,7 @@ import pygame
 from config import TILE_SIZE, PLAYER_IMAGE
 from projectile import Projectile
 from character import Character
+from audio import Sound
 
 def crop_to_visible_area(image, tolerance=10):
     mask = pygame.mask.from_surface(image, tolerance)
@@ -35,6 +36,9 @@ class Player(Character):
         self.invincible_time = 0
         self.def_invincible_time = 100
 
+        # audio
+        self.sfx = Sound()
+
     def update(self, keys, tiles):
         #obsługa klawiszy
         self.handle_input()
@@ -48,6 +52,7 @@ class Player(Character):
 
     def shoot(self):
         if self.shoot_cooldown == 0:
+            self.sfx.play("shoot")
             self.shoot_cooldown = self.def_shoot_cooldown
             x, y = self.rect.center
             return Projectile(x, y, direction=self.direction, speed=self.shoot_speed, damage=self.shoot_damage)
@@ -65,6 +70,7 @@ class Player(Character):
             self.direction = 1
             self.set_facing(1)
         if keys[pygame.K_UP] and self.on_ground:
+            self.sfx.play("jump")
             self.velocity.y = self.jump_strength
 
     def handle_event(self, event):
