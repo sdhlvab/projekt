@@ -37,9 +37,15 @@ class Player(Character):
         self.def_invincible_time = 100
 
         # audio
+        self.old_y = self.rect.y
         self.sfx = Sound()
 
     def update(self, keys, tiles):
+        #zmiana pozycji y
+        old_y = self.rect.y
+
+        was_on_ground = self.on_ground
+
         #obsługa klawiszy
         self.handle_input()
 
@@ -49,6 +55,11 @@ class Player(Character):
         #fizyka
         self.apply_gravity()
         self.move_collide(tiles)
+
+        new_y = self.rect.y
+
+        if (was_on_ground and not self.on_ground) and new_y != self.old_y:
+            self.sfx.play("jump")
 
     def shoot(self):
         if self.shoot_cooldown == 0:
@@ -70,8 +81,11 @@ class Player(Character):
             self.direction = 1
             self.set_facing(1)
         if keys[pygame.K_UP] and self.on_ground:
-            self.sfx.play("jump")
+            # self.sfx.play("jump")
             self.velocity.y = self.jump_strength
+            # if self != self.rect.y:
+            #     print("OLD_Y: ", self.old_y)
+            #     print("Y: ", self.rect.y)
 
     def handle_event(self, event):
         if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:

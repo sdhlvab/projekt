@@ -27,7 +27,7 @@ class Game:
         self.music_on = music_on
         self.sound_on = sound_on
         self.music = Music(self.music_on)
-        self.music.play()
+        #self.music.play()
         self.sfx = Sound(self.sound_on)
 
         # początkowy stan gry
