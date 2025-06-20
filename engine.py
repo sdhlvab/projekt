@@ -13,13 +13,14 @@ class Engine:
         hits = pygame.sprite.groupcollide(projectiles, enemies,True,False)
         for proj, hit_list in hits.items():
             for enemy in hit_list:
-                # dajemy trochę damage
+                # zadanie obrażeń przeciwnikowi
                 enemy.take_damage(proj.damage)
-                # jeśli wróg faktycznie umarł, nalicz punkty
+                # jeśli wróg faktycznie umarł to nalicz punkty i odtywórz dźwięk
                 if enemy.hp <= 0:
                     self.hud.add_points(self.points_per_kill)
                     self.sfx.play("kill")
 
     def handle_player_collisions(self, player, enemies: pygame.sprite.Group):
+        # wykrycie kolizji gracz - przeciwnicy i zredukowanie ilości hp jeśli tak się stało
         if pygame.sprite.spritecollideany(player, enemies):
             player.take_damage(1)

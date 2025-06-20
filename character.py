@@ -74,21 +74,24 @@ class Character(pygame.sprite.Sprite):
         # rysowanie paska życia tylko po otrzymaniu obrażeń
         now = pygame.time.get_ticks()
         if now < self.show_hp_time:
-            # szerokość sprite'a na ekranie
-            w = screen_rect.width
-            h = 4
-            # pasek ma być tuż nad sprite’em
-            x = screen_rect.x
-            y = screen_rect.y - h - 2
+            # szerokość sprite'a = szerokość paska
+            bar_w = screen_rect.width
+            bar_h = 4
+            # pasek nad sprite’em
+            bar_x = screen_rect.x
+            bar_y = screen_rect.y - bar_h - 2
 
             # wypełnienie: proporcja hp
-            fill_w = int(w * (self.hp / self.max_hp))
-            inner = pygame.Rect(x, y, fill_w, h)
-            outer = pygame.Rect(x, y, w, h)
+            ratio = max(0.0, min(1.0, self.hp / self.max_hp))
+            fill_w = int(bar_w * ratio)
+            fill_w = max(0, min(bar_w, fill_w))
+
+            inner_rect = pygame.Rect(bar_x, bar_y, fill_w, bar_h)
+            outer_rect = pygame.Rect(bar_x, bar_y, bar_w, bar_h)
 
             # rysowanie
-            pygame.draw.rect(surface, (255, 0, 0), inner)
-            pygame.draw.rect(surface, (255, 255, 255), outer, 1)
+            pygame.draw.rect(surface, (255, 0, 0), inner_rect)
+            pygame.draw.rect(surface, (255, 255, 255), outer_rect, 1)
 
     # obracanie grafiki w zależności od kierunku
     def set_facing(self, direction:int):
