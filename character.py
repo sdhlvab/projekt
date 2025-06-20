@@ -75,9 +75,8 @@ class Character(pygame.sprite.Sprite):
             h = 4
             x = self.rect.x
             y = self.rect.y - h - 2
-            ratio = self.hp / self.max_hp
-            inner_w = int(w * ratio)
-            inner_rect = pygame.Rect(x, y, inner_w, h)
+            fill_w = int(w * (self.hp / self.max_hp))
+            inner_rect = pygame.Rect(x, y, fill_w, h)
             outer_rect = pygame.Rect(x, y, w, h)
             pygame.draw.rect(surface, (255, 0, 0), inner_rect)
             pygame.draw.rect(surface, (255, 255, 255), outer_rect, 1)
