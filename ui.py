@@ -1,7 +1,6 @@
 import pygame
 
 from config import SCREEN_WIDTH, SCREEN_HEIGHT, FONT_PATH
-from audio import Sound
 
 class MainMenu:
     def __init__(self, screen):
@@ -174,12 +173,8 @@ class GameOverScreen:
     def __init__(self, screen):
         self.screen = screen
         self.font = pygame.font.Font(None, self.FONT_SIZE)
-        self.sfx = Sound()
 
     def show(self):
-        # audio
-        self.sfx.play("dead")
-
         # półprzezroczyste tło
         overlay = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT))
         overlay.set_alpha(self.OVERLAY_ALPHA)

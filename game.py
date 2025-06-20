@@ -134,6 +134,7 @@ class Game:
                 self.draw()
                 # wykrycie przegranej
                 if self.player.hp <= 0:
+                    self.sfx.play("dead")
                     self.state = "GAME_OVER"
                 continue
 
