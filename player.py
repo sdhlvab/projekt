@@ -41,24 +41,24 @@ class Player(Character):
         self.sfx = Sound()
 
     def update(self, keys, tiles):
-        #zmiana pozycji y
+        # zmiana pozycji y (potrzebne do prawidłowego odtworzenia dźwięku skoku)
         old_y = self.rect.y
-
         was_on_ground = self.on_ground
 
-        #obsługa klawiszy
+        # obsługa klawiszy
         self.handle_input()
 
-        #cooldown ataku
+        # cooldown ataku
         if self.shoot_cooldown > 0: self.shoot_cooldown -= 1
 
-        #fizyka
+        # fizyka
         self.apply_gravity()
         self.move_collide(tiles)
 
+        # zmiana pozycji y (potrzebne do prawidłowego odtworzenia dźwięku skoku)
         new_y = self.rect.y
-
-        if (was_on_ground and not self.on_ground) and new_y != self.old_y:
+        # dźwięk skoku
+        if (was_on_ground and not self.on_ground) and new_y != old_y:
             self.sfx.play("jump")
 
     def shoot(self):
@@ -81,11 +81,7 @@ class Player(Character):
             self.direction = 1
             self.set_facing(1)
         if keys[pygame.K_UP] and self.on_ground:
-            # self.sfx.play("jump")
             self.velocity.y = self.jump_strength
-            # if self != self.rect.y:
-            #     print("OLD_Y: ", self.old_y)
-            #     print("Y: ", self.rect.y)
 
     def handle_event(self, event):
         if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
