@@ -5,15 +5,15 @@ from select import select
 class Character(pygame.sprite.Sprite):
     def __init__(self, image, pos, speed=3, max_hp=50, hp=50):
         super().__init__()
-        # Odbicie grafiki
+        # odbicie grafiki
         self.image_right = image
         self.image_left = pygame.transform.flip(image, True, False)
         self.image = self.image_right
 
-        # Pozycja
+        # pozycja
         self.rect = self.image.get_rect(topleft=pos)
 
-        # Atrybuty
+        # atrybuty
         self.speed = speed
         self.velocity = pygame.math.Vector2(0, 0)
         self.gravity = 0.7
@@ -21,6 +21,7 @@ class Character(pygame.sprite.Sprite):
         self.on_ground = False
 
         self.max_hp = max_hp
+        # przy przejściu do kolejnego poziomu, ilość hp zostaje taka sama, po uruchomieniu = max_hp
         self.hp = hp if hp is not None else self.max_hp
         self.show_hp_time = 0
         self.def_show_hp_time = 1000
@@ -65,21 +66,29 @@ class Character(pygame.sprite.Sprite):
 
     # rysowanie
     def draw(self, surface, camera):
-        # sprite
+        # sprawdzenie pozycji sprite na ekranie
         screen_rect = camera.apply(self.rect)
+        # rysowanie sprite'a
         surface.blit(self.image, screen_rect)
-        # pasek życia
+
+        # rysowanie paska życia tylko po otrzymaniu obrażeń
         now = pygame.time.get_ticks()
         if now < self.show_hp_time:
-            w = self.rect.width
+            # szerokość sprite'a na ekranie
+            w = screen_rect.width
             h = 4
-            x = self.rect.x
-            y = self.rect.y - h - 2
+            # pasek ma być tuż nad sprite’em
+            x = screen_rect.x
+            y = screen_rect.y - h - 2
+
+            # wypełnienie: proporcja hp
             fill_w = int(w * (self.hp / self.max_hp))
-            inner_rect = pygame.Rect(x, y, fill_w, h)
-            outer_rect = pygame.Rect(x, y, w, h)
-            pygame.draw.rect(surface, (255, 0, 0), inner_rect)
-            pygame.draw.rect(surface, (255, 255, 255), outer_rect, 1)
+            inner = pygame.Rect(x, y, fill_w, h)
+            outer = pygame.Rect(x, y, w, h)
+
+            # rysowanie
+            pygame.draw.rect(surface, (255, 0, 0), inner)
+            pygame.draw.rect(surface, (255, 255, 255), outer, 1)
 
     # obracanie grafiki w zależności od kierunku
     def set_facing(self, direction:int):
