@@ -26,13 +26,13 @@ class Character(pygame.sprite.Sprite):
         self.def_show_hp_time = 1000
 
 
-    # Ograniczenie prędkości spadania
+    # ograniczenie prędkości spadania
     def apply_gravity(self):
         self.velocity.y = min(self.velocity.y + self.gravity, 12)
 
-    # Wykrywanie kolizji
+    # wykrywanie kolizji
     def move_collide(self, tiles, on_horizontal_collision=None):
-        #poziom
+        # poziom
         self.rect.x += self.velocity.x
         for tile in tiles:
             if self.rect.colliderect(tile):
@@ -43,7 +43,7 @@ class Character(pygame.sprite.Sprite):
                 if on_horizontal_collision:
                     on_horizontal_collision()
 
-        #pion
+        # pion
         self.rect.y += self.velocity.y
         self.on_ground = False
         for tile in tiles:
@@ -56,7 +56,7 @@ class Character(pygame.sprite.Sprite):
                     self.rect.top = tile.bottom
                     self.velocity.y = 0
 
-    # Otrzymywanie obrażeń
+    # otrzymywanie obrażeń
     def take_damage(self, damage):
         self.hp = max(self.hp - damage, 0)
         self.show_hp_time = pygame.time.get_ticks() + self.def_show_hp_time
@@ -65,25 +65,26 @@ class Character(pygame.sprite.Sprite):
 
     # rysowanie
     def draw(self, surface, camera):
-        #sprite
-        surface.blit(self.image, camera.apply(self.rect))
-        #pasek życia
+        # sprite
+        screen_rect = camera.apply(self.rect)
+        surface.blit(self.image, screen_rect)
+        # pasek życia
         now = pygame.time.get_ticks()
         if now < self.show_hp_time:
             w = self.rect.width
             h = 4
-            x, y = self.rect.x, self.rect.y - h - 2
+            x = self.rect.x
+            y = self.rect.y - h - 2
             ratio = self.hp / self.max_hp
-            inner = pygame.Rect(x, y, w * ratio, h)
-            outer = pygame.Rect(x, y, w, h)
-            inner = camera.apply(inner)
-            outer = camera.apply(outer)
-            pygame.draw.rect(surface, (255, 0, 0), inner)
-            pygame.draw.rect(surface, (255, 255, 255), outer, 1)
+            inner_w = int(w * ratio)
+            inner_rect = pygame.Rect(x, y, inner_w, h)
+            outer_rect = pygame.Rect(x, y, w, h)
+            pygame.draw.rect(surface, (255, 0, 0), inner_rect)
+            pygame.draw.rect(surface, (255, 255, 255), outer_rect, 1)
 
-    #obracanie grafiki w zależności od kierunku
+    # obracanie grafiki w zależności od kierunku
     def set_facing(self, direction:int):
-        #direction: 1 = prawo, -1 = lewo
+        # direction: 1 = prawo, -1 = lewo
         if direction not in (-1, 1):
             return
         self.image = self.image_left if direction < 0 else self.image_right
