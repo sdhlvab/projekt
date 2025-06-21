@@ -3,7 +3,7 @@ from select import select
 
 
 class Character(pygame.sprite.Sprite):
-    def __init__(self, image, pos, speed=3, max_hp=50, hp=50):
+    def __init__(self, image, pos, speed = 3, max_hp = 50, hp = None):
         super().__init__()
         # odbicie grafiki
         self.image_right = image
@@ -11,7 +11,7 @@ class Character(pygame.sprite.Sprite):
         self.image = self.image_right
 
         # pozycja
-        self.rect = self.image.get_rect(topleft=pos)
+        self.rect = self.image.get_rect(topleft = pos)
 
         # atrybuty
         self.speed = speed
