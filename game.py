@@ -280,7 +280,7 @@ class Game:
             self.clock.tick(10)
 
     def next_level(self):
-        """Przechodzi do kolejnego pliku levelX.txt, jeśli istnieje."""
+        # przejście do kolejnego pliku levelX.txt, jeśli istnieje
         base = os.path.basename(self.level_file)
         name, ext = os.path.splitext(base)
         m = re.match(r"(.*?)(\d+)$", name)
@@ -294,6 +294,7 @@ class Game:
         )
         if not os.path.exists(next_file):
             return False
+        self.sfx.play("levelup")
         self.level_file = next_file
         self.reset(False)
         self.current_level += 1
