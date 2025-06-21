@@ -135,7 +135,6 @@ class Game:
                 self.sound_on = self.menu.sound_on
                 self.music.set_music_on(self.music_on)
                 self.sfx.set_sound_on(self.sound_on)
-                print(">>> sound_on =", self.sound_on, "   sfx.sound_on =", self.sfx.sound_on)
                 self.reset()
                 self.player.image_path = self.selected_img
                 self.state = "PLAY"

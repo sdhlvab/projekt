@@ -11,6 +11,8 @@ class Music:
         random.shuffle(self.themes)
         self.current_index = 0
         self.music_on = music_on
+        if self.music_on:
+            pygame.mixer.music.play(-1)
 
         # Zarejestruj event po zakończeniu pliku
         pygame.mixer.music.set_endevent(self.MUSIC_END_EVENT)
@@ -48,7 +50,7 @@ class Music:
         if self.music_on:
             # jeśli nic nie gra, zacznij
             if not pygame.mixer.music.get_busy():
-                self.play()
+                self.play(-1)
         else:
             self.stop()
 
@@ -69,5 +71,7 @@ class Sound:
     def set_sound_on(self, on: bool):
         # włącza lub wyłącza efekty dźwiękowe
         self.sound_on = on
+        if not self.sound_on:
+            pygame.mixer.stop()
 
 

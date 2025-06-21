@@ -1,5 +1,4 @@
 import pygame
-from PyQt6.uic.pyuic import preview
 
 from config import SCREEN_WIDTH, SCREEN_HEIGHT, FONT_PATH, PLAYER, TILE_SIZE
 
