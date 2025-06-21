@@ -11,7 +11,7 @@ class Enemy(Character):
         image = pygame.image.load(ENEMY_TYPES[kind]["image"]).convert_alpha()
         image = pygame.transform.scale(image, (TILE_SIZE, TILE_SIZE))
         super().__init__(image, pos, ENEMY_TYPES[kind]["speed"], ENEMY_TYPES[kind]["hp"])
-        print(f"[DEBUG] Spawn Enemy type = {kind} hp={self.hp}/{self.max_hp} at {pos}")
+        #print(f"[DEBUG] Spawn Enemy type = {kind} hp={self.hp}/{self.max_hp} at {pos}")
         self.direction = 1
 
     def update(self, tiles):

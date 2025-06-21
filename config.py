@@ -2,16 +2,33 @@
 ASSETS_DIR = "assets/"
 IMG_DIR = ASSETS_DIR + "img/"
 ENEMIES_DIR = IMG_DIR + "enemies/"
+PLAYERS_DIR = IMG_DIR + "players/"
 MUSIC_DIR = ASSETS_DIR + "music/"
 SFX_DIR = ASSETS_DIR + "sfx/"
 
 FLOOR_TILE = IMG_DIR + "floor2_tile.png"
 WALL_TILE = IMG_DIR + "wall3_tile.png"
-PLAYER_IMAGE = IMG_DIR + "hackerman_brown.png"
 EXIT_TILE = IMG_DIR + "level_tile.png"
 
+#PLAYER_IMAGE = IMG_DIR + "hackerman_brown.png"
+PLAYER_IMAGE = PLAYERS_DIR + "hackerman2.png"
 COIN_IMAGE = IMG_DIR + "boost1.png"
 
+#gracz
+PLAYER = {
+    "player1": {
+        "image": PLAYERS_DIR + "hackerman1.png",
+        "tolerance": 10,
+    },
+    "player2": {
+        "image": PLAYERS_DIR + "hackerman2.png",
+        "tolerance": 20,
+    },
+    "player3": {
+        "image": PLAYERS_DIR + "hackerman3.png",
+        "tolerance": 20,
+    },
+}
 #muzyka
 MUSIC = [MUSIC_DIR + "theme1.mp3",
          MUSIC_DIR + "theme2.mp3",

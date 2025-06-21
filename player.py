@@ -1,11 +1,11 @@
 import pygame
 
-from config import TILE_SIZE, PLAYER_IMAGE
+from config import TILE_SIZE, PLAYER_IMAGE, PLAYER
 from projectile import Projectile
 from character import Character
 from audio import Sound
 
-def crop_to_visible_area(image, tolerance=10):
+def crop_to_visible_area(image, tolerance=PLAYER["player3"]["tolerance"]):
     mask = pygame.mask.from_surface(image, tolerance)
     rects = mask.get_bounding_rects()
     if rects:
@@ -22,7 +22,7 @@ def scale_to_height(image, target_height):
 
 class Player(Character):
     def __init__(self, pos, hp=None):
-        raw = pygame.image.load(PLAYER_IMAGE).convert_alpha()
+        raw = pygame.image.load(PLAYER["player3"]["image"]).convert_alpha()
         cropped = crop_to_visible_area(raw)
         self.image = scale_to_height(cropped, TILE_SIZE)
         super().__init__(self.image, pos, speed=5, max_hp=100, hp=hp)
