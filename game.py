@@ -130,6 +130,7 @@ class Game:
                         self.state = "PAUSE"
                     elif self.state == "PAUSE":
                         self.state = "PLAY"
+                self.music.handle_event(e)
 
 
             if self.state =="MENU":

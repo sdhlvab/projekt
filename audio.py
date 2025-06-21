@@ -12,18 +12,19 @@ class Music:
         random.shuffle(self.themes)
         self.current_index = 0
         self.music_on = music_on
-        if self.music_on:
-            self.play()
 
         # Zarejestruj event po zakończeniu pliku
         pygame.mixer.music.set_endevent(self.MUSIC_END_EVENT)
 
-    def play(self, loops=-1):
+        if self.music_on:
+            self.play()
+
+    def play(self):
         # odtwarza aktualny plik
         if not self.music_on or not self.themes:
             return
-        pygame.mixer.music.load(MUSIC[self.current_index])
-        pygame.mixer.music.play(loops)
+        pygame.mixer.music.load(self.themes[self.current_index])
+        pygame.mixer.music.play()
 
     def stop(self):
         # zatrzymuje odtwarzanie muzyki

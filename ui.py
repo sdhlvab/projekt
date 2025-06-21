@@ -93,6 +93,7 @@ class MainMenu:
     def run(self):
         while self.running:
             for event in pygame.event.get():
+                self.music.handle_event(event)
                 if event.type == pygame.QUIT:
                     exit()
                 elif event.type == pygame.KEYDOWN:
