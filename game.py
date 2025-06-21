@@ -3,7 +3,7 @@ import re
 import os
 import pygame
 
-from config import SCREEN_WIDTH, SCREEN_HEIGHT, TILE_SIZE, LEVEL_FILE, LEVEL_DIR #PLAYER_IMAGE, ENEMY_IMAGE,
+from config import SCREEN_WIDTH, SCREEN_HEIGHT, TILE_SIZE, LEVEL_FILE, LEVEL_DIR, FONT_PATH #PLAYER_IMAGE, ENEMY_IMAGE,
 from player import Player
 from enemy import Enemy
 from level import Level
@@ -34,12 +34,11 @@ class Game:
         self.sfx = Sound(self.sound_on)
 
         # początkowy stan gry
-        self.state = "PLAY"
+        self.state = "MENU"
         self.menu = MainMenu(self.screen)
         self.current_level = 1
 
-        font_path = os.path.join("assets", "fonts", "UbuntuMono-R.ttf")
-        self.font = pygame.font.Font(font_path, 18)
+        self.font = pygame.font.Font(FONT_PATH, 18)
         self.command_file = "assets/data/commands.txt"
 
         # Level i kafelki
@@ -131,6 +130,10 @@ class Game:
                 self.menu.run()
                 self.player_name = self.menu.player_name
                 self.selected_img = self.menu.sprite_keys[self.menu.sprite_idx]
+                self.music_on = self.menu.music_on
+                self.sound_on = self.menu.sound_on
+                self.music.set_music_on(self.music_on)
+                self.sfx.set_sound_on(self.sound_on)
                 self.reset()
                 self.player.image_path = self.selected_img
                 self.state = "PLAY"

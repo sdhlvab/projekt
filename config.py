@@ -105,7 +105,7 @@ ENEMY_TYPES = {
 
 
 
-# Plik levela
+# Plik poziomu
 LEVEL_FILE = "level1.txt"
 LEVEL_DIR = ASSETS_DIR + "levels"
 
