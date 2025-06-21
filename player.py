@@ -23,9 +23,13 @@ def scale_to_height(image, target_height):
 
 class Player(Character):
     def __init__(self, pos, hp=None, image_path=None):
+        if isinstance(image_path, dict):
+            image_info = image_path
+        else:
+            image_info = PLAYER[image_path]
         path = image_path or PLAYER
-        raw = pygame.image.load(PLAYER[path]["image"]).convert_alpha()
-        cropped = crop_to_visible_area(raw, path)
+        raw = pygame.image.load(image_info["image"]).convert_alpha()
+        cropped = crop_to_visible_area(raw, image_info)
         self.image = scale_to_height(cropped, TILE_SIZE)
         super().__init__(self.image, pos, speed=5, max_hp=100, hp=hp)
 
