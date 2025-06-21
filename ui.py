@@ -231,4 +231,52 @@ class CurrentLevel:
         self.screen.blit(txt, ((SCREEN_WIDTH - txt.get_width()) // 2, 10))
         #pygame.display.flip()
 
+class VictoryScreen:
+    FONT_SIZE = 72
+    OVERLAY_ALPHA = 180
+
+    def __init__(self, screen, score):
+        self.screen = screen
+        self.score = score
+        self.font  = pygame.font.Font(None, self.FONT_SIZE)
+        self.clock = pygame.time.Clock()
+
+    def show(self):
+        # półprzezroczyste tło
+        overlay = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT))
+        overlay.set_alpha(self.OVERLAY_ALPHA)
+        overlay.fill((0, 0, 0))
+        self.screen.blit(overlay, (0, 0))
+
+        # Gratulacje!
+        title = self.font.render("Gratulacje! Jesteś zwycięzcą!", True, (0, 255, 0))
+        x = (SCREEN_WIDTH - title.get_width()) // 2
+        y = (SCREEN_HEIGHT - title.get_height()) // 2 - 60
+        self.screen.blit(title, (x, y))
+
+        # Twój wynik
+        score_font = pygame.font.Font(None, 48)
+        score_text = score_font.render(f"Twój wynik: {self.score}", True, (255, 255, 255))
+        x2 = (SCREEN_WIDTH - score_text.get_width()) // 2
+        y2 = y + title.get_height() + 20
+        self.screen.blit(score_text, (x2, y2))
+
+        # Instrukcja
+        instr_font = pygame.font.Font(None, 36)
+        instr = instr_font.render("Naciśnij dowolny klawisz, żeby wrócić do menu", True, (200, 200, 200))
+        x3 = (SCREEN_WIDTH - instr.get_width()) // 2
+        y3 = y2 + score_text.get_height() + 20
+        self.screen.blit(instr, (x3, y3))
+
+        pygame.display.flip()
+
+        # czekaj na dowolny klawisz
+        waiting = True
+        while waiting:
+            for e in pygame.event.get():
+                if e.type == pygame.KEYDOWN:
+                    waiting = False
+            self.clock.tick(10)
+
+
 

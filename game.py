@@ -10,7 +10,7 @@ from level import Level
 from camera import Camera
 from background import TerminalBackground
 from engine import Engine
-from ui import Scoreboard, HealthBar, MainMenu, CurrentLevel
+from ui import Scoreboard, HealthBar, MainMenu, CurrentLevel, VictoryScreen
 from coin import Coin
 from audio import Music, Sound
 
@@ -47,6 +47,7 @@ class Game:
         self.ground_rects = self.level.get_ground_rects()
         self.enemies = pygame.sprite.Group()
         self.projectiles = pygame.sprite.Group()
+        self.max_level = 2
 
         # Pozycja startowa gracza z pliku levela
         px, py = self.level.get_player_spawn()
@@ -150,6 +151,20 @@ class Game:
                     self.sfx.play("dead")
                     self.state = "GAME_OVER"
                 continue
+                # wykrycie wygranej - ukończenie wszystkich poziomów
+                if self.current_level >self.max_level:
+                    self.sfx.play("win")
+                    self.state = "VICTORY"
+                continue
+
+            if self.state == "VICTORY":
+                vs = VictoryScreen(self.screen, self.hud.score)
+                vs.show()
+                # reset do menu
+                self.current_level = 1
+                self.level_file = os.path.join(LEVEL_DIR, LEVEL_FILE)
+                self.clvl = CurrentLevel(self.screen, self.current_level)
+                self.state = "MENU"
 
             if self.state == "PAUSE":
                 # pauza - rysowanie wszystkiego, ale bez update'u
@@ -309,6 +324,7 @@ class Game:
             f"{prefix}{next_num}{ext}"
         )
         if not os.path.exists(next_file):
+            self.max_level = next_num
             return False
         self.sfx.play("levelup")
         self.level_file = next_file
