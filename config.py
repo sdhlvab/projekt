@@ -46,6 +46,7 @@ SFX = {
     "powerup": SFX_DIR + "powerup.mp3",
     "shoot": SFX_DIR + "shoot.mp3",
     "menu": SFX_DIR + "menu.mp3",
+    "win": SFX_DIR + "win.mp3",
 }
 
 #przeciwnicy

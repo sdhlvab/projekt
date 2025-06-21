@@ -2,6 +2,9 @@ import sys
 import re
 import os
 import pygame
+import glob
+
+from jupyter_core.version import pattern
 
 from config import SCREEN_WIDTH, SCREEN_HEIGHT, TILE_SIZE, LEVEL_FILE, LEVEL_DIR, FONT_PATH #PLAYER_IMAGE, ENEMY_IMAGE,
 from player import Player
@@ -47,7 +50,11 @@ class Game:
         self.ground_rects = self.level.get_ground_rects()
         self.enemies = pygame.sprite.Group()
         self.projectiles = pygame.sprite.Group()
-        self.max_level = 2
+
+        #obliczanie maksymalnego poziomu na podstawie istniejących plików z poziomami
+        pattern = os.path.join(LEVEL_DIR, LEVEL_FILE.replace("1", "*"))
+        levels = glob.glob(pattern)
+        self.max_level = len(levels)
 
         # Pozycja startowa gracza z pliku levela
         px, py = self.level.get_player_spawn()
@@ -151,15 +158,17 @@ class Game:
                     self.sfx.play("dead")
                     self.state = "GAME_OVER"
                     continue
-                # wykrycie wygranej - ukończenie wszystkich poziomów
-                if self.current_level >self.max_level:
-                    self.sfx.play("win")
-                    self.state = "VICTORY"
-                    continue
+                # # wykrycie wygranej - ukończenie wszystkich poziomów
+                # if self.current_level >self.max_level:
+                #     self.sfx.play("win")
+                #     self.state = "VICTORY"
+                #     continue
 
             if self.state == "VICTORY":
                 vs = VictoryScreen(self.screen, self.hud.score)
                 vs.show()
+                pygame.mixer.stop()
+                pygame.mixer.music.unpause()
                 # reset do menu
                 self.current_level = 1
                 self.level_file = os.path.join(LEVEL_DIR, LEVEL_FILE)
@@ -199,6 +208,12 @@ class Game:
         for rect in self.level.get_exit_rects():
             if self.player.rect.colliderect(rect):
                 if self.next_level():
+                    return
+                else:
+                    # ostatni poziom ukończony
+                    pygame.mixer.music.pause()
+                    self.sfx.play("win")
+                    self.state = "VICTORY"
                     return
                 self.state = "GAME_OVER"
                 return
@@ -325,7 +340,6 @@ class Game:
             f"{prefix}{next_num}{ext}"
         )
         if not os.path.exists(next_file):
-            self.max_level = next_num
             return False
         self.sfx.play("levelup")
         self.level_file = next_file
