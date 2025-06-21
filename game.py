@@ -288,6 +288,9 @@ class Game:
                         self.state = "PLAY"
                         waiting = False
                     elif e.key == pygame.K_n: # nie = menu
+                        self.current_level= 1
+                        self.level_file = os.path.join(LEVEL_DIR, LEVEL_FILE)
+                        self.clvl = CurrentLevel(self.screen, self.current_level)
                         self.state = "MENU"
                         waiting = False
             self.clock.tick(10)
