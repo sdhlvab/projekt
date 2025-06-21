@@ -19,7 +19,7 @@ class MainMenu:
         self.running = True
         self.sprite_keys = list(PLAYER.keys())
         self.sprite_map = PLAYER
-        #self.sprite_list = PLAYER
+        self.sprite_list = [info["image"] for info in PLAYER.values()]
         self.sprite_idx = 0
 
     def draw(self):
@@ -65,12 +65,12 @@ class MainMenu:
         path = self.sprite_map[key]["image"]
         color = (0, 255, 0) if self.selected == 1 else (160, 160, 160)
         label = self.font.render("Avatar:", True, color)
-        self.screen.blit(label, (250, 260))
+        self.screen.blit(label, (250, 290))
         # podgląd grafiki
         surf = pygame.image.load(path).convert_alpha()
         surf = pygame.transform.scale(surf, (TILE_SIZE, TILE_SIZE))
         # ramka jeśli wybrany
-        preview_rect = pygame.Rect(400, 250, TILE_SIZE, TILE_SIZE)
+        preview_rect = pygame.Rect(400, 290 - TILE_SIZE/4, TILE_SIZE, TILE_SIZE)
         self.screen.blit(surf, preview_rect.topleft)
         if self.selected == 1:
             pygame.draw.rect(self.screen, (0, 255, 0), preview_rect, 2)
@@ -87,7 +87,7 @@ class MainMenu:
         for i, option in enumerate(options):
             color = (0, 255, 0) if self.selected == i + 1 else (160, 160, 160)
             surf = self.font.render(option, True, color)
-            self.screen.blit(surf, (250, 280 + 45 * i))
+            self.screen.blit(surf, (250, 340 + 45 * i))
 
     def run(self):
         while self.running:
