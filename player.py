@@ -102,5 +102,5 @@ class Player(Character):
             return
         # ustaw nowe okno nietykalności
         self.invincible_time = now + self.def_invincible_time
-        # wywołaj bazową logikę (hp-=, show_hp, kill() jeśli hp≤0)
+        # wywołaj bazową logikę
         super().take_damage(damage)

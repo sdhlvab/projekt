@@ -1,4 +1,3 @@
-# Ścieżki do assetów
 ASSETS_DIR = "assets/"
 IMG_DIR = ASSETS_DIR + "img/"
 ENEMIES_DIR = IMG_DIR + "enemies/"
@@ -108,16 +107,16 @@ ENEMY_TYPES = {
 
 
 
-# Plik poziomu
+# plik z poziomem
 LEVEL_FILE = "level1.txt"
 LEVEL_DIR = ASSETS_DIR + "levels"
 
-# Podstawowe ustawienia
+# podstawowe ustawienia
 TILE_SIZE = 64
 SCREEN_WIDTH = 1280
 SCREEN_HEIGHT = 800
 FPS = 60
 
-# inne configi, np. czcionka
+# inne configi
 FONT_PATH = ASSETS_DIR + "fonts/UbuntuMono-R.ttf"
 FONT_SIZE = 20

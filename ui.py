@@ -38,7 +38,7 @@ class MainMenu:
         self.screen.blit(label, (250, 180))
         pygame.draw.rect(self.screen, (30, 30, 30), self.input_box, border_radius=6)
 
-        #zmiana koloru ramki jeżeli jest pusty nick
+        # zmiana koloru ramki jeżeli jest pusty nick
         if not len(self.player_name) == 0:
             if self.active:
                 color = (0, 255, 0)

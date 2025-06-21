@@ -97,7 +97,7 @@ class Game:
         self.coins = pygame.sprite.Group()
         for cx, cy in self.level.get_coin_spawns():
             self.coins.add(Coin(cx, cy))
-        # reset ui (nie resetuje przy przejściu do kolejnego poziomu)
+        # reset ui(nie resetuje przy przejściu do kolejnego poziomu)
         if full_reset:
             # gracz
             px, py = self.level.get_player_spawn()

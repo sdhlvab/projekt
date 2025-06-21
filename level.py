@@ -62,7 +62,6 @@ class Level:
                 if tile in ("floor", "wall"):
                     rects.append(pygame.Rect(x * TILE_SIZE, self._offset_y() + y * TILE_SIZE, TILE_SIZE, TILE_SIZE))
         # dodanie pionowych, niewidzialnych ścian przy pionowych krawędziach poziomu
-        # nowe, pełnowysokościowe niewidzialne ściany
         full_height = len(self.tiles) * TILE_SIZE + self._offset_y()
         level_width = self.width * TILE_SIZE
         # lewa krawędź: od y=0 do full_height

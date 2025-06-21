@@ -13,7 +13,7 @@ class Music:
         self.current_index = 0
         self.music_on = music_on
 
-        # Zarejestruj event po zakończeniu pliku
+        # rejestracja eventu po zakończeniu odtwarzania pliku
         pygame.mixer.music.set_endevent(self.MUSIC_END_EVENT)
 
         if self.music_on:
