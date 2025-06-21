@@ -17,7 +17,9 @@ class MainMenu:
         self.active = False
         self.selected = 0  # 0: Nick, 1: Avatar 2: Muzyka, 3: Dźwięki, 4: Start, 5: Wyjdź
         self.running = True
-        self.sprite_list = PLAYER
+        self.sprite_keys = list(PLAYER.keys())
+        self.sprite_map = PLAYER
+        #self.sprite_list = PLAYER
         self.sprite_idx = 0
 
     def draw(self):
@@ -59,11 +61,13 @@ class MainMenu:
         txt_surface = self.font.render(self.player_name or "Twoja ksywka...", True, color)
 
         # avatar
+        key = self.sprite_keys[self.sprite_idx]
+        path = self.sprite_map[key]
         color = (0, 255, 0) if self.selected == 1 else (160, 160, 160)
         label = self.font.render("Avatar:", True, color)
         self.screen.blit(label, (250, 260))
         # podgląd grafiki
-        surf = pygame.image.load(self.sprite_list[self.sprite_idx]).convert_alpha()
+        surf = pygame.image.load(path).convert_alpha()
         surf = pygame.transform.scale(surf, (TILE_SIZE, TILE_SIZE))
         # ramka jeśli wybrany
         preview_rect = pygame.Rect(400, 250, TILE_SIZE, TILE_SIZE)
