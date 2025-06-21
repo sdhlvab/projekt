@@ -17,8 +17,8 @@ class Projectile(pygame.sprite.Sprite):
 
     def update(self, tiles):
         self.rect.x += self.direction * self.speed
-        # Zniszcz pocisk jeśli poza ekranem/mapą
-        if self.rect.right < 0 or self.rect.left > SCREEN_WIDTH * 2:
+        # Zniszcz pocisk jeśli poza mapą
+        if self.rect.right < 0 or self.rect.left > max(tile.right for tile in tiles):
             self.kill()
         # Kolizja ze ścianą
         for tile in tiles:
