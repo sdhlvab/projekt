@@ -126,7 +126,7 @@ class Game:
                 self.menu.running = True
                 self.menu.run()
                 self.player_name = self.menu.player_name
-                self.selected_img = self.menu.sprite_list[self.menu.sprite_idx]
+                self.selected_img = self.menu.sprite_keys[self.menu.sprite_idx]
                 self.reset()
                 self.player.image_path = self.selected_img
                 self.state = "PLAY"

@@ -152,7 +152,7 @@ class Scoreboard:
         text = f"Punkty: {self.score}"
         surf = self.font.render(text, True, self.TEXT_COLOR)
         bg_rect = surf.get_rect(topright=(SCREEN_WIDTH - self.PADDING, self.PADDING + 30)).inflate(8, 4)
-        # półprzezroczyste tło (jeśli masz display z ALPHA)
+        # półprzezroczyste tło
         bg = pygame.Surface(bg_rect.size, pygame.SRCALPHA)
         bg.fill(self.BG_COLOR)
         surface.blit(bg, bg_rect.topright)
