@@ -104,9 +104,9 @@ class MainMenu:
                             self.player_name += event.unicode
                     else:
                         if event.key in [pygame.K_DOWN, pygame.K_TAB]:
-                            self.selected = (self.selected + 1) % 5
+                            self.selected = (self.selected + 1) % 6
                         if event.key == pygame.K_UP:
-                            self.selected = (self.selected - 1) % 5
+                            self.selected = (self.selected - 1) % 6
 
                         # zmiana avatara strzałka prawo/lewo
                         if self.selected == 1 and event.key == pygame.K_LEFT:
@@ -117,15 +117,16 @@ class MainMenu:
                         if event.key == pygame.K_RETURN:
                             if self.selected == 0:
                                 self.active = True
-                            elif self.selected == 1:
-                                self.music_on = not self.music_on
                             elif self.selected == 2:
-                                self.sound_on = not self.sound_on
+                                self.music_on = not self.music_on
                             elif self.selected == 3:
+                                self.sound_on = not self.sound_on
+                            elif self.selected == 4:
                                 if self.player_name.strip():
                                     self.running = False
-                            elif self.selected == 4:
+                            elif self.selected == 5:
                                 exit()
+
                 elif event.type == pygame.MOUSEBUTTONDOWN:
                     if self.input_box.collidepoint(event.pos):
                         self.active = True
