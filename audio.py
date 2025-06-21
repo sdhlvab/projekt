@@ -18,12 +18,12 @@ class Music:
         # Zarejestruj event po zakończeniu pliku
         pygame.mixer.music.set_endevent(self.MUSIC_END_EVENT)
 
-    def play(self):
+    def play(self, loops=-1):
         # odtwarza aktualny plik
         if not self.music_on or not self.themes:
             return
         pygame.mixer.music.load(MUSIC[self.current_index])
-        pygame.mixer.music.play()
+        pygame.mixer.music.play(loops)
 
     def stop(self):
         # zatrzymuje odtwarzanie muzyki
