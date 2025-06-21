@@ -22,7 +22,7 @@ def scale_to_height(image, target_height):
     return pygame.transform.scale(image, (new_w, target_height))
 
 class Player(Character):
-    def __init__(self, pos, hp=None, image_path=None):
+    def __init__(self, pos, hp=None, image_path=None, sfx=None):
         if isinstance(image_path, dict):
             image_info = image_path
         else:
@@ -44,7 +44,7 @@ class Player(Character):
 
         # audio
         self.old_y = self.rect.y
-        self.sfx = Sound()
+        self.sfx = sfx
 
     def update(self, keys, tiles):
         # zmiana pozycji y (potrzebne do prawidłowego odtworzenia dźwięku skoku)

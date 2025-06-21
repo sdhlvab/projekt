@@ -49,7 +49,7 @@ class Game:
 
         # Pozycja startowa gracza z pliku levela
         px, py = self.level.get_player_spawn()
-        self.player = Player((px, py), image_path = self.selected_img)
+        self.player = Player((px, py), image_path = self.selected_img, sfx = self.sfx)
         self.all_sprites = pygame.sprite.Group(self.player)
 
         # Dodaj przeciwników z levela (np. 'E' w pliku)
@@ -69,7 +69,7 @@ class Game:
 
         # UI
         self.hud = Scoreboard()
-        self.engine = Engine(self.hud, points_per_kill=100)
+        self.engine = Engine(self.hud, points_per_kill=100, sfx=self.sfx)
         self.health_bar = HealthBar(self.player)
         self.clvl = CurrentLevel(self.screen, self.current_level)
 
@@ -94,12 +94,12 @@ class Game:
         if full_reset:
             # gracz
             px, py = self.level.get_player_spawn()
-            self.player = Player((px, py), image_path=self.selected_img)
+            self.player = Player((px, py), image_path=self.selected_img, sfx=self.sfx)
             self.hud.reset()
             self.health_bar = HealthBar(self.player)
         else:
             px, py = self.level.get_player_spawn()
-            self.player = Player((px, py), hp=self.player.hp, image_path=self.selected_img)
+            self.player = Player((px, py), hp=self.player.hp, image_path=self.selected_img, sfx=self.sfx)
             self.health_bar = HealthBar(self.player)
         # reset stanu i zegara
         self.clock.tick()
@@ -134,6 +134,7 @@ class Game:
                 self.sound_on = self.menu.sound_on
                 self.music.set_music_on(self.music_on)
                 self.sfx.set_sound_on(self.sound_on)
+                print(">>> sound_on =", self.sound_on, "   sfx.sound_on =", self.sfx.sound_on)
                 self.reset()
                 self.player.image_path = self.selected_img
                 self.state = "PLAY"

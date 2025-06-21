@@ -3,10 +3,10 @@ import pygame
 from audio import Sound
 
 class Engine:
-    def __init__(self, hud, points_per_kill=100):
+    def __init__(self, hud, points_per_kill=100, sfx=None):
         self.hud = hud
         self.points_per_kill = points_per_kill
-        self.sfx = Sound()
+        self.sfx = sfx
 
     def handle_hits(self, projectiles: pygame.sprite.Group, enemies: pygame.sprite.Group):
         # wykrycie trafienia pocisk-wróg i usunięcie obu grup
