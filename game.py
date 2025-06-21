@@ -34,7 +34,7 @@ class Game:
         self.sfx = Sound(self.sound_on)
 
         # początkowy stan gry
-        self.state = "MENU"
+        self.state = "PLAY"
         self.menu = MainMenu(self.screen)
         self.current_level = 1
 
@@ -87,6 +87,10 @@ class Game:
         self.projectiles = pygame.sprite.Group()
         # kamera
         self.camera = Camera(self.level.pixel_width, self.level.pixel_height, SCREEN_WIDTH, SCREEN_HEIGHT)
+        # monety
+        self.coins = pygame.sprite.Group()
+        for cx, cy in self.level.get_coin_spawns():
+            self.coins.add(Coin(cx, cy))
         # reset ui (nie resetuje przy przejściu do kolejnego poziomu)
         if full_reset:
             # gracz
