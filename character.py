@@ -1,6 +1,4 @@
 import pygame
-from select import select
-
 
 class Character(pygame.sprite.Sprite):
     def __init__(self, image, pos, speed = 3, max_hp = 50, hp = None):

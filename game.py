@@ -4,8 +4,6 @@ import os
 import pygame
 import glob
 
-from jupyter_core.version import pattern
-
 from config import SCREEN_WIDTH, SCREEN_HEIGHT, TILE_SIZE, LEVEL_FILE, LEVEL_DIR, FONT_PATH #PLAYER_IMAGE, ENEMY_IMAGE,
 from player import Player
 from enemy import Enemy
@@ -45,23 +43,23 @@ class Game:
         self.font = pygame.font.Font(FONT_PATH, 18)
         self.command_file = "assets/data/commands.txt"
 
-        # Level i kafelki
+        # poziom i kafelki
         self.level = Level(self.level_file)
         self.ground_rects = self.level.get_ground_rects()
         self.enemies = pygame.sprite.Group()
         self.projectiles = pygame.sprite.Group()
 
-        #obliczanie maksymalnego poziomu na podstawie istniejących plików z poziomami
+        # obliczanie maksymalnego poziomu na podstawie istniejących plików z poziomami
         pattern = os.path.join(LEVEL_DIR, LEVEL_FILE.replace("1", "*"))
         levels = glob.glob(pattern)
         self.max_level = len(levels)
 
-        # Pozycja startowa gracza z pliku levela
+        # pozycja startowa gracza z pliku
         px, py = self.level.get_player_spawn()
         self.player = Player((px, py), image_path = self.selected_img, sfx = self.sfx)
         self.all_sprites = pygame.sprite.Group(self.player)
 
-        # Dodaj przeciwników z levela (np. 'E' w pliku)
+        # dodanie przeciwników z pliku
         for ex, ey in self.level.get_enemy_spawns():
             self.enemies.add(Enemy((ex, ey)))
 
@@ -70,10 +68,10 @@ class Game:
         for cx, cy in self.level.get_coin_spawns():
             self.coins.add(Coin(cx, cy))
 
-        # Kamera
+        # kamera
         self.camera = Camera(self.level.pixel_width, self.level.pixel_height, SCREEN_WIDTH, SCREEN_HEIGHT)
 
-        # Terminal w tle (wywołanie bez przesunięcia)
+        # terminal w tle (wywołanie bez przesunięcia)
         self.terminal_bg = TerminalBackground(SCREEN_WIDTH, SCREEN_HEIGHT, self.font, self.command_file, SCREEN_HEIGHT , self.player_name)
 
         # UI
@@ -84,7 +82,7 @@ class Game:
 
     def reset(self, full_reset=True):
         # przywrócenie stanu początkowego gry
-        # odtworzenie poziomu i kafli
+        # odtworzenie poziomu i kafelków
         self.level = Level(self.level_file)
         self.ground_rects = self.level.get_ground_rects()
         # wrogowie
@@ -245,24 +243,24 @@ class Game:
         self.clvl.draw()
 
     def draw(self):
-        # Tło terminala (nie podlega kamerze)
+        # tło terminala (nie podlega kamerze)
         self.terminal_bg.draw(self.screen, self.camera.x, self.camera.y)
 
-        # Rysuj level (kafelki)
+        # rysuj level (kafelki)
         self.level.draw(self.screen, self.camera)
-        # Rysuj gracza
+        # rysuj gracza
         self.screen.blit(self.player.image, self.camera.apply(self.player.rect))
 
-        # Rysowanie przeciwników
+        # rysowanie przeciwników
         for e in self.enemies: e.draw(self.screen, self.camera)
         for p in self.projectiles: self.screen.blit(p.image, self.camera.apply(p.rect))
 
-        # Rysowanie HUD'a
+        # rysowanie HUD'a
         self.hud.draw(self.screen)
         self.health_bar.draw(self.screen)
         self.clvl.draw()
 
-        # Rysowanie "monet"
+        # rysowanie "monet"
         for coin in self.coins:
             self.screen.blit(coin.image, self.camera.apply(coin.rect))
 
@@ -311,7 +309,7 @@ class Game:
 
         pygame.display.flip()
 
-        #czekamy na decyzje
+        # czekamy na decyzje
         waiting = True
         while waiting:
             for e in pygame.event.get():
