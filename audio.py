@@ -51,7 +51,7 @@ class Music:
         if self.music_on:
             # jeśli nic nie gra, zacznij
             if not pygame.mixer.music.get_busy():
-                self.play(-1)
+                self.play()
         else:
             self.stop()
 

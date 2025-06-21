@@ -96,6 +96,7 @@ class MainMenu:
                 if event.type == pygame.QUIT:
                     exit()
                 elif event.type == pygame.KEYDOWN:
+                    self.sfx.play("menu")
                     if self.active:
                         if event.key == pygame.K_RETURN:
                             self.active = False
