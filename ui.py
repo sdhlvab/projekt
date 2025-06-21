@@ -62,7 +62,7 @@ class MainMenu:
 
         # avatar
         key = self.sprite_keys[self.sprite_idx]
-        path = self.sprite_map[key]
+        path = self.sprite_map[key]["image"]
         color = (0, 255, 0) if self.selected == 1 else (160, 160, 160)
         label = self.font.render("Avatar:", True, color)
         self.screen.blit(label, (250, 260))
