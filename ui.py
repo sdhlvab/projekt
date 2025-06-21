@@ -1,6 +1,8 @@
 import pygame
+from PyQt6.uic.pyuic import preview
 
-from config import SCREEN_WIDTH, SCREEN_HEIGHT, FONT_PATH
+from config import SCREEN_WIDTH, SCREEN_HEIGHT, FONT_PATH, PLAYER, TILE_SIZE
+
 
 class MainMenu:
     def __init__(self, screen):
@@ -13,15 +15,18 @@ class MainMenu:
         self.music_on = True
         self.sound_on = True
         self.active = False
-        self.selected = 0  # 0: Nick, 1: Muzyka, 2: Dźwięki, 3: Start, 4: Wyjdź
+        self.selected = 0  # 0: Nick, 1: Avatar 2: Muzyka, 3: Dźwięki, 4: Start, 5: Wyjdź
         self.running = True
+        self.sprite_list = PLAYER
+        self.sprite_idx = 0
 
     def draw(self):
-
+        # tytuł
         self.screen.fill((0, 0, 0))
         title = self.big_font.render("Hackerman vs. Bugzilla", True, (0, 255, 0))
         self.screen.blit(title, (80, 60))
 
+        # ksywka
         if self.selected == 0:
             label = self.font.render("Nazwa gracza:", True, (0, 255, 0))
         else:
@@ -53,7 +58,18 @@ class MainMenu:
 
         txt_surface = self.font.render(self.player_name or "Twoja ksywka...", True, color)
 
-
+        # avatar
+        color = (0, 255, 0) if self.selected == 1 else (160, 160, 160)
+        label = self.font.render("Avatar:", True, color)
+        self.screen.blit(label, (250, 260))
+        # podgląd grafiki
+        surf = pygame.image.load(self.sprite_list[self.sprite_idx]).convert_alpha()
+        surf = pygame.transform.scale(surf, (TILE_SIZE, TILE_SIZE))
+        # ramka jeśli wybrany
+        preview_rect = pygame.Rect(400, 250, TILE_SIZE, TILE_SIZE)
+        self.screen.blit(surf, preview_rect.topleft)
+        if self.selected == 1:
+            pygame.draw.rect(self.screen, (0, 255, 0), preview_rect, 2)
 
         self.screen.blit(txt_surface, (self.input_box.x + 8, self.input_box.y + 5))
 
@@ -87,6 +103,13 @@ class MainMenu:
                             self.selected = (self.selected + 1) % 5
                         if event.key == pygame.K_UP:
                             self.selected = (self.selected - 1) % 5
+
+                        # zmiana avatara strzałka prawo/lewo
+                        if self.selected == 1 and event.key == pygame.K_LEFT:
+                            self.sprite_idx = (self.sprite_idx - 1) % len(self.sprite_list)
+                        if self.selected == 1 and event.key == pygame.K_RIGHT:
+                            self.sprite_idx = (self.sprite_idx + 1) % len(self.sprite_list)
+
                         if event.key == pygame.K_RETURN:
                             if self.selected == 0:
                                 self.active = True

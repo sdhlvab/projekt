@@ -23,6 +23,9 @@ class Game:
         self.player_name = player_name
         self.level_file = os.path.join(LEVEL_DIR, LEVEL_FILE)
 
+        # grafika gracza
+        self.selected_img = None
+
         # audio
         self.music_on = music_on
         self.sound_on = sound_on
@@ -31,7 +34,7 @@ class Game:
         self.sfx = Sound(self.sound_on)
 
         # początkowy stan gry
-        self.state = "PLAY"
+        self.state = "MENU"
         self.menu = MainMenu(self.screen)
         self.current_level = 1
 
@@ -47,7 +50,7 @@ class Game:
 
         # Pozycja startowa gracza z pliku levela
         px, py = self.level.get_player_spawn()
-        self.player = Player((px, py))
+        self.player = Player((px, py), image_path = self.selected_img)
         self.all_sprites = pygame.sprite.Group(self.player)
 
         # Dodaj przeciwników z levela (np. 'E' w pliku)
@@ -88,12 +91,12 @@ class Game:
         if full_reset:
             # gracz
             px, py = self.level.get_player_spawn()
-            self.player = Player((px, py))
+            self.player = Player((px, py), image_path=self.selected_img)
             self.hud.reset()
             self.health_bar = HealthBar(self.player)
         else:
             px, py = self.level.get_player_spawn()
-            self.player = Player((px, py), hp=self.player.hp)
+            self.player = Player((px, py), hp=self.player.hp, image_path=self.selected_img)
             self.health_bar = HealthBar(self.player)
         # reset stanu i zegara
         self.clock.tick()
@@ -123,7 +126,9 @@ class Game:
                 self.menu.running = True
                 self.menu.run()
                 self.player_name = self.menu.player_name
+                self.selected_img = self.menu.sprite_list[self.menu.sprite_idx]
                 self.reset()
+                self.player.image_path = self.selected_img
                 self.state = "PLAY"
                 continue
 
