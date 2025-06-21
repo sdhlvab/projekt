@@ -11,8 +11,9 @@ WALL_TILE = IMG_DIR + "wall3_tile.png"
 EXIT_TILE = IMG_DIR + "level_tile.png"
 
 #PLAYER_IMAGE = IMG_DIR + "hackerman_brown.png"
-PLAYER_IMAGE = PLAYERS_DIR + "hackerman2.png"
+#PLAYER_IMAGE = PLAYERS_DIR + "hackerman2.png"
 COIN_IMAGE = IMG_DIR + "boost1.png"
+CD_IMAGE = IMG_DIR + "cd.png"
 
 #gracz
 PLAYER = {

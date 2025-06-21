@@ -1,6 +1,6 @@
 import pygame
 
-from config import TILE_SIZE, PLAYER_IMAGE, PLAYER
+from config import TILE_SIZE, PLAYER #PLAYER_IMAGE,
 from projectile import Projectile
 from character import Character
 from audio import Sound
