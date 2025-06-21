@@ -224,6 +224,10 @@ class Game:
         if hits:
             self.sfx.play("coin")
             self.hud.add_points(10)
+            # bonus za zebranie wszystkich monet
+            if not self.coins:
+                self.sfx.play("powerup")
+                self.hud.add_points(1000)
 
         #self.enemies.update(self.ground_rects)
         # wrogowie odbijają się od wszystkich kfelków
