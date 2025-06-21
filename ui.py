@@ -4,13 +4,15 @@ from config import SCREEN_WIDTH, SCREEN_HEIGHT, FONT_PATH, PLAYER, TILE_SIZE
 
 
 class MainMenu:
-    def __init__(self, screen):
+    def __init__(self, screen, music_controller, sfx_controller):
         self.screen = screen
         self.clock = pygame.time.Clock()
         self.font = pygame.font.Font(FONT_PATH, 28)
         self.big_font = pygame.font.Font(FONT_PATH, 48)
         self.input_box = pygame.Rect(250, 220, 300, 40)
         self.player_name = ""
+        self.music = music_controller
+        self.sfx = sfx_controller
         self.music_on = True
         self.sound_on = True
         self.active = False
@@ -118,8 +120,10 @@ class MainMenu:
                                 self.active = True
                             elif self.selected == 2:
                                 self.music_on = not self.music_on
+                                self.music.set_music_on(self.music_on)
                             elif self.selected == 3:
                                 self.sound_on = not self.sound_on
+                                self.sfx.set_sound_on(self.sound_on)
                             elif self.selected == 4:
                                 if self.player_name.strip():
                                     self.running = False

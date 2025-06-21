@@ -36,7 +36,7 @@ class Game:
 
         # początkowy stan gry
         self.state = "MENU"
-        self.menu = MainMenu(self.screen)
+        self.menu = MainMenu(self.screen, self.music, self.sfx)
         self.current_level = 1
 
         self.font = pygame.font.Font(FONT_PATH, 18)
