@@ -85,7 +85,7 @@ class MainMenu:
             "Wyjdź"
         ]
         for i, option in enumerate(options):
-            color = (0, 255, 0) if self.selected == i + 1 else (160, 160, 160)
+            color = (0, 255, 0) if self.selected == i + 2 else (160, 160, 160)
             surf = self.font.render(option, True, color)
             self.screen.blit(surf, (250, 340 + 45 * i))
 
@@ -127,11 +127,6 @@ class MainMenu:
                             elif self.selected == 5:
                                 exit()
 
-                elif event.type == pygame.MOUSEBUTTONDOWN:
-                    if self.input_box.collidepoint(event.pos):
-                        self.active = True
-                    else:
-                        self.active = False
             self.draw()
             pygame.display.flip()
             self.clock.tick(30)
