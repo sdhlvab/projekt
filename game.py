@@ -24,7 +24,7 @@ class Game:
         self.level_file = os.path.join(LEVEL_DIR, LEVEL_FILE)
 
         # grafika gracza
-        self.selected_img = None
+        self.selected_img = "player1"
 
         # audio
         self.music_on = music_on

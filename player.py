@@ -7,7 +7,7 @@ from audio import Sound
 
 
 def crop_to_visible_area(image, image_path):
-    mask = pygame.mask.from_surface(image, PLAYER[image_path]["tolerance"])
+    mask = pygame.mask.from_surface(image, image_path["tolerance"])
     rects = mask.get_bounding_rects()
     if rects:
         crop_rect = rects[0]
