@@ -7,12 +7,13 @@ class Music:
     MUSIC_END_EVENT = pygame.USEREVENT + 1
 
     def __init__(self, music_on=True):
+        pygame.mixer.music.set_volume(0.5)
         self.themes = MUSIC
         random.shuffle(self.themes)
         self.current_index = 0
         self.music_on = music_on
         if self.music_on:
-            pygame.mixer.music.play(-1)
+            self.play()
 
         # Zarejestruj event po zakończeniu pliku
         pygame.mixer.music.set_endevent(self.MUSIC_END_EVENT)
