@@ -150,12 +150,12 @@ class Game:
                 if self.player.hp <= 0:
                     self.sfx.play("dead")
                     self.state = "GAME_OVER"
-                continue
+                    continue
                 # wykrycie wygranej - ukończenie wszystkich poziomów
                 if self.current_level >self.max_level:
                     self.sfx.play("win")
                     self.state = "VICTORY"
-                continue
+                    continue
 
             if self.state == "VICTORY":
                 vs = VictoryScreen(self.screen, self.hud.score)
@@ -165,6 +165,7 @@ class Game:
                 self.level_file = os.path.join(LEVEL_DIR, LEVEL_FILE)
                 self.clvl = CurrentLevel(self.screen, self.current_level)
                 self.state = "MENU"
+                continue
 
             if self.state == "PAUSE":
                 # pauza - rysowanie wszystkiego, ale bez update'u

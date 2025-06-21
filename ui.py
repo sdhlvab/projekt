@@ -263,7 +263,7 @@ class VictoryScreen:
 
         # Instrukcja
         instr_font = pygame.font.Font(None, 36)
-        instr = instr_font.render("Naciśnij dowolny klawisz, żeby wrócić do menu", True, (200, 200, 200))
+        instr = instr_font.render("Naciśnij dowolny klawisz, żeby wrócić do menu.", True, (200, 200, 200))
         x3 = (SCREEN_WIDTH - instr.get_width()) // 2
         y3 = y2 + score_text.get_height() + 20
         self.screen.blit(instr, (x3, y3))
