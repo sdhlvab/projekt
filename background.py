@@ -36,8 +36,8 @@ class TerminalBackground:
 
     def draw(self, surface, camera_x, camera_y):
         prompt = self.player_name + PROMPT
-        # Terminal zawsze na górze, bez przesuwania
-        surface.fill((0, 0, 0), (0, 0, self.width, self.terminal_height))
+        # terminal zawsze na górze, bez przesuwania
+        surface.fill((0, 0, 0))
         for i, line in enumerate(self.lines):
             text = f"{prompt} {line}"
             txt = self.font.render(text, False, (0, 255, 0))

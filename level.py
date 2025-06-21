@@ -15,8 +15,15 @@ class Level:
         self.pixel_height = self.height * TILE_SIZE
 
     def _load_map(self, path):
-        with open(path) as f:
-            lines = [line.rstrip('\n') for line in f if line.strip()]
+        with open(path, encoding="utf-8") as f:
+            raw = [line.rstrip('\n') for line in f]
+        # obetnij wiodące puste
+        while raw and not raw[0].strip():
+            raw.pop(0)
+        # obetnij końcowe puste
+        while raw and not raw[-1].strip():
+            raw.pop()
+        lines = raw
         self.height = len(lines)
         self.width = max(len(line) for line in lines)
         self.tiles = []
@@ -65,9 +72,9 @@ class Level:
         return rects
 
     def _offset_y(self):
-        # Pozycja startowa Y mapy (od dołu okna)
-        map_height_px = self.height * TILE_SIZE
-        return SCREEN_HEIGHT - map_height_px
+        # podstawa rysowania zawsze >= 0, dla krótszych map push mapy w dół ekranu
+        map_h_px = self.height * TILE_SIZE
+        return max(0, SCREEN_HEIGHT - map_h_px)
 
     def draw(self, surface, camera=None):
         floor_img = pygame.image.load(FLOOR_TILE).convert_alpha()
