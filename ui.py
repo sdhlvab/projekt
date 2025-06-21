@@ -26,7 +26,7 @@ class MainMenu:
     def draw(self):
         # tytuł
         self.screen.fill((0, 0, 0))
-        title = self.big_font.render("Hackerman vs. Bugzilla", True, (0, 255, 0))
+        title = self.big_font.render("Hackerman vs Bugzilla", True, (0, 255, 0))
         self.screen.blit(title, (80, 60))
 
         # ksywka
@@ -78,7 +78,7 @@ class MainMenu:
 
         self.screen.blit(txt_surface, (self.input_box.x + 8, self.input_box.y + 5))
 
-        # Opcje menu
+        # opcje menu
         options = [
             f"Muzyka: {'Włączona' if self.music_on else 'Wyłączona'}",
             f"Dźwięki: {'Włączone' if self.sound_on else 'Wyłączone'}",
@@ -249,20 +249,20 @@ class VictoryScreen:
         overlay.fill((0, 0, 0))
         self.screen.blit(overlay, (0, 0))
 
-        # Gratulacje!
+        # napis "gratulacje!"
         title = self.font.render("Gratulacje! Jesteś zwycięzcą!", True, (0, 255, 0))
         x = (SCREEN_WIDTH - title.get_width()) // 2
         y = (SCREEN_HEIGHT - title.get_height()) // 2 - 60
         self.screen.blit(title, (x, y))
 
-        # Twój wynik
+        # napis z wynikiem
         score_font = pygame.font.Font(None, 48)
         score_text = score_font.render(f"Twój wynik: {self.score}", True, (255, 255, 255))
         x2 = (SCREEN_WIDTH - score_text.get_width()) // 2
         y2 = y + title.get_height() + 20
         self.screen.blit(score_text, (x2, y2))
 
-        # Instrukcja
+        # napis z informacją
         instr_font = pygame.font.Font(None, 36)
         instr = instr_font.render("Naciśnij dowolny klawisz, żeby wrócić do menu.", True, (200, 200, 200))
         x3 = (SCREEN_WIDTH - instr.get_width()) // 2
