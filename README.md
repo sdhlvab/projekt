@@ -1,0 +1,1 @@
+📥 [Zobacz instrukcję instalacji](INSTALL.md)
