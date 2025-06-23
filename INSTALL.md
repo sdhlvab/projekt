@@ -79,7 +79,7 @@ python main.py
 - ⬅️➡️ 🔼🔽 – poruszanie się Hackermana
 - ␣ **Spacja** – atak
 - ⎋ **Escape** – pauza
-- 🎵 **M** – włącz/wyłącz muzykę
+- 🎵 **M** – zmienia muzykę podczas rozgrywki
 
 ---
 
