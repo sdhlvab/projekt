@@ -1,6 +1,6 @@
 import pygame
 
-from config import SCREEN_WIDTH, SCREEN_HEIGHT, FONT_PATH, PLAYER, TILE_SIZE
+from src.config import SCREEN_WIDTH, SCREEN_HEIGHT, FONT_PATH, PLAYER, TILE_SIZE
 
 
 class MainMenu:

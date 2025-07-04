@@ -1,8 +1,8 @@
 import pygame
 import random
 
-from character import (Character)
-from config import TILE_SIZE, ENEMY_TYPES
+from src.entities.character import (Character)
+from src.config import TILE_SIZE, ENEMY_TYPES
 
 class Enemy(Character):
     def __init__(self, pos):

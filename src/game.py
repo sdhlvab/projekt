@@ -4,16 +4,16 @@ import os
 import pygame
 import glob
 
-from config import SCREEN_WIDTH, SCREEN_HEIGHT, TILE_SIZE, LEVEL_FILE, LEVEL_DIR, FONT_PATH #PLAYER_IMAGE, ENEMY_IMAGE,
-from player import Player
-from enemy import Enemy
-from level import Level
-from camera import Camera
-from background import TerminalBackground
-from engine import Engine
-from ui import Scoreboard, HealthBar, MainMenu, CurrentLevel, VictoryScreen
-from coin import Coin
-from audio import Music, Sound
+from src.config import SCREEN_WIDTH, SCREEN_HEIGHT, TILE_SIZE, LEVEL_FILE, LEVEL_DIR, FONT_PATH, CMD_FILE
+from src.entities.player import Player
+from src.entities.enemy import Enemy
+from src.systems.level import Level
+from src.systems.camera import Camera
+from src.systems.background import TerminalBackground
+from src.engine import Engine
+from src.systems.ui import Scoreboard, HealthBar, MainMenu, CurrentLevel, VictoryScreen
+from src.entities.coin import Coin
+from src.systems.audio import Music, Sound
 
 
 class Game:
@@ -41,7 +41,7 @@ class Game:
         self.current_level = 1
 
         self.font = pygame.font.Font(FONT_PATH, 18)
-        self.command_file = "assets/data/commands.txt"
+        self.command_file = CMD_FILE
 
         # poziom i kafelki
         self.level = Level(self.level_file)

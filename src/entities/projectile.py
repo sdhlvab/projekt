@@ -1,6 +1,6 @@
 import pygame
-from config import CD_IMAGE
-import os
+
+from src.config import CD_IMAGE
 
 class Projectile(pygame.sprite.Sprite):
     def __init__(self, x, y, direction, speed=12, damage=10):

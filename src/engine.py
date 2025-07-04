@@ -1,6 +1,6 @@
 import pygame
 
-from audio import Sound
+from src.systems.audio import Sound
 
 class Engine:
     def __init__(self, hud, points_per_kill=100, sfx=None):

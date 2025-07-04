@@ -1,10 +1,8 @@
 import pygame
 
-from config import TILE_SIZE, PLAYER #PLAYER_IMAGE,
-from projectile import Projectile
-from character import Character
-from audio import Sound
-
+from src.config import TILE_SIZE, PLAYER
+from src.entities.projectile import Projectile
+from src.entities.character import Character
 
 def crop_to_visible_area(image, image_path):
     mask = pygame.mask.from_surface(image, image_path["tolerance"])

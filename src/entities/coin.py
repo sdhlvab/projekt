@@ -1,5 +1,6 @@
 import pygame
-from config import TILE_SIZE, COIN_IMAGE
+
+from src.config import TILE_SIZE, COIN_IMAGE
 
 class Coin(pygame.sprite.Sprite):
     def __init__(self, x, y):

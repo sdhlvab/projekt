@@ -1,6 +1,5 @@
-import os
 import pygame
-from config import TILE_SIZE, LEVEL_DIR, FLOOR_TILE, WALL_TILE, EXIT_TILE, SCREEN_HEIGHT
+from src.config import TILE_SIZE, LEVEL_DIR, FLOOR_TILE, WALL_TILE, EXIT_TILE, SCREEN_HEIGHT
 
 class Level:
     def __init__(self, filename):

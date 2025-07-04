@@ -1,9 +1,11 @@
-ASSETS_DIR = "assets/"
+ASSETS_DIR = "../assets/"
 IMG_DIR = ASSETS_DIR + "img/"
 ENEMIES_DIR = IMG_DIR + "enemies/"
 PLAYERS_DIR = IMG_DIR + "players/"
 MUSIC_DIR = ASSETS_DIR + "music/"
 SFX_DIR = ASSETS_DIR + "sfx/"
+
+CMD_FILE = ASSETS_DIR + "data/commands.txt"
 
 FLOOR_TILE = IMG_DIR + "floor2_tile.png"
 WALL_TILE = IMG_DIR + "wall3_tile.png"

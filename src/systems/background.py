@@ -1,7 +1,7 @@
 import pygame
 import random
 
-from config import TILE_SIZE
+from src.config import TILE_SIZE
 
 PROMPT = "@debian:~$"
 CURSOR_CHARS = ["_", " "]

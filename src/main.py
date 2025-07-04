@@ -1,7 +1,7 @@
 import pygame
 
-from config import SCREEN_WIDTH, SCREEN_HEIGHT, FPS
-from game import Game
+from src.config import SCREEN_WIDTH, SCREEN_HEIGHT, FPS
+from src.game import Game
 
 def main():
     pygame.init()

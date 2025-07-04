@@ -1,7 +1,7 @@
 import random
 import pygame
 
-from config import MUSIC, SFX
+from src.config import MUSIC, SFX
 
 class Music:
     MUSIC_END_EVENT = pygame.USEREVENT + 1
