@@ -4,13 +4,13 @@ import os
 import pygame
 import glob
 
-from src.config import SCREEN_WIDTH, SCREEN_HEIGHT, TILE_SIZE, LEVEL_FILE, LEVEL_DIR, FONT_PATH, CMD_FILE
+from src.config import SCREEN_WIDTH, SCREEN_HEIGHT, LEVEL_FILE, LEVEL_DIR, FONT_PATH, CMD_FILE
 from src.entities.player import Player
 from src.entities.enemy import Enemy
 from src.systems.level import Level
 from src.systems.camera import Camera
 from src.systems.background import TerminalBackground
-from src.engine import Engine
+from src.systems.collision_engine import CollisionEngine
 from src.systems.ui import Scoreboard, HealthBar, MainMenu, CurrentLevel, VictoryScreen
 from src.entities.coin import Coin
 from src.systems.audio import Music, Sound
@@ -36,7 +36,7 @@ class Game:
         self.sfx = Sound(self.sound_on)
 
         # początkowy stan gry
-        self.state = "MENU"
+        self.state = "PLAY"
         self.menu = MainMenu(self.screen, self.music, self.sfx)
         self.current_level = 1
 
@@ -76,7 +76,7 @@ class Game:
 
         # UI
         self.hud = Scoreboard()
-        self.engine = Engine(self.hud, points_per_kill=100, sfx=self.sfx)
+        self.engine = CollisionEngine(self.hud, points_per_kill=100, sfx=self.sfx)
         self.health_bar = HealthBar(self.player)
         self.clvl = CurrentLevel(self.screen, self.current_level)
 

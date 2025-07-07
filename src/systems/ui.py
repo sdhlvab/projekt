@@ -1,3 +1,5 @@
+import sys
+
 import pygame
 
 from src.config import SCREEN_WIDTH, SCREEN_HEIGHT, FONT_PATH, PLAYER, TILE_SIZE
@@ -278,6 +280,78 @@ class VictoryScreen:
                 if e.type == pygame.KEYDOWN:
                     waiting = False
             self.clock.tick(10)
+
+class UIManager:
+    def draw_pause(self, screen):
+        """Wyświetla overlay pauzy i czeka na ESC"""
+        # ciemne tło
+        overlay = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT))
+        overlay.set_alpha(200)
+        overlay.fill((0, 0, 0))
+        screen.blit(overlay, (0, 0))
+        pause = pygame.font.Font(None, 72).render("PAUZA", True, (255, 255, 0))
+        screen.blit(pause, ((SCREEN_WIDTH - pause.get_width()) // 2, 200))
+        pygame.display.flip()
+        paused = True
+        while paused:
+            for e in pygame.event.get():
+                if e.type == pygame.KEYDOWN and e.key == pygame.K_ESCAPE:
+                    paused = False
+                    self.state = "PLAY"
+                elif e.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+            self.clock.tick(10)
+
+        # przenieś body metody Game._draw_pause tutaj (zmień self.screen → screen,
+        # a self.clock na lokalny zegar czy przekazywaną instancję, albo przechowuj clock w UIManager)
+
+    def draw_game_over(self, screen, hud, reset_callback, menu_callback):
+        """Wyświetla Game Over, wynik, pyta o T/N i wywołuje zwrotnie reset/menu"""
+        # ciemne tło
+        overlay = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT))
+        overlay.set_alpha(180);
+        overlay.fill((0, 0, 0))
+        screen.blit(overlay, (0, 0))
+        # napis game over
+        go = pygame.font.Font(None, 72).render("GAME OVER", True, (255, 0, 0))
+        screen.blit(go, ((SCREEN_WIDTH - go.get_width()) // 2, (SCREEN_HEIGHT - go.get_height()) // 2 - 60))
+        # wynik
+        font_med = pygame.font.Font(None, 48)
+        score_txt = font_med.render(f"Twój wynik: {hud.score}", True, (255, 255, 255))
+        screen.blit(score_txt, ((SCREEN_WIDTH - score_txt.get_width()) // 2,
+                                     (SCREEN_HEIGHT - score_txt.get_height()) // 2 + 20))
+        # pytanie o restart
+        font_sm = pygame.font.Font(None, 36)
+        txt = font_sm.render("Czy chcesz zrestartować? (T)ak/(N)ie", True, (200, 200, 200))
+        screen.blit(txt, ((SCREEN_WIDTH - txt.get_width()) // 2,
+                               (SCREEN_HEIGHT - txt.get_height()) // 2 + 80))
+
+        pygame.display.flip()
+
+        # czekamy na decyzje
+        waiting = True
+        while waiting:
+            for e in pygame.event.get():
+                if e.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+                elif e.type == pygame.KEYDOWN:
+                    if e.key == pygame.K_t:  # tak = restart
+                        #self.reset()
+                        reset_callback()
+                        self.state = "PLAY"
+                        waiting = False
+                    elif e.key == pygame.K_n:  # nie = menu
+                        self.current_level = 1
+                        self.level_file = os.path.join(LEVEL_DIR, LEVEL_FILE)
+                        self.clvl = CurrentLevel(self.screen, self.current_level)
+                        #self.state = "MENU"
+                        menu_callback()
+                        waiting = False
+            self.clock.tick(10)
+        # tu przenieś Game._draw_game_over, ale zamiast self.reset() czy sys.exit()
+        # wywołuj przekazane callbacki: reset_callback(), menu_callback()
 
 
 
