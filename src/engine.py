@@ -103,6 +103,10 @@ class Engine:
 
             if self.state == "PLAY":
                 self.update()
+                if self.player.hp <= 0:
+                    self.sfx.play("dead")
+                    self.state = "GAME_OVER"
+                    continue
 
             elif self.state == "PAUSE":
                 self.draw()
@@ -114,7 +118,12 @@ class Engine:
                     self.screen,
                     self.hud,
                     reset_callback=lambda: self.reset(full_reset=True),
-                    menu_callback=lambda: setattr(self, "state", "MENU")
+                    menu_callback=lambda: (
+                        setattr(self, "current_level", 1),
+                        setattr(self, "level_file", os.path.join(LEVEL_DIR, LEVEL_FILE)),
+                        setattr(self, "clvl", CurrentLevel(self.screen, 1)),
+                        setattr(self, "state", "MENU")
+                    )
                 )
 
                 continue
