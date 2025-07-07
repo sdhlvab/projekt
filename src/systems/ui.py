@@ -1,6 +1,7 @@
 import sys
 
 import pygame
+from pygame.event import set_keyboard_grab
 
 from src.config import SCREEN_WIDTH, SCREEN_HEIGHT, FONT_PATH, PLAYER, TILE_SIZE
 
@@ -282,6 +283,9 @@ class VictoryScreen:
             self.clock.tick(10)
 
 class UIManager:
+    def __init__(self):
+        self.clock = pygame.time.Clock()
+
     def draw_pause(self, screen):
         """Wyświetla overlay pauzy i czeka na ESC"""
         # ciemne tło
@@ -292,12 +296,12 @@ class UIManager:
         pause = pygame.font.Font(None, 72).render("PAUZA", True, (255, 255, 0))
         screen.blit(pause, ((SCREEN_WIDTH - pause.get_width()) // 2, 200))
         pygame.display.flip()
-        paused = True
-        while paused:
+
+        # czekanie na ESC lub QUIT
+        while True:
             for e in pygame.event.get():
                 if e.type == pygame.KEYDOWN and e.key == pygame.K_ESCAPE:
-                    paused = False
-                    self.state = "PLAY"
+                    return
                 elif e.type == pygame.QUIT:
                     pygame.quit()
                     sys.exit()
@@ -330,8 +334,7 @@ class UIManager:
         pygame.display.flip()
 
         # czekamy na decyzje
-        waiting = True
-        while waiting:
+        while True:
             for e in pygame.event.get():
                 if e.type == pygame.QUIT:
                     pygame.quit()
@@ -340,15 +343,14 @@ class UIManager:
                     if e.key == pygame.K_t:  # tak = restart
                         #self.reset()
                         reset_callback()
-                        self.state = "PLAY"
-                        waiting = False
+                        return
                     elif e.key == pygame.K_n:  # nie = menu
-                        self.current_level = 1
-                        self.level_file = os.path.join(LEVEL_DIR, LEVEL_FILE)
-                        self.clvl = CurrentLevel(self.screen, self.current_level)
+                        #self.current_level = 1
+                        #self.level_file = os.path.join(LEVEL_DIR, LEVEL_FILE)
+                        #self.clvl = CurrentLevel(self.screen, self.current_level)
                         #self.state = "MENU"
                         menu_callback()
-                        waiting = False
+                        return
             self.clock.tick(10)
         # tu przenieś Game._draw_game_over, ale zamiast self.reset() czy sys.exit()
         # wywołuj przekazane callbacki: reset_callback(), menu_callback()

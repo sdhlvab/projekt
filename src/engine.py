@@ -1,13 +1,16 @@
-import pygame
+import glob
 import os
+import re
 
-from src.config import SCREEN_WIDTH, SCREEN_HEIGHT, FPS
+import pygame
+
+from src.config import SCREEN_WIDTH, SCREEN_HEIGHT, FPS, LEVEL_DIR, LEVEL_FILE, CMD_FILE, FONT_PATH
 from src.entities.player import Player
 from src.entities.enemy import Enemy
 from src.systems.level import Level
 from src.systems.camera import Camera
 from src.systems.background import TerminalBackground
-from src.systems.ui import UIManager
+from src.systems.ui import MainMenu, Scoreboard, HealthBar, CurrentLevel, UIManager, VictoryScreen
 from src.systems.collision_engine import CollisionEngine
 from src.entities.coin import Coin
 from src.systems.audio import Music, Sound
@@ -55,7 +58,7 @@ class Engine:
         # pozycja startowa gracza z pliku
         px, py = self.level.get_player_spawn()
         self.player = Player((px, py), image_path = self.selected_img, sfx = self.sfx)
-        self.all_sprites = pygame.sprite.Group(self.player)
+        #self.all_sprites = pygame.sprite.Group(self.player)
 
         # dodanie przeciwników z pliku
         for ex, ey in self.level.get_enemy_spawns():
@@ -74,12 +77,10 @@ class Engine:
 
         # UI
         self.hud = Scoreboard()
-        self.engine = CollisionEngine(self.hud, points_per_kill=100, sfx=self.sfx)
+        self.collision_engine = CollisionEngine(self.hud, points_per_kill=100, sfx=self.sfx)
         self.health_bar = HealthBar(self.player)
         self.clvl = CurrentLevel(self.screen, self.current_level)
-
-        # zamiast self.engine = Engine(...) (kolizje), używaj:
-        self.collision_engine = CollisionEngine(self.hud, points_per_kill=100, sfx=self.sfx)
+        #self.victory = VictoryScreen
 
         # utwórz UIManager:
         self.ui = UIManager()
@@ -87,9 +88,47 @@ class Engine:
     def run(self):
         """Główna pętla gry: eventy, update, draw, stany."""
         while self.running and self.state != "EXIT":
+            self.clock.tick(FPS)
             events = pygame.event.get()
-            # przenieś body pętli z Game.run: clock.tick, for e in events, obsługa ESC, music.handle...
-            # podziel na self.handle_events(events), self.update(), self.draw()
+
+            # 1) obsługa eventów (QUIT, ESC, strzały, muzyka)
+            self.handle_events(events)
+
+            # 2) logika gry / aktualizacje / przejścia stanów MENU, PLAY, PAUSE, VICTORY
+            if self.state == "MENU":
+                self.menu.run()
+                self.reset(full_reset=True)
+                self.state = "PLAY"
+                continue
+
+            if self.state == "PLAY":
+                self.update()
+
+            elif self.state == "PAUSE":
+                self.draw()
+                self.ui.draw_pause(self.screen)
+                continue
+
+            elif self.state == "GAME_OVER":
+                self.ui.draw_game_over(
+                    self.screen,
+                    self.hud,
+                    reset_callback=lambda: self.reset(full_reset=True),
+                    menu_callback=lambda: setattr(self, "state", "MENU")
+                )
+
+                continue
+
+            elif self.state == "VICTORY":
+                VictoryScreen(self.screen, self.hud.score).show()
+                #self.victory.show()
+                self.reset(full_reset=True)
+                self.state = "MENU"
+                continue
+
+            # 3) rysowanie i flip
+            self.draw()
+
         pygame.quit()
 
     def handle_events(self, events):
@@ -147,8 +186,8 @@ class Engine:
         self.camera.update(self.player.rect)
         self.terminal_bg.update()
 
-        self.engine.handle_hits(self.projectiles, self.enemies)
-        self.engine.handle_player_collisions(self.player, self.enemies)
+        self.collision_engine.handle_hits(self.projectiles, self.enemies)
+        self.collision_engine.handle_player_collisions(self.player, self.enemies)
 
         self.clvl.draw()
 
@@ -197,6 +236,37 @@ class Engine:
         self.current_level += 1
         self.clvl = CurrentLevel(self.screen, self.current_level)
         return True
-        # skopiuj metodę next_level z Game
 
-    # UWAGA: Usuń z tej klasy metody _draw_pause i _draw_game_over
+    def reset(self, full_reset=True):
+        # przywrócenie stanu początkowego gry
+        # odtworzenie poziomu i kafelków
+        self.level = Level(self.level_file)
+        self.ground_rects = self.level.get_ground_rects()
+        # wrogowie
+        self.enemies = pygame.sprite.Group()
+        for ex, ey in self.level.get_enemy_spawns():
+            self.enemies.add(Enemy((ex, ey)))
+        # pociski
+        self.projectiles = pygame.sprite.Group()
+        # kamera
+        self.camera = Camera(self.level.pixel_width, self.level.pixel_height, SCREEN_WIDTH, SCREEN_HEIGHT)
+        # monety
+        self.coins = pygame.sprite.Group()
+        for cx, cy in self.level.get_coin_spawns():
+            self.coins.add(Coin(cx, cy))
+        # reset ui(nie resetuje przy przejściu do kolejnego poziomu)
+        if full_reset:
+            # gracz
+            px, py = self.level.get_player_spawn()
+            self.player = Player((px, py), image_path=self.selected_img, sfx=self.sfx)
+            self.hud.reset()
+            self.health_bar = HealthBar(self.player)
+        else:
+            px, py = self.level.get_player_spawn()
+            self.player = Player((px, py), hp=self.player.hp, image_path=self.selected_img, sfx=self.sfx)
+            self.health_bar = HealthBar(self.player)
+        # reset stanu i zegara
+        self.clock.tick()
+        self.state = "PLAY"
+        # reset tła (linii komend)
+        self.terminal_bg = TerminalBackground(SCREEN_WIDTH, SCREEN_HEIGHT, self.font, self.command_file, SCREEN_HEIGHT , self.player_name)

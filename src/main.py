@@ -1,7 +1,8 @@
 import pygame
 
-from src.config import SCREEN_WIDTH, SCREEN_HEIGHT, FPS
-from src.game import Game
+from src.config import SCREEN_WIDTH, SCREEN_HEIGHT
+#from src.game import Game
+from src.engine import Engine
 
 def main():
     pygame.init()
@@ -13,8 +14,9 @@ def main():
     #screen = pygame.display.set_mode((0, 0), flags)
     # do fullscreena trzeba dodać nadpisywanie wartości SCREEN_WIDTH, SCREEN_HEIGHT z configa!!
     pygame.display.set_caption("Hackerman vs Bugzilla")
-    game = Game(screen)
-    game.run()
+    #game = Game(screen)
+    #game.run()
+    Engine(screen).run()
     pygame.quit()
 
 if __name__ == "__main__":
