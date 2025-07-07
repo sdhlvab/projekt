@@ -1,6 +1,6 @@
 import pygame
 
-from src.config import TILE_SIZE, PLAYER
+from src.config import TILE_SIZE, PLAYER, INVINCIBLE_TIME, SHOOT_CD, SHOOT_DMG, SHOOT_SPEED, MAX_HP, SPEED
 from src.entities.projectile import Projectile
 from src.entities.character import Character
 
@@ -29,16 +29,16 @@ class Player(Character):
         raw = pygame.image.load(image_info["image"]).convert_alpha()
         cropped = crop_to_visible_area(raw, image_info)
         self.image = scale_to_height(cropped, TILE_SIZE)
-        super().__init__(self.image, pos, speed=5, max_hp=100, hp=hp)
+        super().__init__(self.image, pos, speed=SPEED, max_hp=MAX_HP, hp=hp)
 
         self.direction = 1 # 1 prawo, -1 lewo
         self.shoot_cooldown = 0
-        self.def_shoot_cooldown = 5
-        self.shoot_speed = 12
-        self.shoot_damage = 10
+        self.def_shoot_cooldown = SHOOT_CD
+        self.shoot_speed = SHOOT_SPEED
+        self.shoot_damage = SHOOT_DMG
 
         self.invincible_time = 0
-        self.def_invincible_time = 100
+        self.def_invincible_time = INVINCIBLE_TIME
 
         # audio
         self.old_y = self.rect.y

@@ -105,9 +105,32 @@ ENEMY_TYPES = {
     },
 }
 
-#BUGZILLA_IMAGE = ENEMIES_DIR + "bugzilla.png"
+POINTS = {
+    "coin" : 10,
+    "all_coins_bonus" : 1000,
+    "kill" : 100,
+}
 
+# wartości związane z graczem
+MAX_HP = 100 # maksymalne życie gracza
+SPEED = 5 # prędkość gracza
+INVINCIBLE_TIME = 100 # przez ile ms gracz jest odporny na zetknięcie z wrogami
+SHOOT_CD = 5 # cooldown na strzelanie w ms
+SHOOT_DMG = 10 # ile obrażeń zadaje atak
+SHOOT_SPEED = 12 # prędkość pocisków
+JUMP = -16 # skoczność
+GRAVITY = 0.7 # grawitacja
 
+COLORS = {
+    "red" : (255, 0, 0),
+    "white" : (255, 255, 255),
+    "black" : (0, 0, 0),
+    "yellow" : (255, 255, 0),
+    "grey" : (200, 200, 200),
+    "dark_grey" : (160, 160, 160),
+    "green" : (0, 255, 0),
+    "black_alpha" : (0, 0, 0, 180),
+}
 
 # plik z poziomem
 LEVEL_FILE = "level1.txt"
@@ -119,6 +142,20 @@ SCREEN_WIDTH = 1280
 SCREEN_HEIGHT = 800
 FPS = 60
 
+# healthbar przeciwników
+BAR_W = 200
+BAR_H = 20
+
 # inne configi
 FONT_PATH = ASSETS_DIR + "fonts/UbuntuMono-R.ttf"
 FONT_SIZE = 20
+FONT_SIZE_S = 18
+FONT_SIZE_XL = 72
+FONT_SIZE_L = 48
+FONT_SIZE_M = 36
+FONT_SIZE_XS = 24
+
+PADDING = 16
+
+GAMEOVER_DELAY = 2000
+

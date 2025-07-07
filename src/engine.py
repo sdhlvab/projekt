@@ -4,7 +4,7 @@ import re
 
 import pygame
 
-from src.config import SCREEN_WIDTH, SCREEN_HEIGHT, FPS, LEVEL_DIR, LEVEL_FILE, CMD_FILE, FONT_PATH
+from src.config import SCREEN_WIDTH, SCREEN_HEIGHT, FPS, LEVEL_DIR, LEVEL_FILE, CMD_FILE, FONT_PATH, POINTS, FONT_SIZE_S
 from src.entities.player import Player
 from src.entities.enemy import Enemy
 from src.systems.level import Level
@@ -17,8 +17,6 @@ from src.systems.audio import Music, Sound
 
 class Engine:
     def __init__(self, screen, player_name="", music_on=True, sound_on=True):
-        """Przygotowuje całą grę: stany, audio, poziom, sprite’y, UI, kolizje itp."""
-        # … tu wklejasz i dostosowujesz _tylko_ body __init__ z klasy Game
         self.screen = screen
         self.clock = pygame.time.Clock()
         self.running = True
@@ -41,7 +39,7 @@ class Engine:
         self.menu = MainMenu(self.screen, self.music, self.sfx)
         self.current_level = 1
 
-        self.font = pygame.font.Font(FONT_PATH, 18)
+        self.font = pygame.font.Font(FONT_PATH, FONT_SIZE_S)
         self.command_file = CMD_FILE
 
         # poziom i kafelki
@@ -58,7 +56,6 @@ class Engine:
         # pozycja startowa gracza z pliku
         px, py = self.level.get_player_spawn()
         self.player = Player((px, py), image_path = self.selected_img, sfx = self.sfx)
-        #self.all_sprites = pygame.sprite.Group(self.player)
 
         # dodanie przeciwników z pliku
         for ex, ey in self.level.get_enemy_spawns():
@@ -77,7 +74,7 @@ class Engine:
 
         # UI
         self.hud = Scoreboard()
-        self.collision_engine = CollisionEngine(self.hud, points_per_kill=100, sfx=self.sfx)
+        self.collision_engine = CollisionEngine(self.hud, points_per_kill=POINTS["kill"], sfx=self.sfx)
         self.health_bar = HealthBar(self.player)
         self.clvl = CurrentLevel(self.screen, self.current_level)
         #self.victory = VictoryScreen
@@ -130,7 +127,6 @@ class Engine:
 
             elif self.state == "VICTORY":
                 VictoryScreen(self.screen, self.hud.score).show()
-                #self.victory.show()
                 self.reset(full_reset=True)
                 self.state = "MENU"
                 continue
@@ -173,18 +169,18 @@ class Engine:
                     self.sfx.play("win")
                     self.state = "VICTORY"
                     return
-                self.state = "GAME_OVER"
-                return
+                #self.state = "GAME_OVER"
+                #return
 
         # wykrycie zderzenia z monetami
         hits = pygame.sprite.spritecollide(self.player, self.coins, True)
         if hits:
             self.sfx.play("coin")
-            self.hud.add_points(10)
+            self.hud.add_points(POINTS["coin"])
             # bonus za zebranie wszystkich monet
             if not self.coins:
                 self.sfx.play("powerup")
-                self.hud.add_points(1000)
+                self.hud.add_points(POINTS["all_coins_bonus"])
 
         # wrogowie odbijają się od wszystkich kfelków
         all_solid = self.ground_rects + self.level.get_exit_rects()

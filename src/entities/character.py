@@ -1,5 +1,8 @@
 import pygame
 
+from src.config import COLORS
+
+
 class Character(pygame.sprite.Sprite):
     def __init__(self, image, pos, speed = 3, max_hp = 50, hp = None):
         super().__init__()
@@ -88,8 +91,8 @@ class Character(pygame.sprite.Sprite):
             outer_rect = pygame.Rect(bar_x, bar_y, bar_w, bar_h)
 
             # rysowanie
-            pygame.draw.rect(surface, (255, 0, 0), inner_rect)
-            pygame.draw.rect(surface, (255, 255, 255), outer_rect, 1)
+            pygame.draw.rect(surface, COLORS["red"], inner_rect)
+            pygame.draw.rect(surface, COLORS["white"], outer_rect, 1)
 
     # obracanie grafiki w zależności od kierunku
     def set_facing(self, direction:int):
